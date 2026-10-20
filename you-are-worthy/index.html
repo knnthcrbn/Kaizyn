@@ -66,9 +66,12 @@
 #gw-worthy em{font-style:italic}
 
 /* ---------- sky ---------- */
-#gw-worthy .gw-sky{position:fixed;inset:0;z-index:0;pointer-events:none}
+#gw-worthy .gw-sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+/* fallback when a builder wrapper breaks position:fixed (see script) */
+#gw-worthy.gw-sky-local .gw-sky{position:absolute;bottom:auto;height:100vh;will-change:transform}
+#gw-worthy.gw-sky-local .gw-toast{position:absolute;bottom:auto}
 #gw-worthy .gw-nebula{
-  position:absolute;inset:-15%;
+  position:absolute;inset:0;
   background:
     radial-gradient(38% 32% at 16% 12%,rgba(118,92,255,.22),transparent 70%),
     radial-gradient(34% 30% at 86% 26%,rgba(62,128,255,.16),transparent 70%),
@@ -260,7 +263,7 @@
 /* ---------- keyframes ---------- */
 @keyframes gw-rise{from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:none}}
 @keyframes gw-shimmer{from{background-position:0% 50%}to{background-position:100% 50%}}
-@keyframes gw-drift{from{transform:translate3d(-2%,-1%,0) scale(1)}to{transform:translate3d(2%,2%,0) scale(1.08)}}
+@keyframes gw-drift{from{transform:translate3d(-2%,-1%,0) scale(1.15)}to{transform:translate3d(2%,2%,0) scale(1.22)}}
 @keyframes gw-pulse{0%,100%{opacity:.5;transform:scale(.85)}50%{opacity:1;transform:scale(1.15)}}
 @keyframes gw-fall{0%{top:-10px;opacity:0}30%{opacity:1}100%{top:46px;opacity:0}}
 @keyframes gw-breathe{0%,100%{transform:scale(.6);opacity:.75}50%{transform:scale(1);opacity:1}}
@@ -437,6 +440,36 @@
   function fitWidth() { root.style.setProperty('--gw-vw', docEl.clientWidth + 'px'); }
   fitWidth();
 
+  /* Paint the page behind us so builder padding or overscroll never shows white */
+  try {
+    var BG = '#04050d';
+    docEl.style.backgroundColor = BG;
+    document.body.style.backgroundColor = BG;
+    for (var up = root.parentElement; up && up !== document.body; up = up.parentElement) up.style.backgroundColor = BG;
+  } catch (e) {}
+
+  /* Page builders often wrap elements in a transform or filter, which pins
+     "fixed" layers to that wrapper instead of the screen and leaves blank
+     scroll space under the page. Detect that and move the layer ourselves. */
+  var sky = root.querySelector('.gw-sky');
+  var skyLocal = false;
+  (function () {
+    var r = sky.getBoundingClientRect();
+    if (Math.abs(r.top) > 60 || Math.abs(r.height - window.innerHeight) > 60) {
+      skyLocal = true;
+      root.classList.add('gw-sky-local');
+    }
+  })();
+  function placeSky() {
+    if (!skyLocal) return;
+    var vh = window.innerHeight;
+    var y = Math.max(0, Math.min(-root.getBoundingClientRect().top, root.offsetHeight - vh));
+    sky.style.height = vh + 'px';
+    sky.style.transform = 'translate3d(0,' + y + 'px,0)';
+  }
+  placeSky();
+  window.addEventListener('scroll', placeSky, { passive: true });
+
   /* Scroll reveals */
   var reveals = root.querySelectorAll('.gw-reveal');
   if ('IntersectionObserver' in window && !reduce) {
@@ -506,6 +539,7 @@
 
   function resize() {
     fitWidth();
+    placeSky();
     if (!ctx) return;
     var dpr = Math.min(window.devicePixelRatio || 1, 2);
     W = window.innerWidth; H = window.innerHeight;
@@ -616,6 +650,7 @@
   function frame(now) {
     var dt = last ? Math.min(50, now - last) : 16;
     last = now; clock += dt;
+    placeSky();
     update(dt); draw();
     requestAnimationFrame(frame);
   }
@@ -640,6 +675,7 @@
   /* ---------- Toast ---------- */
   var toastEl = root.querySelector('.gw-toast'), toastTimer;
   function toast(msg) {
+    if (skyLocal) toastEl.style.top = (window.innerHeight - 28 - 48 - root.getBoundingClientRect().top) + 'px';
     toastEl.textContent = msg;
     toastEl.classList.add('gw-show');
     clearTimeout(toastTimer);
