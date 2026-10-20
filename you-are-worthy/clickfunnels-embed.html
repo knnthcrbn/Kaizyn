@@ -31,7 +31,6 @@
   width:var(--gw-vw,100vw);
   max-width:none;
   margin:0 0 0 calc(50% - var(--gw-vw,100vw) / 2);
-  min-height:100vh;
   background:var(--gw-bg);
   color:var(--gw-ink);
   font-family:var(--gw-sans);
@@ -57,7 +56,7 @@
 /* ---------- sky ---------- */
 #gw-worthy .gw-sky{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
 /* fallback when a builder wrapper breaks position:fixed (see script) */
-#gw-worthy.gw-sky-local .gw-sky{position:absolute;bottom:auto;height:100vh;will-change:transform}
+#gw-worthy.gw-sky-local .gw-sky{position:absolute;bottom:auto;height:100%;will-change:transform}
 #gw-worthy.gw-sky-local .gw-toast{position:absolute;bottom:auto}
 #gw-worthy .gw-nebula{
   position:absolute;inset:0;
@@ -80,7 +79,7 @@
 
 /* ---------- hero ---------- */
 #gw-worthy .gw-hero{
-  position:relative;min-height:100vh;min-height:100svh;
+  position:relative;min-height:var(--gw-screen,640px);
   display:flex;flex-direction:column;align-items:center;justify-content:center;
   text-align:center;padding:96px 0 140px;
 }
@@ -437,27 +436,66 @@
     for (var up = root.parentElement; up && up !== document.body; up = up.parentElement) up.style.backgroundColor = BG;
   } catch (e) {}
 
-  /* Page builders often wrap elements in a transform or filter, which pins
-     "fixed" layers to that wrapper instead of the screen and leaves blank
-     scroll space under the page. Detect that and move the layer ourselves. */
+  /* Where is the screen? Page builders may wrap the page in a transform
+     (which breaks position:fixed) or render it inside a frame that grows to
+     fit its content, where the "screen" is the whole page and anything sized
+     to it grows forever. So the background is sized and moved here, from the
+     real browser window, never from the frame's height. */
   var sky = root.querySelector('.gw-sky');
-  var skyLocal = false;
-  (function () {
-    var r = sky.getBoundingClientRect();
-    if (Math.abs(r.top) > 60 || Math.abs(r.height - window.innerHeight) > 60) {
-      skyLocal = true;
-      root.classList.add('gw-sky-local');
-    }
-  })();
+  var framed = false, topWin = null, frameEl = null;
+  try { framed = window.self !== window.top; } catch (e) { framed = true; }
+  if (framed) {
+    try { frameEl = window.frameElement; topWin = window.top; void topWin.innerHeight; }
+    catch (e) { frameEl = null; topWin = null; }
+  }
+  // How far the top of the visible screen is below the top of the page (null = can't tell).
+  function viewTop() {
+    var rt = root.getBoundingClientRect().top;
+    if (!framed) return -rt;
+    if (frameEl && topWin) return -(frameEl.getBoundingClientRect().top + rt);
+    return null;
+  }
+  function viewH() {
+    if (framed && topWin) return topWin.innerHeight;
+    if (framed) return Math.max(480, (screen.availHeight || 900) - 120);
+    return window.innerHeight;
+  }
+  var skyLocal = framed;
+  if (!skyLocal) {
+    var sr = sky.getBoundingClientRect();
+    skyLocal = Math.abs(sr.top) > 60 || Math.abs(sr.height - window.innerHeight) > 60;
+  }
+  if (skyLocal) root.classList.add('gw-sky-local');
   function placeSky() {
     if (!skyLocal) return;
-    var vh = window.innerHeight;
-    var y = Math.max(0, Math.min(-root.getBoundingClientRect().top, root.offsetHeight - vh));
+    var top = viewTop(), rh = root.offsetHeight;
+    if (top === null) {               // can't see the outer page: cover the whole page instead
+      sky.style.height = rh + 'px';
+      sky.style.transform = 'none';
+      return;
+    }
+    var vh = Math.min(viewH(), rh);
     sky.style.height = vh + 'px';
-    sky.style.transform = 'translate3d(0,' + y + 'px,0)';
+    sky.style.transform = 'translate3d(0,' + Math.max(0, Math.min(top, rh - vh)) + 'px,0)';
   }
+  // Hero height comes from the real window, refreshed only when the width changes
+  // (so phone toolbars sliding in and out don't make the page jump).
+  var lastW = 0;
+  function setScreen(force) {
+    var w = docEl.clientWidth;
+    if (!force && w === lastW) return;
+    lastW = w;
+    root.style.setProperty('--gw-screen', Math.round(viewH()) + 'px');
+  }
+  setScreen(true);
   placeSky();
   window.addEventListener('scroll', placeSky, { passive: true });
+  if (topWin && topWin !== window) {
+    try {
+      topWin.addEventListener('scroll', placeSky, { passive: true });
+      topWin.addEventListener('resize', function () { resize(); });
+    } catch (e) {}
+  }
 
   /* Scroll reveals */
   var reveals = root.querySelectorAll('.gw-reveal');
@@ -528,14 +566,15 @@
 
   function resize() {
     fitWidth();
+    setScreen(false);
     placeSky();
     if (!ctx) return;
-    var dpr = Math.min(window.devicePixelRatio || 1, 2);
-    W = window.innerWidth; H = window.innerHeight;
+    W = sky.clientWidth || window.innerWidth; H = sky.clientHeight || window.innerHeight;
+    var dpr = Math.min(window.devicePixelRatio || 1, H > 1600 ? 1 : 2);
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    var target = Math.min(480, Math.max(110, Math.round(W * H / 3000)));
+    var target = Math.min(H > 1600 ? 1000 : 480, Math.max(110, Math.round(W * H / 3000)));
     while (stars.length < target) stars.push(newStar());
     if (stars.length > target) stars.length = target;
     if (reduce) draw();
@@ -588,7 +627,7 @@
   function draw() {
     ctx.clearRect(0, 0, W, H);
     var sec = clock / 1000;
-    var scroll = window.pageYOffset || docEl.scrollTop || 0;
+    var scroll = Math.max(0, viewTop() || 0);
     var i, s, size;
 
     for (i = 0; i < stars.length; i++) {
@@ -640,6 +679,7 @@
     var dt = last ? Math.min(50, now - last) : 16;
     last = now; clock += dt;
     placeSky();
+    if (Math.abs(sky.clientHeight - H) > 2 || Math.abs(sky.clientWidth - W) > 2) resize();
     update(dt); draw();
     requestAnimationFrame(frame);
   }
@@ -655,7 +695,8 @@
       }, { passive: true });
       root.addEventListener('click', function (e) {
         if (e.target.closest && e.target.closest('a,button')) return;
-        burst(e.clientX, e.clientY, 14, 0.6);
+        var s = sky.getBoundingClientRect();
+        burst(e.clientX - s.left, e.clientY - s.top, 14, 0.6);
       });
     }
   }
@@ -664,7 +705,10 @@
   /* ---------- Toast ---------- */
   var toastEl = root.querySelector('.gw-toast'), toastTimer;
   function toast(msg) {
-    if (skyLocal) toastEl.style.top = (window.innerHeight - 28 - 48 - root.getBoundingClientRect().top) + 'px';
+    if (skyLocal) {          // show it just under the share button the visitor tapped
+      var sb = root.querySelector('[data-gw="share"]').getBoundingClientRect();
+      toastEl.style.top = (sb.bottom - root.getBoundingClientRect().top + 18) + 'px';
+    }
     toastEl.textContent = msg;
     toastEl.classList.add('gw-show');
     clearTimeout(toastTimer);
@@ -676,7 +720,8 @@
   var after = root.querySelector('.gw-after');
   receiveBtn.addEventListener('click', function () {
     var r = receiveBtn.getBoundingClientRect();
-    if (ctx && !reduce) { burst(r.left + r.width / 2, r.top + r.height / 2, 90, 1.4); boost = 1; }
+    var s = sky.getBoundingClientRect();
+    if (ctx && !reduce) { burst(r.left + r.width / 2 - s.left, r.top + r.height / 2 - s.top, 90, 1.4); boost = 1; }
     if (receiveBtn.classList.contains('is-done')) return;
     receiveBtn.classList.add('is-done');
     receiveBtn.querySelector('.gw-btn-label').textContent = 'Received. You are loved.';
