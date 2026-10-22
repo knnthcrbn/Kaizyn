@@ -143,15 +143,6 @@ body {
   }
 }
 
-@keyframes drift {
-  from {
-    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg));
-  }
-  to {
-    transform: translate3d(0, -14px, 0) rotate(calc(var(--tilt, 0deg) * -0.5));
-  }
-}
-
 .hover-up {
   animation: hover-up 3.2s ease-in-out infinite alternate;
 }
@@ -160,15 +151,10 @@ body {
   animation: hover-shadow 3.2s ease-in-out infinite alternate;
 }
 
-.drift {
-  animation: drift var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .constellation-glow,
   .hover-up,
-  .hover-shadow,
-  .drift {
+  .hover-shadow {
     animation: none;
   }
 }

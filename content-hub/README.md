@@ -52,8 +52,8 @@ Live at **https://content-hub-theta-one.vercel.app** (Vercel project
 ## Sign-in
 
 `/login` is the sign-in screen: the saved constellation background in brand
-purple, the logo hovering on a glass tile that tilts toward the cursor, and
-pieces of the hub drifting around it (wide screens). `src/proxy.ts` sends
+purple and the logo hovering on a glass tile that tilts toward the cursor.
+`src/proxy.ts` sends
 everything else, including the Claude route, to it until the password is
 entered; the session lasts 30 days. Settings has **Sign out** and a link to
 the screen.
