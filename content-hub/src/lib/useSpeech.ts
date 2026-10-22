@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { IN_CLAUDE } from "./platform";
 
 // Minimal typing for the browser Speech Recognition API (Chrome, Edge, Safari).
 interface SpeechResultEvent {
@@ -19,7 +20,8 @@ interface Recognizer {
 }
 
 function getRecognizer(): Recognizer | null {
-  if (typeof window === "undefined") return null;
+  // The claude.ai-hosted copy has no microphone access.
+  if (typeof window === "undefined" || IN_CLAUDE) return null;
   const w = window as unknown as {
     SpeechRecognition?: new () => Recognizer;
     webkitSpeechRecognition?: new () => Recognizer;

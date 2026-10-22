@@ -1,6 +1,8 @@
 "use client";
 
 import { ANTI_AI_BRIEF } from "./antiAi";
+import { capability, IN_CLAUDE, type Sample } from "./platform";
+import { contextBlock, SYSTEM } from "./prompt";
 import { formatLabel, pillarLabel, scriptModeLabel, stageLabel } from "./meta";
 import { useHub } from "./store";
 
@@ -49,6 +51,7 @@ export async function streamClaude(
   onText: (text: string) => void,
   signal?: AbortSignal,
 ) {
+  if (IN_CLAUDE) return sampleClaude(messages, page, onText, signal);
   const res = await fetch("/api/claude", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -73,4 +76,49 @@ export async function streamClaude(
     onText(text);
   }
   return text;
+}
+
+const SAMPLE_ERRORS: Record<string, string> = {
+  not_granted: "Claude needs your permission to run in this page. Reload and choose Allow when asked.",
+  sampling_disabled: "Claude isn't available on this account.",
+  rate_limited: "Too many requests right now. Give it a minute and try again.",
+  session_expired: "Your claude.ai session expired. Sign in again, then retry.",
+  refused: "Claude declined this one. Try rewording it.",
+  prompt_too_large: "That's too much text for one request. Trim your voice samples or the card and try again.",
+};
+
+/** The claude.ai-hosted copy: ask Claude on the viewer's own account. */
+async function sampleClaude(
+  messages: { role: "user" | "assistant"; content: string }[],
+  page: string,
+  onText: (text: string) => void,
+  signal?: AbortSignal,
+) {
+  const sample = await capability<Sample>("sample");
+  if (!sample) {
+    const msg = "⚠️ Claude isn't available in this view. Open the hub inside claude.ai to use it.";
+    onText(msg);
+    return msg;
+  }
+  // No system prompt here, so the instructions and context lead as a user turn.
+  const rules = `${SYSTEM}\n\n${contextBlock(buildContext(page))}\n\nThe conversation with the creator follows. Reply to their last message.`;
+  try {
+    const { text, truncated } = await sample([{ role: "user", content: rules }, ...messages], {
+      cache: false,
+      signal,
+      onText: ({ text }) => onText(text),
+    });
+    const final = truncated ? `${text}\n\n_(Cut off at the length limit.)_` : text;
+    onText(final);
+    return final;
+  } catch (e) {
+    const err = e as { code?: string; text?: string };
+    if (err.code === "cancelled") {
+      onText(err.text ?? "");
+      return err.text ?? "";
+    }
+    const msg = `${err.text ? `${err.text}\n\n` : ""}⚠️ ${SAMPLE_ERRORS[err.code ?? ""] ?? "Something went wrong talking to Claude. Try again."}`;
+    onText(msg);
+    return msg;
+  }
 }

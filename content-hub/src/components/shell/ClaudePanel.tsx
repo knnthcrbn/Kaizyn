@@ -183,10 +183,12 @@ export function ClaudePanel() {
               <div className="space-y-2 text-[13px] leading-relaxed text-ink/90">
                 {m.content ? (
                   <Markdown text={m.content} />
-                ) : (
+                ) : busy && m.id === chat[chat.length - 1]?.id ? (
                   <span className="inline-flex items-center gap-2 text-xs text-faint">
                     <span className="size-1.5 animate-pulse rounded-full bg-brand" /> Writing…
                   </span>
+                ) : (
+                  <span className="text-xs text-ghost">Stopped.</span>
                 )}
               </div>
               {m.content && !(busy && m.id === chat[chat.length - 1]?.id) && (

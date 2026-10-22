@@ -1,6 +1,6 @@
 "use client";
 
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import { useState, type ButtonHTMLAttributes, type ReactNode } from "react";
 import { ArrowDownRight, ArrowUpRight, Minus } from "lucide-react";
 import { PILLAR_STYLE, STAGES, pillarLabel, stageIndex } from "@/lib/meta";
 import type { Pillar, StageId } from "@/lib/types";
@@ -262,4 +262,49 @@ export function Kbd({ children }: { children: ReactNode }) {
 
 export function Empty({ children }: { children: ReactNode }) {
   return <div className="rounded-xl border border-dashed border-line px-4 py-8 text-center text-xs text-faint">{children}</div>;
+}
+
+/**
+ * A destructive action that asks in place ("Delete? Yes / Cancel") instead of
+ * a browser dialog, which the claude.ai-hosted copy can't show.
+ */
+export function ConfirmAction({
+  onConfirm,
+  question,
+  confirmLabel = "Delete",
+  children,
+  className,
+  title,
+}: {
+  onConfirm: () => void;
+  question: string;
+  confirmLabel?: string;
+  children: ReactNode;
+  className?: string;
+  title?: string;
+}) {
+  const [asking, setAsking] = useState(false);
+  if (asking)
+    return (
+      <span className="inline-flex items-center gap-1.5 text-xs">
+        <span className="text-muted">{question}</span>
+        <button
+          onClick={() => {
+            setAsking(false);
+            onConfirm();
+          }}
+          className="h-7 rounded-md bg-critical/15 px-2 font-medium text-critical-text hover:bg-critical/25"
+        >
+          {confirmLabel}
+        </button>
+        <button onClick={() => setAsking(false)} className="h-7 rounded-md px-2 text-faint hover:bg-surface-3 hover:text-ink">
+          Cancel
+        </button>
+      </span>
+    );
+  return (
+    <button onClick={() => setAsking(true)} className={className} title={title}>
+      {children}
+    </button>
+  );
 }

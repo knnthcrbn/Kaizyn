@@ -5,7 +5,7 @@ import { Check, MonitorPlay, Plus, Sparkles, Trash2, X } from "lucide-react";
 import { useHub } from "@/lib/store";
 import { FORMATS, PILLARS, PILLAR_STYLE, SCRIPT_MODES, STAGES, scriptModeLabel } from "@/lib/meta";
 import type { ContentItem, Format, Pillar, ScriptMode, StageId } from "@/lib/types";
-import { Button, cx, inputCls, selectCls, StageIcon, Tabs } from "./ui";
+import { Button, ConfirmAction, cx, inputCls, selectCls, StageIcon, Tabs } from "./ui";
 import { LintPanel } from "./LintPanel";
 import { Teleprompter } from "./Teleprompter";
 
@@ -54,15 +54,14 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
           <Button size="sm" onClick={() => setPrompter(true)}>
             <MonitorPlay className="size-3.5" /> Teleprompter
           </Button>
-          <button
-            onClick={() => {
-              if (confirm("Delete this card?")) del(item.id);
-            }}
+          <ConfirmAction
+            question="Delete this card?"
+            onConfirm={() => del(item.id)}
             className="rounded-md p-1.5 text-faint hover:bg-critical/10 hover:text-critical-text"
             title="Delete card"
           >
             <Trash2 className="size-3.5" />
-          </button>
+          </ConfirmAction>
           <button onClick={onClose} className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink" title="Close (Esc)">
             <X className="size-4" />
           </button>

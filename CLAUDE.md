@@ -28,4 +28,8 @@ Offer it first for new landing pages, recoloured for the brand.
   `src/app/globals.css`. Claude runs through `src/app/api/claude/route.ts`. Roadmap order
   is deliberate: social account connections and publishing come LAST (Phase
   5); don't ask for account details before then. `BUILD-PROMPT.md` is the
-  full brief.
+  full brief. A private hosted copy lives at
+  https://claude.ai/artifact/QdLdoiqSi1cYKSP9ipn5iD: rebuild with
+  `npm run build:artifact` and republish `artifact-dist/content-hub.html` to
+  that URL (Claude there uses the `sample` capability; backups use
+  `downloads`). The Vercel connector can't create projects on this account.

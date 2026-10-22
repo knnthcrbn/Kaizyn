@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Clapperboard, MessageCircleQuestion, Plus, Trash2, X } from "lucide-react";
-import { Badge, Button, PageHeader, inputCls } from "@/components/ui";
+import { Badge, Button, ConfirmAction, PageHeader, inputCls } from "@/components/ui";
 import { useHub } from "@/lib/store";
 import type { Story } from "@/lib/types";
 
@@ -108,18 +108,17 @@ function StoryEditor({ story, onClose }: { story: Story; onClose: () => void }) 
             onChange={(e) => set({ title: e.target.value })}
             className="flex-1 bg-transparent text-base font-semibold focus:outline-none"
           />
-          <Button
-            size="sm"
-            variant="danger"
-            onClick={() => {
-              if (confirm("Delete this story?")) {
-                del(story.id);
-                onClose();
-              }
+          <ConfirmAction
+            question="Delete this story?"
+            onConfirm={() => {
+              del(story.id);
+              onClose();
             }}
+            className="rounded-md p-1.5 text-faint hover:bg-critical/10 hover:text-critical-text"
+            title="Delete story"
           >
             <Trash2 className="size-3.5" />
-          </Button>
+          </ConfirmAction>
           <button onClick={onClose} className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink">
             <X className="size-4" />
           </button>

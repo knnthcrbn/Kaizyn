@@ -47,11 +47,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   }, []);
 
   if (!ready) {
-    return <div className="h-dvh bg-bg" />;
+    return <div className="h-full bg-bg" />;
   }
 
   return (
-    <div className="flex h-dvh overflow-hidden">
+    <div className="flex h-full overflow-hidden">
       <aside className="hidden w-56 shrink-0 border-r border-line bg-bg lg:block">
         <Sidebar />
       </aside>

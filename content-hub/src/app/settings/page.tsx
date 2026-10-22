@@ -2,7 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Download, Upload, RotateCcw, CircleCheck, CircleAlert } from "lucide-react";
-import { Badge, Button, Card, PageHeader } from "@/components/ui";
+import { Badge, Button, Card, ConfirmAction, PageHeader } from "@/components/ui";
+import { capability, IN_CLAUDE, type Downloads, type Sample } from "@/lib/platform";
 import { useHub } from "@/lib/store";
 
 const ROADMAP = [
@@ -21,13 +22,17 @@ export default function SettingsPage() {
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
+    if (IN_CLAUDE) {
+      capability<Sample>("sample").then((s) => setClaude(!!s));
+      return;
+    }
     fetch("/api/claude")
       .then((r) => r.json())
       .then((d) => setClaude(!!d.configured))
       .catch(() => setClaude(false));
   }, []);
 
-  const exportData = () => {
+  const exportData = async () => {
     const s = useHub.getState();
     const data = {
       exportedAt: new Date().toISOString(),
@@ -38,10 +43,24 @@ export default function SettingsPage() {
       swipe: s.swipe,
       activityDays: s.activityDays,
     };
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const json = JSON.stringify(data, null, 2);
+    const filename = `content-hub-backup-${data.exportedAt.slice(0, 10)}.json`;
+    if (IN_CLAUDE) {
+      // The hosted page can't start downloads itself; claude.ai asks the viewer.
+      const downloads = await capability<Downloads>("downloads");
+      if (!downloads) return setMsg("Saving files isn't available in this view.");
+      try {
+        await downloads.save({ filename, data: json });
+        setMsg(`Saved ${filename}.`);
+      } catch (e) {
+        const code = (e as { code?: string }).code;
+        if (code !== "declined") setMsg("Couldn't save the backup here. Try again in a moment.");
+      }
+      return;
+    }
     const a = document.createElement("a");
-    a.href = URL.createObjectURL(blob);
-    a.download = `content-hub-backup-${data.exportedAt.slice(0, 10)}.json`;
+    a.href = URL.createObjectURL(new Blob([json], { type: "application/json" }));
+    a.download = filename;
     a.click();
     URL.revokeObjectURL(a.href);
   };
@@ -69,7 +88,16 @@ export default function SettingsPage() {
             ) : claude ? (
               <>
                 <CircleCheck className="mt-0.5 size-4 text-good-text" />
-                <span className="text-muted">Connected. The Claude panel, voice profile and idea generator are live.</span>
+                <span className="text-muted">
+                  {IN_CLAUDE
+                    ? "Connected through your claude.ai account. The first time Claude runs, it asks your permission."
+                    : "Connected. The Claude panel, voice profile and idea generator are live."}
+                </span>
+              </>
+            ) : IN_CLAUDE ? (
+              <>
+                <CircleAlert className="mt-0.5 size-4 text-warning" />
+                <span className="text-muted">Claude isn&apos;t available in this view. Open the hub inside claude.ai to use it.</span>
               </>
             ) : (
               <>
@@ -101,17 +129,17 @@ export default function SettingsPage() {
               onChange={(e) => e.target.files?.[0] && onImport(e.target.files[0])}
             />
             <div className="flex-1" />
-            <Button
-              variant="danger"
-              onClick={() => {
-                if (confirm("Reset everything back to the starter content? Download a backup first if you want to keep anything.")) {
-                  resetAll();
-                  setMsg("Reset to starter content.");
-                }
+            <ConfirmAction
+              question="Erase everything and go back to the starter content?"
+              confirmLabel="Reset"
+              onConfirm={() => {
+                resetAll();
+                setMsg("Reset to starter content.");
               }}
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-critical-text hover:bg-critical/10"
             >
               <RotateCcw className="size-3.5" /> Reset
-            </Button>
+            </ConfirmAction>
             {msg && <p className="w-full pt-2 text-xs text-muted">{msg}</p>}
           </div>
         </Card>

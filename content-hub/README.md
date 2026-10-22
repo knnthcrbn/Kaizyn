@@ -17,6 +17,18 @@ Tokens live in `src/app/globals.css`.
 
 `BUILD-PROMPT.md` is the full brief this was built from.
 
+## Open it
+
+A private copy runs on claude.ai: https://claude.ai/artifact/QdLdoiqSi1cYKSP9ipn5iD
+(only you can open it). There, Claude runs on your claude.ai account, so no
+API key is needed; it asks your permission the first time. Data is saved in
+the browser you use it in. The microphone isn't available in that copy.
+
+To update it after changing the code, run `npm run build:artifact` and
+republish `artifact-dist/content-hub.html` to the same artifact. The build
+bundles the same screens into one page (`src/artifact/`) with in-page
+navigation instead of Next.js routes.
+
 ## Run it
 
 ```bash
