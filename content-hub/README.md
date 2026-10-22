@@ -2,7 +2,18 @@
 
 One place to go from "no idea" to "posted": a pipeline for every video, Claude
 built in to write in your voice, and a daily screen that makes creating a habit.
-Dark theme, brand purple `#B2B1FF`.
+
+## Design
+
+A neutral dark UI where colour carries meaning, not decoration:
+
+- **Green / red:** up or down vs last week (always with an arrow and sign)
+- **Blue / orange / green:** the Business, Lifestyle and Personal pillars
+  (checked for colour-blind separation)
+- **Amber:** warnings, like the pipeline bottleneck or a date due today
+- **Brand purple `#B2B1FF`:** the logo and anything Claude does
+
+Tokens live in `src/app/globals.css`.
 
 `BUILD-PROMPT.md` is the full brief this was built from.
 
@@ -32,8 +43,8 @@ Restart `npm run dev`. Everything else in the hub works without a key.
 
 | Screen | What it does |
 | --- | --- |
-| Today | Greeting, streak, quick capture (type or talk), what to record, review and post next, pipeline bottleneck, pillar mix |
-| Pipeline | 10-stage board (Idea → Analysed). Drag cards; click one to edit hooks, overlay text, script, caption, notes and linked stories |
+| Today | This week vs last week (ideas, scripts, recordings, posts), up-next queue, consistency grid and streaks, pipeline bottleneck, pillar mix |
+| Pipeline | 10-stage board or list (Idea → Analysed). Drag cards; open one to edit hooks, overlay text, script, caption, notes and linked stories |
 | Ideas | Ideas by pillar, one-click "script it", and an idea generator for when you're blank |
 | Voice Lab | Talk (live transcription in Chrome/Edge/Safari) or paste; builds your voice corpus and voice profile; anti-AI checker |
 | Hooks & overlays | 15 hook types and 12 on-screen text patterns with examples per pillar, plus the trial reel testing routine |
@@ -45,7 +56,8 @@ Restart `npm run dev`. Everything else in the hub works without a key.
 Every card editor has a **teleprompter** (space to play, arrows for speed,
 mirror mode) and Claude actions that write straight into the card.
 
-Shortcuts: `⌘K` / `Ctrl+K` search and jump, `⌘J` / `Ctrl+J` open Claude.
+Shortcuts: `C` capture an idea, `⌘K` / `Ctrl+K` search and jump, `⌘J` /
+`Ctrl+J` open Claude, `Esc` close.
 
 ## Where data lives
 

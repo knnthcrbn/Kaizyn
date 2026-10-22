@@ -36,6 +36,7 @@ interface HubState {
   openItemId: string | null;
   claudeOpen: boolean;
   paletteOpen: boolean;
+  captureOpen: boolean;
   /** A prompt queued for the Claude panel to send as soon as it opens. */
   pendingPrompt: string | null;
 
@@ -62,6 +63,7 @@ interface HubState {
   openItem: (id: string | null) => void;
   setClaudeOpen: (open: boolean) => void;
   setPaletteOpen: (open: boolean) => void;
+  setCaptureOpen: (open: boolean) => void;
   askClaude: (prompt: string) => void;
   takePendingPrompt: () => string | null;
 
@@ -89,6 +91,7 @@ export const useHub = create<HubState>()(
       openItemId: null,
       claudeOpen: false,
       paletteOpen: false,
+      captureOpen: false,
       pendingPrompt: null,
 
       addItem: (partial) => {
@@ -107,6 +110,7 @@ export const useHub = create<HubState>()(
           storyIds: [],
           ...partial,
           id,
+          stageHistory: [{ stage: partial.stage ?? "idea", at: now }],
           createdAt: now,
           updatedAt: now,
         };
@@ -115,7 +119,19 @@ export const useHub = create<HubState>()(
       },
       updateItem: (id, patch) =>
         set((s) => ({
-          items: s.items.map((i) => (i.id === id ? { ...i, ...patch, updatedAt: Date.now() } : i)),
+          items: s.items.map((i) => {
+            if (i.id !== id) return i;
+            const now = Date.now();
+            const moved = patch.stage && patch.stage !== i.stage;
+            return {
+              ...i,
+              ...patch,
+              stageHistory: moved
+                ? [...(i.stageHistory ?? []), { stage: patch.stage!, at: now }]
+                : i.stageHistory,
+              updatedAt: now,
+            };
+          }),
           activityDays: markActive(s.activityDays),
         })),
       moveItem: (id, stage) => get().updateItem(id, { stage }),
@@ -165,6 +181,7 @@ export const useHub = create<HubState>()(
       openItem: (openItemId) => set({ openItemId }),
       setClaudeOpen: (claudeOpen) => set({ claudeOpen }),
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
+      setCaptureOpen: (captureOpen) => set({ captureOpen }),
       askClaude: (prompt) => set({ claudeOpen: true, pendingPrompt: prompt }),
       takePendingPrompt: () => {
         const p = get().pendingPrompt;

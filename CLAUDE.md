@@ -20,9 +20,12 @@ Offer it first for new landing pages, recoloured for the brand.
 - `you-are-worthy/`: "You are worthy, and God loves you" page for ClickFunnels
   (dark starfield, gold serif headline). Paste `clickfunnels-embed.html` into a
   Custom Code element; `index.html` is the standalone preview.
-- `content-hub/`: the Content Hub app (Next.js 16, Tailwind 4, Zustand). Dark
-  theme, accent **#B2B1FF**: the user confirmed this exact purple, so don't
-  change it. Claude runs through `src/app/api/claude/route.ts`. Roadmap order
+- `content-hub/`: the Content Hub app (Next.js 16, Tailwind 4, Zustand). The
+  brand is black and purple (**#B2B1FF**, exact value confirmed), but that is
+  the brand, not the whole UI palette. The app is a neutral dark UI with real
+  colour where it means something (green up / red down, pillar colours,
+  status). Purple is only for the logo and Claude/AI actions. Tokens live in
+  `src/app/globals.css`. Claude runs through `src/app/api/claude/route.ts`. Roadmap order
   is deliberate: social account connections and publishing come LAST (Phase
   5); don't ask for account details before then. `BUILD-PROMPT.md` is the
   full brief.

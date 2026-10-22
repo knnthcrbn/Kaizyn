@@ -160,12 +160,12 @@ system gets smarter about **my** audience every week.
 - Streaks and progress, because I need momentum.
 
 ## Design
-- Dark theme; very modern, techy, and clean (think Linear, Vercel, Raycast).
-- Accent: my brand purple **#B2B1FF**. This is the exact colour; don't change
-  it or swap in a different purple. Use it for primary actions, focus states,
-  and glows.
-- Optional: my saved constellation background (see CLAUDE.md) on the login
-  and empty states, recoloured to #B2B1FF.
+- Dark theme; modern, minimal, clean, the way a Fortune 500 product would
+  look (think Linear, Vercel, Stripe).
+- My brand is black and purple (**#B2B1FF**, exact value), but the app
+  shouldn't be all black and purple. Use a neutral dark base and real colour
+  where it carries meaning: green for up, red for down, distinct colours for
+  categories and status. Keep purple as a brand touch.
 - Keyboard-first (command palette on ⌘K), fast, and smooth micro-animations.
 
 ## Team and access (confirm)

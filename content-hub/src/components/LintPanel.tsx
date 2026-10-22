@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck, TriangleAlert } from "lucide-react";
+import { CircleCheck, TriangleAlert } from "lucide-react";
 import { lintScript } from "@/lib/antiAi";
 
 /** Flags anything in a script that would make it sound generated. */
@@ -9,19 +9,19 @@ export function LintPanel({ text }: { text: string }) {
   if (!text.trim()) return null;
   if (!hits.length)
     return (
-      <div className="flex items-center gap-2 rounded-lg border border-good/20 bg-good/5 px-3 py-2 text-xs text-good">
-        <ShieldCheck className="size-3.5" /> Sounds human. No AI tells found.
+      <div className="flex items-center gap-2 text-xs text-good-text">
+        <CircleCheck className="size-3.5" /> Sounds human. No AI tells found.
       </div>
     );
+  const total = hits.reduce((n, h) => n + h.count, 0);
   return (
-    <div className="space-y-1.5 rounded-lg border border-warn/25 bg-warn/5 p-3">
-      <div className="flex items-center gap-2 text-xs font-medium text-warn">
-        <TriangleAlert className="size-3.5" /> {hits.reduce((n, h) => n + h.count, 0)} AI tell
-        {hits.length === 1 && hits[0].count === 1 ? "" : "s"} found
+    <div className="rounded-lg border border-warning/20 bg-warning/[0.04] p-3">
+      <div className="flex items-center gap-2 text-xs font-medium text-warning">
+        <TriangleAlert className="size-3.5" /> {total} AI tell{total === 1 ? "" : "s"} found
       </div>
-      <ul className="space-y-1 text-xs text-muted">
+      <ul className="mt-2 space-y-1 text-xs">
         {hits.map((h) => (
-          <li key={h.rule.id}>
+          <li key={h.rule.id} className="text-muted">
             <span className="text-ink">{h.samples.join(", ")}</span>
             {h.count > 1 && <span className="text-faint"> ×{h.count}</span>}
             <span className="text-faint"> · {h.rule.why}</span>

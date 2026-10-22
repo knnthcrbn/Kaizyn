@@ -30,6 +30,7 @@ function idea(
     caption: "",
     notes,
     storyIds,
+    stageHistory: [{ stage: "idea", at: t0 + n }],
     createdAt: t0 + n,
     updatedAt: t0 + n,
   };

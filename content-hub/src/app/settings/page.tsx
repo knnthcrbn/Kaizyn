@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Download, Upload, RotateCcw, CircleCheck, CircleAlert } from "lucide-react";
-import { Button, PageHeader, Panel, cx } from "@/components/ui";
+import { Badge, Button, Card, PageHeader } from "@/components/ui";
 import { useHub } from "@/lib/store";
 
 const ROADMAP = [
@@ -59,21 +59,21 @@ export default function SettingsPage() {
 
   return (
     <div className="max-w-4xl">
-      <PageHeader title="Settings & backup" subtitle="Your data lives in this browser for now. Back it up, move it to another computer, or start fresh." />
+      <PageHeader title="Settings & backup" description="Your data lives in this browser for now. Back it up, move it to another computer, or start fresh." />
 
       <div className="space-y-6">
-        <Panel title="Claude">
-          <div className="flex items-start gap-3 p-4 text-sm">
+        <Card title="Claude">
+          <div className="flex items-start gap-3 px-4 pb-4 pt-3 text-[13px]">
             {claude === null ? (
               <span className="text-faint">Checking…</span>
             ) : claude ? (
               <>
-                <CircleCheck className="mt-0.5 size-4 text-good" />
+                <CircleCheck className="mt-0.5 size-4 text-good-text" />
                 <span className="text-muted">Connected. The Claude panel, voice profile and idea generator are live.</span>
               </>
             ) : (
               <>
-                <CircleAlert className="mt-0.5 size-4 text-warn" />
+                <CircleAlert className="mt-0.5 size-4 text-warning" />
                 <div className="text-muted">
                   Not connected yet. Create an API key at console.anthropic.com, then add{" "}
                   <code className="rounded bg-surface-3 px-1 font-mono text-xs text-ink">ANTHROPIC_API_KEY=…</code> to{" "}
@@ -83,15 +83,15 @@ export default function SettingsPage() {
               </>
             )}
           </div>
-        </Panel>
+        </Card>
 
-        <Panel title="Backup">
-          <div className="flex flex-wrap items-center gap-2 p-4">
+        <Card title="Backup">
+          <div className="flex flex-wrap items-center gap-2 px-4 pb-4 pt-3">
             <Button variant="primary" onClick={exportData}>
-              <Download className="size-4" /> Download backup
+              <Download className="size-3.5" /> Download backup
             </Button>
             <Button onClick={() => fileRef.current?.click()}>
-              <Upload className="size-4" /> Restore from backup
+              <Upload className="size-3.5" /> Restore from backup
             </Button>
             <input
               ref={fileRef}
@@ -110,37 +110,28 @@ export default function SettingsPage() {
                 }
               }}
             >
-              <RotateCcw className="size-4" /> Reset
+              <RotateCcw className="size-3.5" /> Reset
             </Button>
             {msg && <p className="w-full pt-2 text-xs text-muted">{msg}</p>}
           </div>
-        </Panel>
+        </Card>
 
-        <Panel title="Roadmap">
-          <ol className="divide-y divide-line">
+        <Card title="Roadmap">
+          <ol className="mt-2 divide-y divide-line border-t border-line">
             {ROADMAP.map((r) => (
               <li key={r.phase} className="flex gap-4 px-4 py-3">
                 <span className="w-16 shrink-0 font-mono text-xs text-faint">{r.phase}</span>
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 text-sm text-ink">
+                  <div className="flex items-center gap-2 text-[13px] text-ink">
                     {r.title}
-                    {r.status && (
-                      <span
-                        className={cx(
-                          "rounded-full px-2 py-0.5 text-[10px] uppercase tracking-wider",
-                          r.status === "Now" ? "bg-accent/15 text-accent" : "border border-line text-faint",
-                        )}
-                      >
-                        {r.status}
-                      </span>
-                    )}
+                    {r.status && <Badge tone={r.status === "Now" ? "good" : "neutral"}>{r.status}</Badge>}
                   </div>
                   <div className="mt-0.5 text-xs text-muted">{r.items}</div>
                 </div>
               </li>
             ))}
           </ol>
-        </Panel>
+        </Card>
       </div>
     </div>
   );

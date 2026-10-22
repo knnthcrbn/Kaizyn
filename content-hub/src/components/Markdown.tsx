@@ -32,7 +32,7 @@ export function Markdown({ text }: { text: string }) {
     blocks.push(
       <Tag
         key={blocks.length}
-        className={list.ordered ? "ml-5 list-decimal space-y-1" : "ml-4 list-disc space-y-1 marker:text-accent/70"}
+        className={list.ordered ? "ml-5 list-decimal space-y-1" : "ml-4 list-disc space-y-1 marker:text-ghost"}
       >
         {list.items.map((it, i) => (
           <li key={i}>{inline(it)}</li>
@@ -60,7 +60,7 @@ export function Markdown({ text }: { text: string }) {
     const h = line.match(/^(#{1,4})\s+(.*)$/);
     if (h) {
       blocks.push(
-        <p key={blocks.length} className="pt-1 text-[13px] font-semibold uppercase tracking-wide text-accent">
+        <p key={blocks.length} className="pt-1 text-[13px] font-semibold text-ink">
           {inline(h[2])}
         </p>,
       );

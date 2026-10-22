@@ -1,17 +1,21 @@
 import type { Format, Pillar, ScriptMode, StageId } from "./types";
 
-export const STAGES: { id: StageId; label: string; hint: string }[] = [
-  { id: "idea", label: "Idea", hint: "Captured, not started" },
-  { id: "research", label: "Researching", hint: "Angles, references, proof" },
-  { id: "scripting", label: "Scripting", hint: "Hooks and script" },
-  { id: "ready", label: "Ready to record", hint: "Script locked" },
-  { id: "recorded", label: "Recorded", hint: "Raw footage in" },
-  { id: "editing", label: "Editing", hint: "Cut, captions, overlays" },
-  { id: "review", label: "Review", hint: "Final check" },
-  { id: "scheduled", label: "Scheduled", hint: "Queued to post" },
-  { id: "posted", label: "Posted", hint: "Live" },
-  { id: "analysed", label: "Analysed", hint: "Results logged" },
+export type Phase = "plan" | "make" | "ship" | "learn";
+
+export const STAGES: { id: StageId; label: string; hint: string; phase: Phase }[] = [
+  { id: "idea", label: "Idea", hint: "Captured, not started", phase: "plan" },
+  { id: "research", label: "Researching", hint: "Angles, references, proof", phase: "plan" },
+  { id: "scripting", label: "Scripting", hint: "Hooks and script", phase: "make" },
+  { id: "ready", label: "Ready to record", hint: "Script locked", phase: "make" },
+  { id: "recorded", label: "Recorded", hint: "Raw footage in", phase: "make" },
+  { id: "editing", label: "Editing", hint: "Cut, captions, overlays", phase: "make" },
+  { id: "review", label: "Review", hint: "Final check", phase: "make" },
+  { id: "scheduled", label: "Scheduled", hint: "Queued to post", phase: "ship" },
+  { id: "posted", label: "Posted", hint: "Live", phase: "ship" },
+  { id: "analysed", label: "Analysed", hint: "Results logged", phase: "learn" },
 ];
+
+export const stageIndex = (id: StageId) => STAGES.findIndex((s) => s.id === id);
 
 export const stageLabel = (id: StageId) =>
   STAGES.find((s) => s.id === id)?.label ?? id;
@@ -37,11 +41,11 @@ export const PILLARS: { id: Pillar; label: string; blurb: string }[] = [
 export const pillarLabel = (id: Pillar) =>
   PILLARS.find((p) => p.id === id)?.label ?? id;
 
-/** Tailwind classes per pillar. Written out in full so Tailwind can see them. */
-export const PILLAR_STYLE: Record<Pillar, { text: string; bg: string; dot: string }> = {
-  business: { text: "text-business", bg: "bg-business/10", dot: "bg-business" },
-  lifestyle: { text: "text-lifestyle", bg: "bg-lifestyle/10", dot: "bg-lifestyle" },
-  personal: { text: "text-personal", bg: "bg-personal/10", dot: "bg-personal" },
+/** Pillar identity colours. Text stays in ink; the dot carries the hue. */
+export const PILLAR_STYLE: Record<Pillar, { dot: string; hex: string }> = {
+  business: { dot: "bg-business", hex: "#3987e5" },
+  lifestyle: { dot: "bg-lifestyle", hex: "#d95926" },
+  personal: { dot: "bg-personal", hex: "#199e70" },
 };
 
 export const FORMATS: { id: Format; label: string }[] = [

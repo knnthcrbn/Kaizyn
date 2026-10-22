@@ -1,5 +1,5 @@
-import { Check } from "lucide-react";
-import { Constellation } from "./Constellation";
+import type { LucideIcon } from "lucide-react";
+import { Badge, PageHeader } from "./ui";
 
 /** Placeholder for screens on the roadmap, showing what's coming. */
 export function ComingSoon({
@@ -12,30 +12,24 @@ export function ComingSoon({
   title: string;
   phase: string;
   pitch: string;
-  features: string[];
+  features: { icon: LucideIcon; title: string; body: string }[];
   note?: string;
 }) {
   return (
-    <div className="glow relative overflow-hidden rounded-3xl border border-line px-6 py-12 sm:px-12 sm:py-16">
-      <Constellation className="absolute inset-0 h-full w-full opacity-60" density={0.00006} />
-      <div className="relative max-w-2xl">
-        <span className="rounded-full border border-accent/40 bg-accent/10 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.16em] text-accent">
-          {phase}
-        </span>
-        <h1 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">
-          <span className="text-gradient">{title}</span>
-        </h1>
-        <p className="mt-3 text-muted">{pitch}</p>
-        <ul className="mt-8 grid gap-3 sm:grid-cols-2">
-          {features.map((f) => (
-            <li key={f} className="flex gap-2.5 rounded-xl border border-line bg-surface/70 p-3 text-sm text-ink/90 backdrop-blur">
-              <Check className="mt-0.5 size-4 shrink-0 text-accent" />
-              {f}
-            </li>
-          ))}
-        </ul>
-        {note && <p className="mt-6 text-xs text-faint">{note}</p>}
+    <div>
+      <PageHeader title={title} description={pitch} actions={<Badge>{phase} · Planned</Badge>} />
+      <div className="grid gap-px overflow-hidden rounded-xl border border-line bg-line sm:grid-cols-2 lg:grid-cols-3">
+        {features.map((f) => (
+          <div key={f.title} className="bg-surface p-5">
+            <div className="grid size-8 place-items-center rounded-lg border border-line bg-surface-2">
+              <f.icon className="size-4 text-muted" strokeWidth={1.75} />
+            </div>
+            <div className="mt-4 text-[13px] font-medium text-ink">{f.title}</div>
+            <p className="mt-1 text-xs leading-relaxed text-faint">{f.body}</p>
+          </div>
+        ))}
       </div>
+      {note && <p className="mt-4 text-xs text-faint">{note}</p>}
     </div>
   );
 }

@@ -42,7 +42,7 @@ export function Teleprompter({ text, onClose }: { text: string; onClose: () => v
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black">
-      <div className="pointer-events-none absolute inset-x-0 top-1/3 z-10 h-px bg-accent/40 shadow-[0_0_20px_rgb(178_177_255)]" />
+      <div className="pointer-events-none absolute inset-x-0 top-1/3 z-10 h-px bg-white/30" />
       <div
         ref={box}
         className="flex-1 overflow-y-auto px-[8vw] py-[33vh]"
@@ -94,7 +94,7 @@ function Ctl({
       onClick={onClick}
       className={cx(
         "flex items-center gap-1.5 rounded-lg border px-3 py-1.5",
-        active ? "border-accent/60 bg-accent/20 text-accent" : "border-white/15 hover:bg-white/10",
+        active ? "border-white/40 bg-white/15 text-white" : "border-white/15 hover:bg-white/10",
       )}
     >
       {children}

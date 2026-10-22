@@ -2,37 +2,36 @@
 
 import { useState } from "react";
 import { ArrowRight, Sparkles } from "lucide-react";
-import { ItemCard } from "@/components/ItemCard";
 import { QuickCapture } from "@/components/QuickCapture";
-import { Button, Chip, PageHeader, Panel, cx, inputCls } from "@/components/ui";
-import { PILLARS, PILLAR_STYLE } from "@/lib/meta";
+import { Button, Card, PageHeader, Segmented, cx, inputCls, selectCls } from "@/components/ui";
+import { PILLARS, PILLAR_STYLE, formatLabel } from "@/lib/meta";
 import { useHub } from "@/lib/store";
 import type { Pillar } from "@/lib/types";
 
 const ANGLES = [
-  { id: "story", label: "From my story bank" },
-  { id: "agency", label: "Something from the agency this week" },
-  { id: "questions", label: "Questions people keep asking me" },
-  { id: "contrarian", label: "Something everyone gets wrong" },
-  { id: "trend", label: "What's trending in my space" },
-  { id: "mistakes", label: "Mistakes I made" },
+  "From my story bank",
+  "Something from the agency this week",
+  "Questions people keep asking me",
+  "Something everyone gets wrong",
+  "What's trending in my space",
+  "Mistakes I made",
 ];
 
 export default function IdeasPage() {
   const items = useHub((s) => s.items);
   const askClaude = useHub((s) => s.askClaude);
   const moveItem = useHub((s) => s.moveItem);
+  const openItem = useHub((s) => s.openItem);
   const [pillar, setPillar] = useState<Pillar | "any">("any");
-  const [angle, setAngle] = useState(ANGLES[0].id);
+  const [angle, setAngle] = useState(ANGLES[0]);
   const [extra, setExtra] = useState("");
 
   const ideas = items.filter((i) => i.stage === "idea");
 
   const generate = () => {
-    const a = ANGLES.find((x) => x.id === angle)!.label.toLowerCase();
     const p = pillar === "any" ? "spread across all three pillars" : `for the ${pillar} pillar`;
     askClaude(
-      `Give me 8 video ideas ${p}, using this angle: ${a}.${extra.trim() ? ` Context: ${extra.trim()}.` : ""} For each: a working title, the format (short, YouTube long form, or text on B-roll), and one hook in my voice.`,
+      `Give me 8 video ideas ${p}, using this angle: ${angle.toLowerCase()}.${extra.trim() ? ` Context: ${extra.trim()}.` : ""} For each: a working title, the format (short, YouTube long form, or text on B-roll), and one hook in my voice.`,
     );
   };
 
@@ -40,88 +39,85 @@ export default function IdeasPage() {
     <div>
       <PageHeader
         title="Ideas"
-        subtitle="Capture everything. Promote the good ones into scripting. When you're blank, let Claude pull ideas from your stories and your week."
+        description="Capture everything, then promote the good ones to scripting. When you're blank, generate ideas from your stories and your week."
       />
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="space-y-6 lg:col-span-2">
-          <QuickCapture />
+      <div className="grid gap-6 lg:grid-cols-[1fr_20rem]">
+        <div className="space-y-6">
+          <Card>
+            <div className="p-4">
+              <QuickCapture />
+            </div>
+          </Card>
+
           {PILLARS.map((p) => {
             const list = ideas.filter((i) => i.pillar === p.id);
             return (
               <section key={p.id}>
-                <div className="mb-2 flex items-center gap-2">
-                  <span className={cx("size-2 rounded-full", PILLAR_STYLE[p.id].dot)} />
-                  <h2 className="text-sm font-medium">{p.label}</h2>
-                  <span className="text-xs text-faint">{list.length}</span>
+                <div className="mb-2 flex items-center gap-2 px-1">
+                  <span className={cx("size-2 rounded-[3px]", PILLAR_STYLE[p.id].dot)} />
+                  <h2 className="text-[13px] font-medium">{p.label}</h2>
+                  <span className="text-xs tabular-nums text-faint">{list.length}</span>
                 </div>
                 {list.length ? (
-                  <div className="grid gap-2 sm:grid-cols-2">
+                  <ul className="divide-y divide-line overflow-hidden rounded-xl border border-line bg-surface">
                     {list.map((i) => (
-                      <div key={i.id} className="group relative">
-                        <ItemCard item={i} />
-                        <button
-                          onClick={() => moveItem(i.id, "scripting")}
-                          className="absolute right-2 top-2 hidden items-center gap-1 rounded-md bg-accent px-2 py-0.5 text-[11px] font-medium text-accent-ink group-hover:flex"
-                        >
-                          Script it <ArrowRight className="size-3" />
+                      <li key={i.id} className="group flex items-center gap-3 px-4 py-2.5 transition-colors hover:bg-surface-2">
+                        <button onClick={() => openItem(i.id)} className="min-w-0 flex-1 text-left">
+                          <div className="truncate text-[13px] text-ink">{i.title}</div>
+                          {i.hooks[i.chosenHook] && <div className="mt-0.5 truncate text-xs text-faint">{i.hooks[i.chosenHook]}</div>}
                         </button>
-                      </div>
+                        <span className="hidden text-xs text-faint sm:block">{formatLabel(i.format)}</span>
+                        <Button size="sm" variant="ghost" onClick={() => moveItem(i.id, "scripting")} className="sm:opacity-0 sm:group-hover:opacity-100">
+                          Script it <ArrowRight className="size-3" />
+                        </Button>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 ) : (
-                  <p className="rounded-xl border border-dashed border-line px-4 py-6 text-center text-xs text-faint">
+                  <div className="rounded-xl border border-dashed border-line px-4 py-6 text-center text-xs text-faint">
                     No {p.label.toLowerCase()} ideas yet.
-                  </p>
+                  </div>
                 )}
               </section>
             );
           })}
         </div>
 
-        <Panel title={<span className="flex items-center gap-2"><Sparkles className="size-4 text-accent" /> Idea generator</span>} className="h-fit lg:sticky lg:top-0">
-          <div className="space-y-4 p-4">
+        <Card title="Idea generator" description="Claude pulls from your stories and voice" className="h-fit lg:sticky lg:top-0">
+          <div className="space-y-4 px-4 pb-4 pt-3">
             <div>
-              <div className="mb-2 text-xs font-medium text-muted">Pillar</div>
-              <div className="flex flex-wrap gap-1.5">
-                <Chip active={pillar === "any"} onClick={() => setPillar("any")}>
-                  Mix it up
-                </Chip>
-                {PILLARS.map((p) => (
-                  <Chip key={p.id} active={pillar === p.id} onClick={() => setPillar(p.id)}>
-                    {p.label}
-                  </Chip>
-                ))}
-              </div>
+              <div className="mb-1.5 text-xs text-faint">Pillar</div>
+              <Segmented
+                value={pillar}
+                onChange={setPillar}
+                className="flex w-full [&>button]:flex-1 [&>button]:justify-center"
+                options={[{ value: "any", label: "Mix" }, ...PILLARS.map((p) => ({ value: p.id, label: p.label }))]}
+              />
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-muted">Angle</div>
-              <div className="flex flex-wrap gap-1.5">
+              <div className="mb-1.5 text-xs text-faint">Angle</div>
+              <select value={angle} onChange={(e) => setAngle(e.target.value)} className={cx(selectCls, "w-full")}>
                 {ANGLES.map((a) => (
-                  <Chip key={a.id} active={angle === a.id} onClick={() => setAngle(a.id)}>
-                    {a.label}
-                  </Chip>
+                  <option key={a}>{a}</option>
                 ))}
-              </div>
+              </select>
             </div>
             <div>
-              <div className="mb-2 text-xs font-medium text-muted">Anything on your mind? (optional)</div>
+              <div className="mb-1.5 text-xs text-faint">What&apos;s on your mind? (optional)</div>
               <textarea
                 value={extra}
                 onChange={(e) => setExtra(e.target.value)}
                 rows={3}
-                placeholder="e.g. we just lost a client, hired two people, ran a campaign that did 5x…"
+                placeholder="We just lost a client, hired two people, ran a campaign that did 5x…"
                 className={inputCls}
               />
             </div>
-            <Button variant="primary" className="w-full" onClick={generate}>
-              <Sparkles className="size-4" /> Generate ideas
+            <Button variant="ai" className="w-full" onClick={generate}>
+              <Sparkles className="size-3.5" /> Generate ideas
             </Button>
-            <p className="text-[11px] text-faint">
-              Ideas come back in the Claude panel. Paste the good ones into capture, or open a card and use them there.
-            </p>
           </div>
-        </Panel>
+        </Card>
       </div>
     </div>
   );

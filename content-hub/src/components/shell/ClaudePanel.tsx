@@ -3,8 +3,10 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
 import {
+  AlignLeft,
   ArrowUp,
   Check,
+  CornerDownRight,
   Copy,
   FileText,
   ListPlus,
@@ -130,48 +132,39 @@ export function ClaudePanel() {
   };
 
   return (
-    <aside className="slide-in-right fixed inset-y-0 right-0 z-40 flex w-full max-w-[440px] flex-col border-l border-line bg-surface/95 backdrop-blur-xl lg:static lg:z-auto lg:w-[420px] lg:bg-surface">
-      <header className="flex items-center gap-2 border-b border-line px-4 py-3">
-        <div className="grid size-7 place-items-center rounded-lg bg-accent/15 ring-1 ring-accent/40">
-          <Sparkles className="size-3.5 text-accent" />
-        </div>
+    <aside className="slide-in fixed inset-y-0 right-0 z-40 flex w-full max-w-[420px] flex-col border-l border-line bg-surface shadow-2xl shadow-black/50 lg:static lg:z-auto lg:w-[400px] lg:shadow-none">
+      <header className="flex h-12 shrink-0 items-center gap-2.5 border-b border-line px-4">
+        <Sparkles className="size-4 text-brand" />
         <div className="min-w-0 flex-1">
-          <div className="text-sm font-medium">Claude</div>
-          <div className="truncate text-[11px] text-faint">
-            {item ? `Working on: ${item.title}` : pageName(pathname)} · {voiceCount} voice sample
-            {voiceCount === 1 ? "" : "s"}
+          <div className="text-[13px] font-medium leading-tight">Claude</div>
+          <div className="truncate text-[11px] leading-tight text-faint">
+            {item ? item.title : pageName(pathname)}
           </div>
         </div>
-        <button
-          onClick={clearChat}
-          title="New chat"
-          className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink"
-        >
-          <RotateCcw className="size-4" />
+        <button onClick={clearChat} title="New chat" className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink">
+          <RotateCcw className="size-3.5" />
         </button>
-        <button
-          onClick={() => setOpen(false)}
-          title="Close (⌘J)"
-          className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink"
-        >
+        <button onClick={() => setOpen(false)} title="Close (⌘J)" className="rounded-md p-1.5 text-faint hover:bg-surface-3 hover:text-ink">
           <X className="size-4" />
         </button>
       </header>
 
-      <div ref={scroller} className="flex-1 space-y-4 overflow-y-auto px-4 py-4">
+      <div ref={scroller} className="flex-1 space-y-5 overflow-y-auto px-4 py-4">
         {chat.length === 0 && (
-          <div className="fade-up space-y-3 pt-6 text-center">
-            <p className="text-sm text-muted">
-              I know your voice samples, your story bank and the card you have open.
+          <div className="fade-in">
+            <p className="text-[13px] leading-relaxed text-muted">
+              Writes in your voice using {voiceCount} voice sample{voiceCount === 1 ? "" : "s"}, your story bank
+              {item ? " and this card" : ""}.
             </p>
-            <p className="text-xs text-faint">Ask anything, or start with one of these:</p>
-            <div className="space-y-2 pt-2 text-left">
+            <div className="mt-4 text-[11px] font-medium text-ghost">Suggested</div>
+            <div className="mt-1.5 divide-y divide-line overflow-hidden rounded-lg border border-line">
               {quick.map((q) => (
                 <button
                   key={q}
                   onClick={() => send(q)}
-                  className="w-full rounded-xl border border-line bg-surface-2 px-3 py-2.5 text-sm text-muted transition-colors hover:border-accent/40 hover:text-ink"
+                  className="flex w-full items-start gap-2 px-3 py-2.5 text-left text-[13px] text-muted transition-colors hover:bg-surface-2 hover:text-ink"
                 >
+                  <CornerDownRight className="mt-0.5 size-3.5 shrink-0 text-ghost" />
                   {q}
                 </button>
               ))}
@@ -181,28 +174,26 @@ export function ClaudePanel() {
         {chat.map((m) =>
           m.role === "user" ? (
             <div key={m.id} className="flex justify-end">
-              <div className="max-w-[85%] whitespace-pre-wrap rounded-2xl rounded-br-md bg-accent/15 px-3.5 py-2 text-sm text-ink ring-1 ring-accent/20">
+              <div className="max-w-[85%] whitespace-pre-wrap rounded-xl bg-surface-3 px-3 py-2 text-[13px] text-ink">
                 {m.content}
               </div>
             </div>
           ) : (
-            <div key={m.id} className="group space-y-2">
-              <div className="space-y-2 text-sm leading-relaxed text-ink/90">
+            <div key={m.id} className="group">
+              <div className="space-y-2 text-[13px] leading-relaxed text-ink/90">
                 {m.content ? (
                   <Markdown text={m.content} />
                 ) : (
-                  <span className="inline-flex gap-1">
-                    <span className="size-1.5 animate-pulse rounded-full bg-accent" />
-                    <span className="size-1.5 animate-pulse rounded-full bg-accent [animation-delay:150ms]" />
-                    <span className="size-1.5 animate-pulse rounded-full bg-accent [animation-delay:300ms]" />
+                  <span className="inline-flex items-center gap-2 text-xs text-faint">
+                    <span className="size-1.5 animate-pulse rounded-full bg-brand" /> Writing…
                   </span>
                 )}
               </div>
               {m.content && !(busy && m.id === chat[chat.length - 1]?.id) && (
-                <div className="flex flex-wrap gap-1 opacity-60 transition-opacity group-hover:opacity-100">
+                <div className="mt-2 flex flex-wrap gap-1">
                   <MsgAction onClick={() => copy(m.id, m.content)}>
                     {copied === m.id ? <Check className="size-3" /> : <Copy className="size-3" />}
-                    Copy
+                    {copied === m.id ? "Copied" : "Copy"}
                   </MsgAction>
                   {item && openItemId && (
                     <>
@@ -219,7 +210,7 @@ export function ClaudePanel() {
                         <ListPlus className="size-3" /> Add as hooks
                       </MsgAction>
                       <MsgAction onClick={() => updateItem(openItemId, { caption: m.content })}>
-                        Use as caption
+                        <AlignLeft className="size-3" /> Use as caption
                       </MsgAction>
                     </>
                   )}
@@ -230,21 +221,21 @@ export function ClaudePanel() {
         )}
       </div>
 
-      <div className="border-t border-line p-3">
+      <div className="p-3">
         {!busy && chat.length > 0 && (
           <div className="mb-2 flex gap-1.5 overflow-x-auto pb-1">
             {quick.map((q) => (
               <button
                 key={q}
                 onClick={() => send(q)}
-                className="shrink-0 rounded-full border border-line-strong px-2.5 py-1 text-[11px] text-muted hover:border-accent/40 hover:text-ink"
+                className="shrink-0 rounded-md border border-line px-2 py-1 text-[11px] text-faint hover:border-line-strong hover:text-ink"
               >
-                {q.length > 46 ? `${q.slice(0, 44)}…` : q}
+                {q.length > 42 ? `${q.slice(0, 40)}…` : q}
               </button>
             ))}
           </div>
         )}
-        <div className="rounded-xl border border-line-strong bg-surface-2 focus-within:border-accent/50">
+        <div className="rounded-lg border border-line-strong bg-surface-2 transition-colors focus-within:border-white/25">
           <textarea
             value={input + (speech.interim ? ` ${speech.interim}` : "")}
             onChange={(e) => setInput(e.target.value)}
@@ -255,20 +246,20 @@ export function ClaudePanel() {
               }
             }}
             rows={3}
-            placeholder={speech.listening ? "Listening… talk it out" : "Ask Claude, or hit the mic and just talk"}
-            className="w-full resize-none bg-transparent px-3 pt-2.5 text-sm text-ink placeholder:text-faint focus:outline-none"
+            placeholder={speech.listening ? "Listening…" : "Ask Claude, or talk it out"}
+            className="w-full resize-none bg-transparent px-3 pt-2.5 text-[13px] text-ink placeholder:text-ghost focus:outline-none"
           />
           <div className="flex items-center justify-between px-2 pb-2">
             {speech.supported ? (
               <button
                 onClick={speech.listening ? speech.stop : speech.start}
                 className={cx(
-                  "flex items-center gap-1.5 rounded-lg px-2 py-1 text-xs",
-                  speech.listening ? "bg-bad/15 text-bad" : "text-faint hover:text-ink",
+                  "flex h-7 items-center gap-1.5 rounded-md px-2 text-xs transition-colors",
+                  speech.listening ? "bg-critical/15 text-critical-text" : "text-faint hover:bg-surface-3 hover:text-ink",
                 )}
               >
                 {speech.listening ? <MicOff className="size-3.5" /> : <Mic className="size-3.5" />}
-                {speech.listening ? "Stop" : "Talk"}
+                {speech.listening ? "Stop" : "Dictate"}
               </button>
             ) : (
               <span />
@@ -276,7 +267,7 @@ export function ClaudePanel() {
             {busy ? (
               <button
                 onClick={() => abort.current?.abort()}
-                className="grid size-7 place-items-center rounded-lg bg-surface-3 text-ink"
+                className="grid size-7 place-items-center rounded-md bg-surface-3 text-ink"
                 title="Stop"
               >
                 <Square className="size-3" />
@@ -285,7 +276,7 @@ export function ClaudePanel() {
               <button
                 onClick={() => send(input)}
                 disabled={!input.trim()}
-                className="grid size-7 place-items-center rounded-lg bg-accent text-accent-ink disabled:opacity-30"
+                className="grid size-7 place-items-center rounded-md bg-ink text-bg transition-opacity disabled:opacity-20"
                 title="Send"
               >
                 <ArrowUp className="size-4" />
@@ -302,7 +293,7 @@ function MsgAction({ children, onClick }: { children: React.ReactNode; onClick: 
   return (
     <button
       onClick={onClick}
-      className="inline-flex items-center gap-1 rounded-md border border-line px-2 py-0.5 text-[11px] text-muted hover:border-accent/40 hover:text-ink"
+      className="inline-flex h-6 items-center gap-1 rounded-md px-1.5 text-[11px] text-faint transition-colors hover:bg-surface-3 hover:text-ink"
     >
       {children}
     </button>

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { FileText, Lightbulb, Search, Sparkles } from "lucide-react";
 import { ALL_NAV } from "@/lib/nav";
@@ -26,11 +26,6 @@ export function CommandPalette() {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [sel, setSel] = useState(0);
-  const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    if (open) setTimeout(() => inputRef.current?.focus(), 10);
-  }, [open]);
 
   const close = () => {
     setOpen(false);
@@ -71,21 +66,22 @@ export function CommandPalette() {
     }));
     const all = [...nav, ...cards];
     const filtered = query ? all.filter((c) => c.label.toLowerCase().includes(query)) : nav;
-    return [...base, ...filtered].slice(0, 12);
+    // Real matches first; "new idea" and "ask Claude" are the fallbacks.
+    return [...filtered.slice(0, 10), ...base];
   }, [q, items, router, openItem, addItem, askClaude]);
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-[14vh] backdrop-blur-sm" onClick={close}>
+    <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/60 px-4 pt-[14vh] backdrop-blur-[2px]" onClick={close}>
       <div
-        className="fade-up w-full max-w-xl overflow-hidden rounded-2xl border border-line-strong bg-surface shadow-[0_30px_80px_-20px_rgb(0_0_0/0.8),0_0_0_1px_rgb(178_177_255/0.08)]"
+        className="fade-in w-full max-w-xl overflow-hidden rounded-xl border border-line-strong bg-surface shadow-2xl shadow-black/60"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center gap-2 border-b border-line px-4">
           <Search className="size-4 text-faint" />
           <input
-            ref={inputRef}
+            autoFocus
             value={q}
             onChange={(e) => {
               setQ(e.target.value);
@@ -107,7 +103,7 @@ export function CommandPalette() {
               }
             }}
             placeholder="Jump to a screen, find a card, capture an idea, ask Claude…"
-            className="h-12 flex-1 bg-transparent text-sm text-ink placeholder:text-faint focus:outline-none"
+            className="h-12 flex-1 bg-transparent text-sm text-ink placeholder:text-ghost focus:outline-none"
           />
           <Kbd>esc</Kbd>
         </div>
@@ -123,11 +119,11 @@ export function CommandPalette() {
                     close();
                   }}
                   className={cx(
-                    "flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left text-sm",
-                    i === sel ? "bg-accent/10 text-ink" : "text-muted",
+                    "flex w-full items-center gap-3 rounded-md px-3 py-2 text-left text-[13px]",
+                    i === sel ? "bg-surface-3 text-ink" : "text-muted",
                   )}
                 >
-                  <Icon className={cx("size-4", i === sel ? "text-accent" : "text-faint")} />
+                  <Icon className={cx("size-4", i === sel ? "text-ink" : "text-faint")} />
                   <span className="flex-1 truncate">{c.label}</span>
                   {c.hint && <span className="text-[11px] text-faint">{c.hint}</span>}
                 </button>

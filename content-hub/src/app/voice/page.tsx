@@ -1,9 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Mic, Square, Sparkles, Trash2, Save } from "lucide-react";
+import { Mic, RefreshCw, Save, Sparkles, Square, Trash2 } from "lucide-react";
 import { LintPanel } from "@/components/LintPanel";
-import { Button, PageHeader, Panel, cx, inputCls } from "@/components/ui";
+import { Badge, Button, Card, PageHeader, cx, inputCls } from "@/components/ui";
 import { ANTI_AI_RULES } from "@/lib/antiAi";
 import { streamClaude } from "@/lib/claude";
 import { useHub } from "@/lib/store";
@@ -17,6 +17,8 @@ const PROMPTS = [
   "Explain what you do to a friend who has no clue about marketing.",
   "What's annoying you about your industry right now?",
 ];
+
+const GOAL = 3000;
 
 export default function VoicePage() {
   const entries = useHub((s) => s.voiceEntries);
@@ -32,6 +34,7 @@ export default function VoicePage() {
 
   const transcript = [draft, speech.finalText, speech.interim].filter(Boolean).join(" ");
   const totalWords = entries.reduce((n, e) => n + e.text.split(/\s+/).length, 0);
+  const pct = Math.min(100, Math.round((totalWords / GOAL) * 100));
 
   const saveTake = () => {
     const text = [draft, speech.finalText].filter(Boolean).join(" ").trim();
@@ -63,20 +66,37 @@ export default function VoicePage() {
     <div>
       <PageHeader
         title="Voice Lab"
-        subtitle="AI sounds robotic when it has nothing of yours to copy. Talk here for a few minutes a day. Every take goes into your voice corpus, and Claude writes from it."
+        description="AI sounds robotic when it has nothing of yours to copy. Talk here for a few minutes a day; every take goes into your voice corpus, and Claude writes from it."
       />
 
-      <div className="grid gap-6 lg:grid-cols-5">
-        <div className="space-y-6 lg:col-span-3">
-          <Panel title="Talk it out">
-            <div className="space-y-4 p-4">
-              <div className="flex flex-wrap items-center gap-2 text-xs">
-                <span className="text-faint">Prompt:</span>
+      <div className="mb-6 grid gap-3 sm:grid-cols-3">
+        <Metric label="Words in your corpus" value={totalWords.toLocaleString()} foot={`Goal ${GOAL.toLocaleString()}`}>
+          <div className="mt-3 h-1.5 overflow-hidden rounded-full bg-surface-3">
+            <div className={cx("h-full rounded-full", pct >= 100 ? "bg-good" : "bg-ink")} style={{ width: `${pct}%` }} />
+          </div>
+        </Metric>
+        <Metric label="Takes" value={String(entries.length)} foot="Recorded, typed or pasted" />
+        <Metric
+          label="Voice profile"
+          value={profile ? "Built" : "Not built"}
+          foot={profile ? "Claude reads it before writing" : "Build it once you have a few takes"}
+          tone={profile ? "good" : undefined}
+        />
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1fr_24rem]">
+        <div className="space-y-6">
+          <Card title="Talk it out" description="Don't perform and don't fix it. Rambling is the point.">
+            <div className="space-y-4 px-4 pb-4 pt-3">
+              <div className="flex items-center gap-2 rounded-lg border border-line bg-surface-2 px-3 py-2">
+                <span className="text-xs text-faint">Prompt</span>
+                <span className="flex-1 text-[13px] text-ink">{prompt}</span>
                 <button
                   onClick={() => setPrompt(PROMPTS[(PROMPTS.indexOf(prompt) + 1) % PROMPTS.length])}
-                  className="rounded-full border border-accent/30 bg-accent/10 px-3 py-1 text-accent hover:bg-accent/15"
+                  className="rounded-md p-1 text-faint hover:bg-surface-3 hover:text-ink"
+                  title="Another prompt"
                 >
-                  {prompt} ↻
+                  <RefreshCw className="size-3.5" />
                 </button>
               </div>
 
@@ -85,22 +105,21 @@ export default function VoicePage() {
                   onClick={speech.listening ? speech.stop : speech.start}
                   disabled={!speech.supported}
                   className={cx(
-                    "relative grid size-16 shrink-0 place-items-center rounded-full transition-all disabled:opacity-40",
-                    speech.listening
-                      ? "bg-bad text-white shadow-[0_0_0_8px_rgb(252_165_165/0.15)]"
-                      : "bg-accent text-accent-ink shadow-[0_0_30px_-4px_rgb(178_177_255/0.7)] hover:scale-105",
+                    "relative grid size-12 shrink-0 place-items-center rounded-full transition-colors disabled:opacity-40",
+                    speech.listening ? "bg-critical text-white" : "bg-ink text-bg hover:bg-white",
                   )}
+                  title={speech.listening ? "Stop" : "Start talking"}
                 >
-                  {speech.listening ? <Square className="size-5" /> : <Mic className="size-6" />}
-                  {speech.listening && <span className="absolute inset-0 animate-ping rounded-full bg-bad/30" />}
+                  {speech.listening ? <Square className="size-4" /> : <Mic className="size-5" />}
+                  {speech.listening && <span className="absolute inset-0 animate-ping rounded-full bg-critical/30" />}
                 </button>
-                <div className="text-sm text-muted">
+                <div className="text-[13px] text-muted">
                   {!speech.supported
                     ? "Live transcription needs Chrome, Edge or Safari. You can still type or paste below."
                     : speech.listening
-                      ? "Listening. Talk like you would to a friend. Rambling is good."
-                      : "Hit the mic and just talk. Don't perform, don't fix it."}
-                  {speech.error && <div className="mt-1 text-xs text-bad">Mic error: {speech.error}</div>}
+                      ? "Recording. Talk like you would to a friend."
+                      : "Press to start talking."}
+                  {speech.error && <div className="mt-1 text-xs text-critical-text">Mic error: {speech.error}</div>}
                 </div>
               </div>
 
@@ -115,7 +134,7 @@ export default function VoicePage() {
                 className={inputCls}
               />
               <div className="flex items-center justify-between">
-                <span className="text-xs text-faint">
+                <span className="text-xs tabular-nums text-faint">
                   {transcript.trim() ? transcript.trim().split(/\s+/).length : 0} words
                 </span>
                 <div className="flex gap-2">
@@ -130,73 +149,72 @@ export default function VoicePage() {
                     Discard
                   </Button>
                   <Button variant="primary" onClick={saveTake} disabled={!transcript.trim()}>
-                    <Save className="size-4" /> Save to my voice
+                    <Save className="size-3.5" /> Save take
                   </Button>
                 </div>
               </div>
             </div>
-          </Panel>
+          </Card>
 
-          <Panel
-            title={`Voice corpus · ${entries.length} takes · ${totalWords.toLocaleString()} words`}
-            action={<span className="text-xs text-faint">Aim for 3,000+ words</span>}
-          >
-            <div className="h-1 bg-surface-3">
-              <div className="h-full bg-accent" style={{ width: `${Math.min(100, (totalWords / 3000) * 100)}%` }} />
-            </div>
-            <ul className="divide-y divide-line">
+          <Card title="Corpus" description="Everything Claude learns your voice from">
+            <ul className="mt-2 divide-y divide-line border-t border-line">
               {entries.map((e) => (
                 <li key={e.id} className="group flex gap-3 px-4 py-3">
-                  <div className="flex-1">
-                    <div className="mb-1 text-[11px] text-faint">
-                      {e.source === "seed" ? "From your first voice note" : e.source === "recording" ? "Recorded" : "Typed / pasted"} ·{" "}
-                      {e.text.split(/\s+/).length} words
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex items-center gap-2 text-[11px] text-faint">
+                      <Badge>{e.source === "seed" ? "First voice note" : e.source === "recording" ? "Recorded" : "Typed"}</Badge>
+                      <span className="tabular-nums">{e.text.split(/\s+/).length} words</span>
+                      <span>·</span>
+                      <span>{new Date(e.createdAt).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</span>
                     </div>
-                    <p className="line-clamp-3 text-sm text-muted">{e.text}</p>
+                    <p className="line-clamp-2 text-[13px] text-muted">{e.text}</p>
                   </div>
-                  <button onClick={() => remove(e.id)} className="h-fit text-faint opacity-0 hover:text-bad group-hover:opacity-100">
-                    <Trash2 className="size-4" />
+                  <button
+                    onClick={() => remove(e.id)}
+                    className="h-fit rounded-md p-1 text-ghost opacity-0 hover:text-critical-text group-hover:opacity-100"
+                    title="Remove"
+                  >
+                    <Trash2 className="size-3.5" />
                   </button>
                 </li>
               ))}
             </ul>
-          </Panel>
+          </Card>
         </div>
 
-        <div className="space-y-6 lg:col-span-2">
-          <Panel
+        <div className="space-y-6">
+          <Card
             title="Voice profile"
+            description="Edit it any time"
             action={
-              <Button size="sm" variant="primary" onClick={rebuild} disabled={building || !entries.length}>
-                <Sparkles className="size-3.5" /> {building ? "Building…" : profile ? "Rebuild" : "Build"}
+              <Button size="sm" variant="ai" onClick={rebuild} disabled={building || !entries.length}>
+                <Sparkles className="size-3" /> {building ? "Building…" : profile ? "Rebuild" : "Build"}
               </Button>
             }
           >
-            <div className="p-4">
+            <div className="px-4 pb-4 pt-3">
               <textarea
                 value={profile}
                 onChange={(e) => setProfile(e.target.value)}
                 rows={14}
-                placeholder="Build it from your corpus. Claude reads it before writing anything for you. Edit it any time."
-                className={cx(inputCls, "text-[13px] leading-relaxed")}
+                placeholder="Build it from your corpus. Claude reads it before writing anything for you."
+                className={cx(inputCls, "text-xs leading-relaxed")}
               />
             </div>
-          </Panel>
+          </Card>
 
-          <Panel title="Anti-AI check">
-            <div className="space-y-3 p-4">
+          <Card title="Anti-AI check" description={`${ANTI_AI_RULES.length} rules every script is checked against`}>
+            <div className="space-y-3 px-4 pb-4 pt-3">
               <textarea
                 value={testText}
                 onChange={(e) => setTestText(e.target.value)}
                 rows={5}
-                placeholder="Paste any script or caption to check it."
+                placeholder="Paste any script or caption to check it"
                 className={inputCls}
               />
               <LintPanel text={testText} />
               <details className="text-xs text-muted">
-                <summary className="cursor-pointer text-faint hover:text-ink">
-                  The {ANTI_AI_RULES.length} rules every script is checked against
-                </summary>
+                <summary className="cursor-pointer text-faint hover:text-ink">See the rules</summary>
                 <ul className="mt-2 space-y-1">
                   {ANTI_AI_RULES.map((r) => (
                     <li key={r.id}>
@@ -206,9 +224,39 @@ export default function VoicePage() {
                 </ul>
               </details>
             </div>
-          </Panel>
+          </Card>
         </div>
       </div>
+    </div>
+  );
+}
+
+function Metric({
+  label,
+  value,
+  foot,
+  tone,
+  children,
+}: {
+  label: string;
+  value: string;
+  foot: string;
+  tone?: "good";
+  children?: React.ReactNode;
+}) {
+  return (
+    <div className="rounded-xl border border-line bg-surface p-4">
+      <div className="text-xs font-medium text-muted">{label}</div>
+      <div
+        className={cx(
+          "mt-2 text-xl font-semibold tracking-tight",
+          tone === "good" ? "text-good-text" : "text-ink",
+        )}
+      >
+        {value}
+      </div>
+      {children}
+      <div className="mt-2 text-[11px] text-ghost">{foot}</div>
     </div>
   );
 }

@@ -36,6 +36,8 @@ export interface ContentItem {
   notes: string;
   storyIds: string[];
   dueDate?: string;
+  /** When the card entered each stage. Drives the week-over-week numbers. */
+  stageHistory?: { stage: StageId; at: number }[];
   createdAt: number;
   updatedAt: number;
 }

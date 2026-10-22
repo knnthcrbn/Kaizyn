@@ -1,24 +1,41 @@
 @import "tailwindcss";
 
+/*
+ * Design tokens. A neutral dark base; colour only where it carries meaning:
+ *  - brand (#B2B1FF): the logo and anything Claude/AI does
+ *  - pillars: categorical slots validated for colour-blind separation on the card surface
+ *  - status: good / warning / critical, always paired with an icon or sign
+ */
 @theme {
-  --color-bg: #07070b;
-  --color-surface: #0c0c13;
-  --color-surface-2: #12121b;
-  --color-surface-3: #191924;
+  --color-bg: #0b0b0c;
+  --color-surface: #121214;
+  --color-surface-2: #18181b;
+  --color-surface-3: #222226;
   --color-line: rgb(255 255 255 / 0.07);
-  --color-line-strong: rgb(255 255 255 / 0.13);
-  --color-ink: #ededf5;
-  --color-muted: #8d8da6;
-  --color-faint: #5c5c72;
-  /* Brand purple. Confirmed by the user: do not change. */
-  --color-accent: #b2b1ff;
-  --color-accent-ink: #0b0b14;
-  --color-business: #7dd3fc;
-  --color-lifestyle: #fdba74;
-  --color-personal: #f9a8d4;
-  --color-good: #86efac;
-  --color-warn: #fcd34d;
-  --color-bad: #fca5a5;
+  --color-line-strong: rgb(255 255 255 / 0.12);
+  --color-ink: #f4f4f5;
+  --color-muted: #a1a1aa;
+  --color-faint: #71717a;
+  --color-ghost: #52525b;
+
+  --color-brand: #b2b1ff;
+
+  --color-business: #3987e5;
+  --color-lifestyle: #d95926;
+  --color-personal: #199e70;
+
+  --color-good: #0ca30c;
+  --color-good-text: #3fcf5c;
+  --color-warning: #fab219;
+  --color-critical: #d03b3b;
+  --color-critical-text: #f26d6d;
+
+  --color-heat-0: #1c1c20;
+  --color-heat-1: #0e4429;
+  --color-heat-2: #006d32;
+  --color-heat-3: #26a641;
+  --color-heat-4: #39d353;
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -35,35 +52,27 @@ body {
 
 body {
   font-family: var(--font-geist-sans), system-ui, sans-serif;
+  font-feature-settings: "cv11", "ss01";
 }
 
 ::selection {
-  background: rgb(178 177 255 / 0.35);
+  background: rgb(255 255 255 / 0.18);
 }
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(255 255 255 / 0.12) transparent;
+  scrollbar-color: rgb(255 255 255 / 0.1) transparent;
 }
 
-/* Soft brand glow used on hero areas and the active nav item. */
-.glow {
-  background:
-    radial-gradient(60% 80% at 15% 0%, rgb(178 177 255 / 0.14), transparent 60%),
-    radial-gradient(50% 60% at 100% 0%, rgb(178 177 255 / 0.06), transparent 60%);
+:focus-visible {
+  outline: 2px solid rgb(255 255 255 / 0.35);
+  outline-offset: 2px;
 }
 
-.text-gradient {
-  background: linear-gradient(180deg, #ffffff 0%, #b2b1ff 140%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-@keyframes fade-up {
+@keyframes fade-in {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -71,13 +80,13 @@ body {
   }
 }
 
-.fade-up {
-  animation: fade-up 0.35s ease both;
+.fade-in {
+  animation: fade-in 0.2s ease-out both;
 }
 
-@keyframes slide-in-right {
+@keyframes slide-in {
   from {
-    transform: translateX(24px);
+    transform: translateX(16px);
     opacity: 0;
   }
   to {
@@ -86,13 +95,13 @@ body {
   }
 }
 
-.slide-in-right {
-  animation: slide-in-right 0.25s ease both;
+.slide-in {
+  animation: slide-in 0.2s ease-out both;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fade-up,
-  .slide-in-right {
+  .fade-in,
+  .slide-in {
     animation: none;
   }
 }

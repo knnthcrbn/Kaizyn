@@ -1,3 +1,4 @@
+import { Activity, AudioLines, FlaskConical, LineChart, Sparkles, Tags } from "lucide-react";
 import { ComingSoon } from "@/components/ComingSoon";
 
 export default function AnalyticsPage() {
@@ -5,14 +6,14 @@ export default function AnalyticsPage() {
     <ComingSoon
       title="Analytics"
       phase="Phase 4"
-      pitch="Close the loop: results flow back into every card, and the hub learns what works for your audience."
+      pitch="Results flow back into every card, and the hub learns what works for your audience."
       features={[
-        "Views, retention, shares, saves and follows per post",
-        "Tag what worked: hook type, pillar, overlay, length, post time",
-        "Trial reel A/B log for hooks and overlay text",
-        "Trending audio tracker for your niche",
-        "Claude uses your winners when it writes new hooks and scripts",
-        "Weekly report: double down, drop, test next",
+        { icon: LineChart, title: "Per-post results", body: "Views, retention, shares, saves and follows on each card." },
+        { icon: Tags, title: "What worked", body: "Compare by hook type, pillar, overlay, length and post time." },
+        { icon: FlaskConical, title: "Trial reel log", body: "A/B results for hooks and overlay text, winner marked." },
+        { icon: AudioLines, title: "Trending audio", body: "Sounds picking up in your niche, ready to add in-app." },
+        { icon: Sparkles, title: "Smarter Claude", body: "Your winners feed into the hooks and scripts it writes." },
+        { icon: Activity, title: "Weekly report", body: "Double down, drop, test next." },
       ]}
     />
   );
