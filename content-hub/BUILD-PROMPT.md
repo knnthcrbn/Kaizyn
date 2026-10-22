@@ -161,9 +161,9 @@ system gets smarter about **my** audience every week.
 
 ## Design
 - Dark theme; very modern, techy, and clean (think Linear, Vercel, Raycast).
-- Accent: my brand purple **#B2B1FF** (a soft lavender). Use it for primary
-  actions, focus states, and glows. Pair it with a deeper purple for contrast
-  where the light tone won't read.
+- Accent: my brand purple **#B2B1FF**. This is the exact colour; don't change
+  it or swap in a different purple. Use it for primary actions, focus states,
+  and glows.
 - Optional: my saved constellation background (see CLAUDE.md) on the login
   and empty states, recoloured to #B2B1FF.
 - Keyboard-first (command palette on ⌘K), fast, and smooth micro-animations.
@@ -182,12 +182,14 @@ review/approval comments in the Review stage.]
    - **Phase 1**: pipeline board, Claude panel, voice capture and voice
      profile, scripting modes, hook library, story bank, Today view.
      (This alone gets me creating.)
-   - **Phase 2**: account connections, scheduling, multi-account publishing,
-     calendar.
-   - **Phase 3**: editor, auto-captions, exports, repurposing, B-roll
+   - **Phase 2**: editor, auto-captions, exports, repurposing, B-roll
      library.
+   - **Phase 3**: calendar, posting goals, batch recording days, weekly
+     review.
    - **Phase 4**: analytics loop, trial-reel testing, trending-audio
      tracker.
+   - **Phase 5 (last)**: account connections, scheduling, multi-account
+     publishing. Account details come at this step, not before.
 3. Do the creator and hook research for real (search the web, cite sources).
    Don't rely on memory.
 4. Flag anything that platform rules make impossible or risky, and offer the

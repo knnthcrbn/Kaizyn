@@ -1,0 +1,73 @@
+# Content Hub
+
+One place to go from "no idea" to "posted": a pipeline for every video, Claude
+built in to write in your voice, and a daily screen that makes creating a habit.
+Dark theme, brand purple `#B2B1FF`.
+
+`BUILD-PROMPT.md` is the full brief this was built from.
+
+## Run it
+
+```bash
+cd content-hub
+npm install
+npm run dev
+```
+
+Open http://localhost:3000.
+
+### Connect Claude
+
+The Claude panel, the voice profile builder and the idea generator need an
+Anthropic API key. Get one at console.anthropic.com, then create
+`content-hub/.env.local`:
+
+```
+ANTHROPIC_API_KEY=sk-ant-...
+```
+
+Restart `npm run dev`. Everything else in the hub works without a key.
+
+## What's in Phase 1
+
+| Screen | What it does |
+| --- | --- |
+| Today | Greeting, streak, quick capture (type or talk), what to record, review and post next, pipeline bottleneck, pillar mix |
+| Pipeline | 10-stage board (Idea → Analysed). Drag cards; click one to edit hooks, overlay text, script, caption, notes and linked stories |
+| Ideas | Ideas by pillar, one-click "script it", and an idea generator for when you're blank |
+| Voice Lab | Talk (live transcription in Chrome/Edge/Safari) or paste; builds your voice corpus and voice profile; anti-AI checker |
+| Hooks & overlays | 15 hook types and 12 on-screen text patterns with examples per pillar, plus the trial reel testing routine |
+| Story bank | Your stories and lessons, with questions to draw them out; "interview me" and "turn into a video" |
+| Swipe file | Save videos that stopped your scroll; Claude breaks down the pattern |
+| Playbooks | Frameworks from 10 content coaches, plus retention and YouTube packaging principles, with sources |
+| Settings | Claude connection status, backup / restore, roadmap |
+
+Every card editor has a **teleprompter** (space to play, arrows for speed,
+mirror mode) and Claude actions that write straight into the card.
+
+Shortcuts: `⌘K` / `Ctrl+K` search and jump, `⌘J` / `Ctrl+J` open Claude.
+
+## Where data lives
+
+For now, everything is saved in this browser (localStorage). Use
+**Settings → Download backup** to keep a copy or move to another computer. A
+real database and login come with the later phases, when accounts and
+publishing are added.
+
+## Roadmap
+
+1. **Shell + writing system** (this)
+2. Studio: editing, auto-captions, overlays, exports, repurposing, B-roll library
+3. Calendar and habit: posting goals, batch recording days, weekly review
+4. Analytics and testing: results per post, trial reel A/B log, trending audio
+5. Accounts and publishing: main + clipping pages, multi-account scheduling
+
+## Code map
+
+- `src/app/*/page.tsx`: one file per screen
+- `src/app/api/claude/route.ts`: the server route that talks to Claude (streams replies)
+- `src/lib/store.ts`: all hub data and actions (Zustand, saved to localStorage)
+- `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
+- `src/lib/antiAi.ts`: the phrases that make writing sound generated
+- `src/lib/research.json`: the coach, hook and overlay research
+- `src/components/shell/`: sidebar, Claude panel, command palette

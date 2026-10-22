@@ -1,0 +1,98 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #07070b;
+  --color-surface: #0c0c13;
+  --color-surface-2: #12121b;
+  --color-surface-3: #191924;
+  --color-line: rgb(255 255 255 / 0.07);
+  --color-line-strong: rgb(255 255 255 / 0.13);
+  --color-ink: #ededf5;
+  --color-muted: #8d8da6;
+  --color-faint: #5c5c72;
+  /* Brand purple. Confirmed by the user: do not change. */
+  --color-accent: #b2b1ff;
+  --color-accent-ink: #0b0b14;
+  --color-business: #7dd3fc;
+  --color-lifestyle: #fdba74;
+  --color-personal: #f9a8d4;
+  --color-good: #86efac;
+  --color-warn: #fcd34d;
+  --color-bad: #fca5a5;
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html,
+body {
+  background: var(--color-bg);
+  color: var(--color-ink);
+}
+
+body {
+  font-family: var(--font-geist-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: rgb(178 177 255 / 0.35);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(255 255 255 / 0.12) transparent;
+}
+
+/* Soft brand glow used on hero areas and the active nav item. */
+.glow {
+  background:
+    radial-gradient(60% 80% at 15% 0%, rgb(178 177 255 / 0.14), transparent 60%),
+    radial-gradient(50% 60% at 100% 0%, rgb(178 177 255 / 0.06), transparent 60%);
+}
+
+.text-gradient {
+  background: linear-gradient(180deg, #ffffff 0%, #b2b1ff 140%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.35s ease both;
+}
+
+@keyframes slide-in-right {
+  from {
+    transform: translateX(24px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slide-in-right 0.25s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up,
+  .slide-in-right {
+    animation: none;
+  }
+}

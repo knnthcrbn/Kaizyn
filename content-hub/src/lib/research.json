@@ -1,0 +1,859 @@
+{
+ "researchedAt": "2026-10-22",
+ "coaches": [
+  {
+   "name": "Paddy Galloway",
+   "knownFor": "YouTube strategist and consultant (clients reported to include MrBeast, Ryan Trahan, Jesser, Noah Kagan). Known as a 'view maximizer' who pushes creators to spend most of their time on ideas and packaging, not filming and editing. Still doing major interviews in 2025 and 2026 ('The New Rules of YouTube', Colin and Samir, April 2025; 'The New Rules Of YouTube In 2026', Feb 2026).",
+   "platforms": [
+    "YouTube long form",
+    "YouTube Shorts"
+   ],
+   "frameworks": [
+    {
+     "name": "CCN Fit (Core, Casual, New)",
+     "summary": "Every channel has a Core audience (never miss an upload), Casual viewers (seen a video or two) and New viewers (never heard of you). The videos that pop are the ones that work for all three at once.",
+     "howToApply": "Before greenlighting a long-form idea, ask: would an agency owner who watches everything care, would someone who saw one ad tip care, and would a stranger click it? Example: the motorcycle story framed as 'what dying taught me about running a business' hits all three; a deep dive on a niche Ads Manager setting only hits Core."
+    },
+    {
+     "name": "Packaging first, high idea volume",
+     "summary": "Top creators spend far more time on ideation and title/thumbnail than small creators, who pour almost everything into production. Generate lots of raw ideas and filter hard; an idea that can't be packaged doesn't get made.",
+     "howToApply": "Keep an idea backlog in the Hub. For each idea, write the title and sketch the thumbnail before any script. If you can't get a title you'd click yourself, park the idea."
+    },
+    {
+     "name": "Find your format, then build your show",
+     "summary": "A format is a video with a set formula; a show is something people come back to. Galloway argues creators chased raw views and forgot how valuable returning viewers are.",
+     "howToApply": "Pick one repeatable long-form format (e.g. a weekly 'I audit your ad account' teardown or 'Leadership mistakes I made this month') and run it as a series so viewers know what they're getting each week."
+    }
+   ],
+   "sources": [
+    "https://x.com/PaddyG96/status/1912937707023856127",
+    "https://www.colinandsamir.com/resources/the-new-rules-of-youtube-from-paddy-galloway",
+    "https://news.thepublishpress.com/p/youtube-pays-youtubers-to-stay-on-youtube",
+    "https://podcast.creatorscience.com/paddy-galloway-2/",
+    "https://marketing-examined.beehiiv.com/podcast/s/sweat_equity/the_new_rules_of_youtube_in_2026_w_paddy_galloway"
+   ]
+  },
+  {
+   "name": "Kallaway (Kane Kallaway)",
+   "knownFor": "Short-form scripting and hook writing; 1B+ views on tech/AI/business shorts; founder of Sandcastles.ai (a hook/script tool). Guest on Creator Science in September 2026 ('#316: Kallaway's EXACT System For Going Viral').",
+   "platforms": [
+    "Instagram Reels",
+    "TikTok",
+    "YouTube Shorts",
+    "LinkedIn"
+   ],
+   "frameworks": [
+    {
+     "name": "Topic clarity + on-target curiosity",
+     "summary": "A hook has two jobs: make it instantly clear what the video is about, and open curiosity the viewer feels is relevant to them. He lists four hook killers: delay, confusion, irrelevance and disinterest.",
+     "howToApply": "Say the subject in the first line ('Meta ads', 'my team', 'the crash'), then add the twist. Cut any opener that makes the viewer wait to find out the topic."
+    },
+    {
+     "name": "Triple hook alignment",
+     "summary": "The spoken hook, the visual in the first frame and the on-screen text hook should all say the same thing. When they don't line up, viewers swipe.",
+     "howToApply": "For each Reel in the Hub, fill three fields: spoken line, first-frame visual, text overlay. If the overlay is about ad spend but the visual is a coffee shot, fix one of them."
+    },
+    {
+     "name": "Context lean-in, scroll-stop interjection, contrarian snapback",
+     "summary": "Open with familiar context the viewer nods along to, hit a contrast word like 'but' to stop the scroll, then snap back with a surprising take.",
+     "howToApply": "'Everyone tells you to go broad on Meta. But broad is why your CPA doubled last month.' Works especially well for the Business pillar."
+    },
+    {
+     "name": "Rehooks / stacked curiosity loops",
+     "summary": "One hook isn't enough. Keep opening new curiosity loops through the video so there's always a reason to keep watching, backed by tight rhythm and pacing in the edit.",
+     "howToApply": "Every 5 to 8 seconds in a script, add a line that opens the next question ('and that wasn't even the worst part')."
+    }
+   ],
+   "sources": [
+    "https://videohighlight.com/v/2byPP_9F0-Q",
+    "https://sozai.app/transcript/psychology-killer-hooks/",
+    "https://opentools.ai/youtube-summary/how-to-create-irresistible-hooks-and-blow-up-your-content",
+    "https://www.castmagic.io/podcast/rhythm-hooks-and-a-billion-views-kane-kallaways-short-form-video-content-secrets",
+    "https://podcast.creatorscience.com/guests/kallaway/"
+   ]
+  },
+  {
+   "name": "Alex Hormozi",
+   "knownFor": "Acquisition.com founder; author of $100M Leads, which lays out the hook-retain-reward content model. Runs one of the highest-volume business channels (an OutlierKit teardown with July 2026 data reports roughly 5,300 videos with about 91% of views from Shorts).",
+   "platforms": [
+    "YouTube long form",
+    "YouTube Shorts",
+    "Instagram",
+    "TikTok",
+    "Podcast"
+   ],
+   "frameworks": [
+    {
+     "name": "Hook, Retain, Reward (the content unit)",
+     "summary": "The smallest unit of content has three parts: a hook that earns attention, something that retains it, and a reward that pays it off so people come back. Longer content is just units chained together.",
+     "howToApply": "Tag every script in the Hub with its H / R / R lines. If you can't point to the reward (the takeaway or payoff), the video isn't done."
+    },
+    {
+     "name": "Volume + repurposing",
+     "summary": "Long-form recordings are cut into many short clips for reach. Output volume is the lever, and the long form feeds the short form.",
+     "howToApply": "Record one long YouTube video or podcast per week and pull 5 to 10 Shorts/Reels from it, each with its own hook."
+    },
+    {
+     "name": "Short form for awareness, long form for influence",
+     "summary": "Hormozi has said short form creates awareness but doesn't build deep influence on its own.",
+     "howToApply": "Use Reels/TikTok/Shorts to get found, and point the best performers to long-form YouTube where the trust (and agency leads) gets built."
+    }
+   ],
+   "sources": [
+    "https://www.skool.com/acceleratoruniversity/what-three-parts-make-up-an-effective-content-unit",
+    "https://audible.de/pd/100M-Leads-Hoerbuch/B0C7WFVJP9",
+    "https://alpha.outlierkit.com/resources/alex-hormozi-growth-strategy/",
+    "https://news.trykarat.com/p/future-of-short-form-content"
+   ]
+  },
+  {
+   "name": "Jenny Hoyos",
+   "knownFor": "YouTube Shorts storyteller (budget and cheap-meal challenges) averaging roughly 10M views per Short in 2023 coverage; gave a TED talk on telling a story in under 60 seconds. Widely cited as the reference for Shorts storytelling.",
+   "platforms": [
+    "YouTube Shorts",
+    "TikTok",
+    "Instagram Reels"
+   ],
+   "frameworks": [
+    {
+     "name": "The 60-second story (TED)",
+     "summary": "Open with a question people want answered (the more surprising the better), build tension by making the answer feel uncertain, keep showing progress toward it, and land a satisfying payoff.",
+     "howToApply": "Personal pillar: 'Could I ride again after the crash?' as the question, the first attempts as tension, the first full ride as the payoff."
+    },
+    {
+     "name": "3-second visual hook with power words",
+     "summary": "Hooks should be concise, under about 3 seconds and visually strong, often with words like 'free', 'secret' or 'cheap'. She sketches thumbnail-style frames to plan the opening visual.",
+     "howToApply": "Sketch the first frame like a thumbnail before filming. Keep the spoken hook under ~10 words."
+    },
+    {
+     "name": "Foreshadow, then no preamble",
+     "summary": "Get right into it with no intro, and right after the hook state the conflict and what the viewer gets by the end. Retention targets in summaries of her work are very high (90%+).",
+     "howToApply": "Line 2 of every script says what's coming: 'By the end you'll see the one setting that fixed it.'"
+    },
+    {
+     "name": "Blue-ocean niche",
+     "summary": "Copying another creator is a red-ocean move. Find an angle nobody owns.",
+     "howToApply": "Agency owner who was clinically dead is a blue-ocean angle on its own. Lean into combos competitors can't copy."
+    }
+   ],
+   "sources": [
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/",
+    "https://marketing-examined.beehiiv.com/p/jenny-hoyos-shortform-video-playbook",
+    "https://chaindesk.ai/tools/youtube-summarizer/how-jenny-hoyos-actually-makes-viral-shorts-5Dy1UDCvmkw",
+    "https://vidiq.com/blog/post/how-jenny-hoyos-gets-10m-views-per-youtube-short/",
+    "https://podcast.creatorscience.com/jenny-hoyos/"
+   ]
+  },
+  {
+   "name": "Brendan Kane",
+   "knownFor": "Author of 'Hook Point: How to Stand Out in a 3-Second World' (2020) and 'The Guide to Going Viral' (Hook Point LLC, 2025). Consults brands and creators on hooks and viral testing.",
+   "platforms": [
+    "Instagram",
+    "TikTok",
+    "YouTube",
+    "Facebook"
+   ],
+   "frameworks": [
+    {
+     "name": "Hook Point",
+     "summary": "A short burst of content (a line, a number, a visual, a character or a mix) built to grab attention in roughly 3 seconds and signal the content is worth the next 5 to 10 seconds.",
+     "howToApply": "Judge every opener on one question: does the first 3 seconds promise value or entertainment clearly enough to earn 10 more?"
+    },
+    {
+     "name": "Familiar + unexpected",
+     "summary": "Strong hooks are clear and instantly understood, and spark curiosity by flipping an expectation, blending something familiar with something surprising.",
+     "howToApply": "Pair a familiar setting (Ads Manager, a team meeting, a date night) with a twist the viewer doesn't see coming."
+    }
+   ],
+   "sources": [
+    "https://www.nar.realtor/magazine/real-estate-news/you-have-just-3-seconds-to-hook-clients-with-your-real-estate-message",
+    "https://summaries.com/blog/hook-point"
+   ]
+  },
+  {
+   "name": "Jake Thomas (Creator Hooks)",
+   "knownFor": "Runs the Creator Hooks newsletter (weekly title breakdowns and five outlier video ideas every Monday) and Creator Hooks Pro; wrote ~2,000 titles as a channel marketing manager before going solo.",
+   "platforms": [
+    "YouTube long form"
+   ],
+   "frameworks": [
+    {
+     "name": "Curiosity + fear or desire",
+     "summary": "Titles that work trigger curiosity, fear and/or desire, with curiosity the strongest; the best combine curiosity with one of the other two.",
+     "howToApply": "Write each long-form title, then label which emotion it hits. 'Why your Meta ads die after 2 weeks' = curiosity + fear."
+    },
+    {
+     "name": "Model proven titles",
+     "summary": "Don't invent titles from scratch. Find titles that overperformed and adapt their structure to your topic.",
+     "howToApply": "Save outlier titles from business/marketing channels into the Hub's swipe file and rewrite them for your topics."
+    },
+    {
+     "name": "Four title failures",
+     "summary": "Titles fail when they're too wordy, too specific, too general or too boring.",
+     "howToApply": "Run every title past those four checks before publishing."
+    }
+   ],
+   "sources": [
+    "https://www.netinfluencer.com/creator-hooks-jake-thomas-code-on-clickable-youtube-titles/",
+    "https://vidpros.com/insiders/jake-thomas-youtube-title-strategy/",
+    "https://www.passionfroot.me/creators-on-air/how-to-write-youtube-titles-to-get-more-views-with-jake-thomas",
+    "https://podcast.creatorscience.com/jake-thomas/"
+   ]
+  },
+  {
+   "name": "Ed Lawrence (Film Booth)",
+   "knownFor": "Built Film Booth (~375K subs) teaching educational creators to grow, with story-driven, entertaining education; sells the Thumbnail University course. A late-2025 1of10 interview says he has shifted focus toward products, so his current upload pace is unverified.",
+   "platforms": [
+    "YouTube long form"
+   ],
+   "frameworks": [
+    {
+     "name": "Story-driven education",
+     "summary": "Teach through a narrative instead of a list of tips, so educational videos are bingeable and turn new viewers into regulars.",
+     "howToApply": "Instead of '5 leadership tips', tell the story of the hire that went wrong and pull the lessons out along the way."
+    },
+    {
+     "name": "Pick the story angle, then package it",
+     "summary": "Choose a pathway/story first, then build the title and thumbnail around it. Borrow a more clickable subject (e.g. a famous creator's early videos) when you are less clickable yourself.",
+     "howToApply": "For business videos, anchor on a recognizable brand or ad ('Why this Liquid Death ad worked') and teach your lesson through it."
+    }
+   ],
+   "sources": [
+    "https://podcast.creatorscience.com/ed-lawrence/",
+    "https://1of10.com/blog/film-booths-strategy-gaining-millions-views/",
+    "https://x.com/1of10media/status/1995538646288486505",
+    "https://vidiq.com/youtube-stats/channel/UCSQ6ebJE6MTrEAN_P-L-fuA"
+   ]
+  },
+  {
+   "name": "Brock Johnson",
+   "knownFor": "Instagram growth coach and host of the Build Your Tribe podcast; covers trial reels, Reel formats and hooks for reaching non-followers (episodes through 2026).",
+   "platforms": [
+    "Instagram Reels",
+    "Instagram trial reels"
+   ],
+   "frameworks": [
+    {
+     "name": "Trial reels as batting practice",
+     "summary": "Trial reels only go to non-followers, so use them to repost your best-performing content to new audiences without spamming current followers.",
+     "howToApply": "Every month, re-cut your top 3 Reels with a new overlay and post them as trial reels."
+    },
+    {
+     "name": "Test to get data",
+     "summary": "Treat posting as testing: collect data on what works and what doesn't, then double down.",
+     "howToApply": "Log each trial reel's hook/overlay variant and its 24-hour numbers in the Hub so winners are easy to spot."
+    }
+   ],
+   "sources": [
+    "https://jennakutcherblog.com/instagram-growth-strategies-2025-brock-johnson/",
+    "https://tunein.com/podcasts/p639215"
+   ]
+  },
+  {
+   "name": "MrBeast (Jimmy Donaldson), via his production guide",
+   "knownFor": "Not a coach in the usual sense, but his 36-page internal guide 'How to Succeed in MrBeast Production' (leaked in 2024, authenticity confirmed to Passionfruit by two former producers) is still one of the most-cited documents on retention and packaging.",
+   "platforms": [
+    "YouTube long form"
+   ],
+   "frameworks": [
+    {
+     "name": "CTR, AVD, AVP",
+     "summary": "Track three numbers: click-through rate, average view duration and average view percentage. Titles and thumbnails come first; 'I Spent 50 Hours In Ketchup' beats 'I Spent 50 Hours In My Front Yard'.",
+     "howToApply": "For each long-form video in the Hub, log CTR and AVD/AVP at 48 hours and 7 days, and compare against your channel average."
+    },
+    {
+     "name": "First minute + 3-minute re-engagement",
+     "summary": "The first minute is where most viewers leave, so it has to prove the thumbnail's promise. Minutes 1-3, 3-6 and 6-end each have a job, with a re-engagement moment around 3 minutes.",
+     "howToApply": "Script the first 60 seconds word for word. Put a reveal or story turn at about the 3-minute mark."
+    },
+    {
+     "name": "Wow factor + thumbnail expectations",
+     "summary": "The thumbnail sets the viewer's expectations and the video must pay them off early. Ideally include a wow moment early (e.g. the house craned in 30 seconds into '100 Days in a Circle').",
+     "howToApply": "Show the most visual moment (the wrecked bike, the ad dashboard result) in the first 30 seconds."
+    }
+   ],
+   "sources": [
+    "https://www.tubefilter.com/2024/09/17/mrbeast-internal-production-guide-leaked-key-points/",
+    "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "https://passionfru.it/?p=81151",
+    "https://newsletter.tubefilter.com/p/mrbeasts-guide-youtube"
+   ]
+  },
+  {
+   "name": "Derral Eves",
+   "knownFor": "Author of 'The YouTube Formula', founder of VidSummit (keynote at VidSummit 2026, Sept 29 to Oct 1). Known for data-driven, small-tweak channel growth.",
+   "platforms": [
+    "YouTube long form"
+   ],
+   "frameworks": [
+    {
+     "name": "Try, Fail, Analyze, Adjust",
+     "summary": "Test content against a hypothesis about the audience, treat underperformance as a signal, use analytics to find the weak spot, and adjust.",
+     "howToApply": "For every video, write one hypothesis in the Hub ('a personal title beats a tactical one'), then review it against the numbers a week later."
+    },
+    {
+     "name": "Small tweaks, big peaks",
+     "summary": "Growth often comes from one focused change (e.g. moving a channel's upload day to Friday drove 216% more views over 28 days in one test).",
+     "howToApply": "Change one variable at a time (upload day, thumbnail style, intro length) so you know what moved the numbers."
+    }
+   ],
+   "sources": [
+    "https://summaries.com/blog/the-youtube-formula",
+    "https://influencermarketinghub.com/derral-eves-explore-smarter-youtube-growth-vidsummit/"
+   ]
+  }
+ ],
+ "hookTypes": [
+  {
+   "id": "contrarian",
+   "name": "Contrarian",
+   "whyItWorks": "It sets up something the viewer already believes, then breaks it. That contrast stops the scroll and makes people stay to see if you can back it up. Only use it if the payoff is real, or you burn trust.",
+   "template": "Everyone says [common advice]. That's exactly why [bad outcome].",
+   "examples": {
+    "business": [
+     "Everyone says go broad on Meta. That's exactly why your CPA doubled last month.",
+     "Hot take, your team doesn't need more meetings. They need you out of the room."
+    ],
+    "lifestyle": [
+     "Waking up at 5am didn't make me money. Sleeping did.",
+     "Nobody's actually grinding 24/7. They're just posting like they are."
+    ],
+    "personal": [
+     "People think almost dying makes you fearless. It made me way more scared of wasting time.",
+     "Everybody said we moved too fast. Still here."
+    ]
+   },
+   "sources": [
+    "https://opentools.ai/youtube-summary/how-to-create-irresistible-hooks-and-blow-up-your-content",
+    "https://jellymarketing.ca/blog/stop-the-scroll-in-3-seconds-secrets-to-high-performing-short-form-video-hooks/"
+   ]
+  },
+  {
+   "id": "mistake",
+   "name": "Mistake / Stop doing this",
+   "whyItWorks": "It taps fear of loss. People move faster to avoid screwing up than to chase a win, and a mistake you made yourself makes you more relatable.",
+   "template": "Stop [common action]. It's costing you [specific loss].",
+   "examples": {
+    "business": [
+     "Stop touching your Meta ads every day. You're resetting the learning phase and paying for it.",
+     "Biggest mistake I made as a boss was trying to be everyone's buddy first."
+    ],
+    "lifestyle": [
+     "Stop opening your email before you've even brushed your teeth man.",
+     "Worst thing you can do on a bad day is open Instagram. Yeah I see the irony."
+    ],
+    "personal": [
+     "Biggest mistake I made after the crash was telling everyone I was fine.",
+     "I used to need to win every argument. Almost lost her over it."
+    ]
+   },
+   "sources": [
+    "https://www.netinfluencer.com/creator-hooks-jake-thomas-code-on-clickable-youtube-titles/",
+    "https://metricool.com/viral-video-hooks/"
+   ]
+  },
+  {
+   "id": "in-medias-res",
+   "name": "Story in medias res",
+   "whyItWorks": "Starting in the middle of the action skips the warm-up and drops the viewer into tension they want resolved. Short form has no time for a slow build.",
+   "template": "[Present-tense moment of tension]. [One line that raises the stakes].",
+   "examples": {
+    "business": [
+     "Client just called to cancel. His launch is in 40 minutes.",
+     "I'm sitting in my car about to fire my best salesperson."
+    ],
+    "lifestyle": [
+     "3am. Ad account got disabled. Launch is at 9.",
+     "Day one of not checking Slack after 6pm and I'm already twitching."
+    ],
+    "personal": [
+     "Last thing I remember is the bike going sideways.",
+     "I wasn't breathing when they got to me."
+    ]
+   },
+   "sources": [
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
+  },
+  {
+   "id": "number-list",
+   "name": "Number / List",
+   "whyItWorks": "A number tells the viewer exactly what they're getting and how long it'll take, so committing feels low-risk. Odd, specific numbers feel more real than round ones.",
+   "template": "[Number] [things] I [do/stopped/learned] [context].",
+   "examples": {
+    "business": [
+     "4 settings I turn off on every new Meta ad account.",
+     "2 questions I ask in every interview that weed out lazy people."
+    ],
+    "lifestyle": [
+     "5 signs you run a business and not an expensive hobby.",
+     "7 things you only get if you work for yourself."
+    ],
+    "personal": [
+     "2 things I stopped caring about after I flatlined.",
+     "4 things my lady taught me about money that no business book did."
+    ]
+   },
+   "sources": [
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts",
+    "https://metricool.com/viral-video-hooks/"
+   ]
+  },
+  {
+   "id": "curiosity-gap",
+   "name": "Curiosity gap",
+   "whyItWorks": "It shows the result but holds back the reason, so the viewer has to stay to close the gap. It has to stay relevant to them or it reads as clickbait.",
+   "template": "I [did something] and [unexpected result]. It wasn't [the obvious reason].",
+   "examples": {
+    "business": [
+     "We cut a client's ad spend in half and his leads went up. Wasn't the creative.",
+     "My best closer has never closed on the first call. On purpose."
+    ],
+    "lifestyle": [
+     "The one habit every successful person I know has. It's kinda boring.",
+     "What I do every Sunday night so Monday doesn't wreck me."
+    ],
+    "personal": [
+     "There's one thing I think about every time I get back on the bike. Not what you'd guess.",
+     "The thing that saved our relationship had nothing to do with us."
+    ]
+   },
+   "sources": [
+    "https://videohighlight.com/v/2byPP_9F0-Q",
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts"
+   ]
+  },
+  {
+   "id": "how-i-result",
+   "name": "\"How I\" result",
+   "whyItWorks": "Leading with a specific outcome proves you're worth listening to, and the 'how' is the reason to keep watching. Risk: if you give away the whole result up front, there's nothing left to stay for.",
+   "template": "How I [specific result] in [timeframe] without [thing they assume you need].",
+   "examples": {
+    "business": [
+     "How we got a roofing company 212 leads in 30 days off one ad.",
+     "How I went from taking every sales call myself to taking none."
+    ],
+    "lifestyle": [
+     "How I went from working 80 hours a week to like 45 and somehow making more.",
+     "How I quit scrolling in bed. Took about a week."
+    ],
+    "personal": [
+     "How I got back on a bike after one literally killed me.",
+     "How we went from fighting every week to barely ever."
+    ]
+   },
+   "sources": [
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts",
+    "https://socialbu.com/blog/?p=12171"
+   ]
+  },
+  {
+   "id": "callout",
+   "name": "Callout",
+   "whyItWorks": "Naming a specific person or situation makes the right viewer feel spotted, which is the 'on-target' part of curiosity. It also filters out people who were never going to buy.",
+   "template": "If you're [specific identity] and you [specific situation], watch this.",
+   "examples": {
+    "business": [
+     "If you run an agency and you're still doing fulfillment yourself, watch this.",
+     "Agency owners spending under 5k a month on ads, this one's for you."
+    ],
+    "lifestyle": [
+     "If you've ever answered a client text at a family dinner, this is you.",
+     "For everyone whose parents still don't get what you do for work."
+    ],
+    "personal": [
+     "If you ride, watch this before you go out this weekend.",
+     "If someone stuck by you at your worst, send them this."
+    ]
+   },
+   "sources": [
+    "https://socialbu.com/blog/?p=12171",
+    "https://videohighlight.com/v/2byPP_9F0-Q"
+   ]
+  },
+  {
+   "id": "question",
+   "name": "Question",
+   "whyItWorks": "A good question makes people answer it in their head, and then they want to know if they were right. The more surprising the question, the harder it hooks.",
+   "template": "Why do [surprising thing]? / Would you rather [A] or [B]?",
+   "examples": {
+    "business": [
+     "Why do your ads crush it for two weeks and then just die?",
+     "Would you rather have 10 clients at 2k or 2 clients at 10k? Pick wrong and you'll burn out."
+    ],
+    "lifestyle": [
+     "Why is it the more money you make, the less time you have?",
+     "Be honest. When's the last time you took a full day off?"
+    ],
+    "personal": [
+     "What do you think goes through your head right before you crash?",
+     "How do you know she's the one? Mine stayed when I was at my worst."
+    ]
+   },
+   "sources": [
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
+  },
+  {
+   "id": "bold-claim",
+   "name": "Bold claim",
+   "whyItWorks": "A strong, specific statement flips what the viewer expects and dares them to disagree. It only works if the rest of the clip backs it up.",
+   "template": "[Strong specific claim]. [Short line hinting at proof].",
+   "examples": {
+    "business": [
+     "Your Meta ads aren't the problem. Your offer is.",
+     "Most ad accounts I audit are bleeding money in the same spot."
+    ],
+    "lifestyle": [
+     "Being busy is the laziest thing you can do.",
+     "Your phone is why you're tired, not your job."
+    ],
+    "personal": [
+     "Dying was the best thing that ever happened to me.",
+     "Love's not a feeling. It's what you do on the bad days."
+    ]
+   },
+   "sources": [
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts",
+    "https://www.nar.realtor/magazine/real-estate-news/you-have-just-3-seconds-to-hook-clients-with-your-real-estate-message"
+   ]
+  },
+  {
+   "id": "pov-relatable",
+   "name": "POV / Relatable moment",
+   "whyItWorks": "It works through recognition, not cleverness. Viewers see their own life in an oddly specific line and send it to someone who gets it, and on Instagram sends are a top signal for reaching non-followers. This is the core move for repostable Lifestyle B-roll.",
+   "template": "POV: [oddly specific situation your audience lives through]",
+   "examples": {
+    "business": [
+     "POV: client says 'just a quick tweak' at 4:55 on a Friday",
+     "POV: you finally hire someone and realize none of your process is written down"
+    ],
+    "lifestyle": [
+     "POV: you own the business and still can't take a day off",
+     "POV: your mom asks if you still do 'the Facebook thing'"
+    ],
+    "personal": [
+     "POV: first ride back after the crash",
+     "POV: she still makes you text 'home safe' every single time"
+    ]
+   },
+   "sources": [
+    "https://async.com/blog/instagram-reels-formats/",
+    "https://www.socialmediatoday.com/news/instagram-shares-algorithm-2025/738034/"
+   ]
+  },
+  {
+   "id": "before-after",
+   "name": "Before / After",
+   "whyItWorks": "Showing the gap between then and now is instant proof and instant story. The viewer wants to know what happened in between.",
+   "template": "[Time] ago I was [old state]. Now [new state]. This is what changed.",
+   "examples": {
+    "business": [
+     "A year ago every decision went through me. Now I don't even know what my team's working on and we're fine.",
+     "This was our client's ad account in January. This is it now."
+    ],
+    "lifestyle": [
+     "2 years ago this desk was my kitchen table.",
+     "Me before starting a business vs me now. Same hoodie, way more gray hair."
+    ],
+    "personal": [
+     "This is me in the hospital. This is me today.",
+     "We almost called it quits. This is what changed."
+    ]
+   },
+   "sources": [
+    "https://postiz.com/tools/instagram-reels-hook-generator",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
+  },
+  {
+   "id": "experiment",
+   "name": "I tried it / Experiment",
+   "whyItWorks": "A challenge with a clear setup makes people want to see how it turned out. The weirder or more extreme the setup, the stronger the pull. Think 'I Spent 50 Hours In Ketchup' vs 'In My Front Yard'.",
+   "template": "I [did unusual thing] for [time period]. [Tease of the result].",
+   "examples": {
+    "business": [
+     "I let my team run the agency for 30 days without me.",
+     "I ran the ugliest ad I could make against our best one. Did not expect this."
+    ],
+    "lifestyle": [
+     "Didn't touch my phone for the first hour of the day for 30 days.",
+     "Tried a 4 day work week for a month. My clients noticed."
+    ],
+    "personal": [
+     "I wrote down every time I said 'I'm fine' for a week.",
+     "Let her plan our whole weekend and didn't say a word."
+    ]
+   },
+   "sources": [
+    "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/",
+    "https://vidiq.com/blog/post/how-jenny-hoyos-gets-10m-views-per-youtube-short/"
+   ]
+  },
+  {
+   "id": "secret-insider",
+   "name": "Secret / Insider",
+   "whyItWorks": "Words like 'secret' and 'nobody tells you' promise information other people don't have, which is a curiosity gap with built-in status.",
+   "template": "What [insiders] won't tell you about [topic].",
+   "examples": {
+    "business": [
+     "What agencies won't tell you about your own ad account.",
+     "The thing your Meta rep will never say out loud."
+    ],
+    "lifestyle": [
+     "Nobody tells you how lonely it gets running your own thing.",
+     "What nobody posts about being their own boss."
+    ],
+    "personal": [
+     "What nobody tells you about coming back after you almost died.",
+     "The stuff couples don't post. Us included."
+    ]
+   },
+   "sources": [
+    "https://marketing-examined.beehiiv.com/p/jenny-hoyos-shortform-video-playbook",
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts"
+   ]
+  },
+  {
+   "id": "visual-reveal",
+   "name": "Visual reveal / Pattern interrupt",
+   "whyItWorks": "A striking first frame breaks the pattern of the feed before a single word lands. Pair it with a short line so the frame isn't confusing without context.",
+   "template": "[Striking first-frame visual] + '[Short line naming what they're looking at]'",
+   "examples": {
+    "business": [
+     "[Ads Manager screen recording] This is what a 9x ROAS ad looks like. It's ugly.",
+     "[Whiteboard full of notes] My team wrote down every mistake I made this year."
+    ],
+    "lifestyle": [
+     "[B-roll: laptop at a café at 6am] Nobody sees this part.",
+     "[B-roll: empty office at night, lights off] Last one out. Again."
+    ],
+    "personal": [
+     "[Photo of the wrecked bike] I was on this.",
+     "[Hospital wristband in hand] Kept this for a reason."
+    ]
+   },
+   "sources": [
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts",
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts"
+   ]
+  },
+  {
+   "id": "fomo-timely",
+   "name": "FOMO / Timely warning",
+   "whyItWorks": "Tying the hook to something happening now (a season, a deadline, this weekend) adds urgency and fear of missing out, so the viewer acts on it today instead of saving it for later.",
+   "template": "If you're [doing X] right now, [check/watch this] before [deadline or moment].",
+   "examples": {
+    "business": [
+     "Running Meta ads into Q4? Check this setting before your CPMs jump.",
+     "Hiring your first employee this year? Watch this before you post the job."
+    ],
+    "lifestyle": [
+     "If you keep saying 'next year' about starting, this is your sign.",
+     "Watch this before you quit your job on a Monday."
+    ],
+    "personal": [
+     "Before you get on your bike this weekend, give me 30 seconds.",
+     "If you haven't told your people you love them today, do it before you scroll."
+    ]
+   },
+   "sources": [
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts",
+    "https://www.netinfluencer.com/creator-hooks-jake-thomas-code-on-clickable-youtube-titles/"
+   ]
+  }
+ ],
+ "overlayPatterns": [
+  {
+   "name": "POV line",
+   "template": "POV: [oddly specific moment your audience lives through]",
+   "example": "POV: you own the business and still answer emails on vacation",
+   "whenToUse": "Lifestyle B-roll meant to be reposted. Works through recognition, so make the situation specific. Good first test on trial reels since one overlay can be swapped over identical B-roll."
+  },
+  {
+   "name": "Send-this-to callout",
+   "template": "Send this to the [person] who [specific trait]",
+   "example": "Send this to the business partner who still won't take a day off",
+   "whenToUse": "When the goal is reach to non-followers. Mosseri says sends weigh slightly more for unconnected (non-follower) distribution, which is exactly the audience trial reels go to."
+  },
+  {
+   "name": "Nobody tells you",
+   "template": "Nobody tells you [hard truth about X]",
+   "example": "Nobody tells you how quiet it gets after you almost die",
+   "whenToUse": "Lifestyle and Personal clips with reflective B-roll. Test against a POV line on the same clip."
+  },
+  {
+   "name": "Identity callout banner",
+   "template": "If you [run X / are going through Y], this one's for you",
+   "example": "If you run an agency and still do the fulfillment yourself, this one's for you",
+   "whenToUse": "Business talking-head Reels. Filters for buyers. Pin it top-center inside the safe zone for the whole clip."
+  },
+  {
+   "name": "Result-first banner",
+   "template": "[Specific result] in [timeframe]. [What we changed] ↓",
+   "example": "212 leads in 30 days. We changed one thing ↓",
+   "whenToUse": "Business case studies and ad breakdowns. Test a version with the number vs a version without it."
+  },
+  {
+   "name": "Number list banner",
+   "template": "[N] things I [stopped/started] after [event]",
+   "example": "2 things I stopped doing after I flatlined",
+   "whenToUse": "Personal lessons and Business tips. Sets a clear end point so people stay to the last item."
+  },
+  {
+   "name": "Contrarian banner",
+   "template": "[Common advice] is why you're [stuck]",
+   "example": "'Go broad' is why your CPA doubled",
+   "whenToUse": "Business pillar when you can back the claim up in the clip. Good A/B against a question version of the same idea."
+  },
+  {
+   "name": "Before vs now",
+   "template": "[Then] vs [now]",
+   "example": "[year]: kitchen table office. Now: [where you work now]",
+   "whenToUse": "Split-screen or two-shot B-roll. Lifestyle and Personal growth posts."
+  },
+  {
+   "name": "Story cold open",
+   "template": "The day I [dramatic event]",
+   "example": "The day I died",
+   "whenToUse": "Personal story Reels and the first Short cut from a long-form story video. Keep the text up until the spoken story catches up."
+  },
+  {
+   "name": "Would-you question",
+   "template": "Would you [choice A] or [choice B]?",
+   "example": "Would you rather 10 clients at 2k or 2 clients at 10k?",
+   "whenToUse": "When you want comments. Pairs well with a keyword-reply CTA, since commenters on a trial reel are strangers you otherwise lose."
+  },
+  {
+   "name": "Reminder / quote card",
+   "template": "Reminder: [one hard truth in plain words]",
+   "example": "Reminder: your team copies how you act, not what you say",
+   "whenToUse": "Repostable Lifestyle and Leadership B-roll. Short enough to read in one pass while the clip loops."
+  },
+  {
+   "name": "Expectation vs reality",
+   "template": "What I thought [X] would be / What it actually is",
+   "example": "What I thought owning an agency would be / Me on a client call at 9pm",
+   "whenToUse": "Two-beat B-roll with a cut on the reveal. Humor angle for Lifestyle that still says something about the business."
+  }
+ ],
+ "trialReels": {
+  "summary": "Trial reels are Instagram Reels shared first only with non-followers. Instagram started testing them in May 2024 and rolled them out globally to professional accounts from December 10, 2024. A trial reel doesn't appear on your grid or Reels tab or in followers' feeds unless you share it later. After about 24 hours you can see views, likes, comments and shares, then choose to share it with followers or archive it. You can also set it to auto-share if it performs well; third-party guides put that window at the first 72 hours. Mosseri has said trial reels skip connected (follower) ranking and go straight to unconnected recommendations so followers aren't flooded with test content, and that sharing a winner to followers doesn't hurt its reach. Scheduling trial reels was added in 2026 (sources disagree on February vs April). Eligibility in current guides is a public account with about 1,000+ followers, but the numbers conflict, so check in the app. How people test with them: post the same video with only the hook or text overlay changed (keep topic, length and posting window the same), compare trial against trial (not against regular Reels), and graduate the winner to followers. Creators also repost proven older Reels as trials to reach new people (Tubefilter, Jan 2025). Caveats: a trial measures a cold audience that may react differently from your followers, and Kapwing's case study found trials drove more reach but not necessarily more engagement.",
+  "sources": [
+   "https://techcrunch.com/2024/12/10/instagram-rolls-out-trial-reels-that-arent-shown-to-a-creators-followers",
+   "https://techcrunch.com/2024/05/31/instagram-tests-trial-reels-that-dont-display-to-a-creators-followers",
+   "https://buffer.com/resources/instagram-trial-reels/",
+   "https://www.tubefilter.com/2025/01/23/instagram-trial-reels-growth-hacking-creator-economy/",
+   "https://kapwing.com/resources/instagram-trial-reels-study-what-we-learned-after-a-trial-reel-hit-1-million-views",
+   "https://www.socialmediatoday.com/news/instagram-allows-creators-to-schedule-trial-reels/816549/",
+   "https://publer.com/help/en/article/how-to-schedule-instagram-trial-reels-1mgvthp/",
+   "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+  ]
+ },
+ "retentionPrinciples": [
+  {
+   "principle": "Topic clear in the first line, curiosity right after",
+   "detail": "Viewers decide in the first second or two. Say what the video is about immediately, then add the twist. Delay, confusion and irrelevance are the main reasons people swipe.",
+   "source": "https://videohighlight.com/v/2byPP_9F0-Q"
+  },
+  {
+   "principle": "Line up the spoken, visual and text hooks",
+   "detail": "The first frame, the first spoken line and the overlay should all say the same thing. Mixed signals in the opening make people swipe.",
+   "source": "https://sozai.app/transcript/psychology-killer-hooks/"
+  },
+  {
+   "principle": "Rehook throughout",
+   "detail": "One hook isn't enough. Keep opening new curiosity loops through the clip and keep the edit rhythm tight so there's always a next reason to stay.",
+   "source": "https://www.castmagic.io/podcast/rhythm-hooks-and-a-billion-views-kane-kallaways-short-form-video-content-secrets"
+  },
+  {
+   "principle": "No preamble, foreshadow the payoff",
+   "detail": "Skip the intro and start doing the thing. Right after the hook, tell the viewer the conflict and what they'll get by the end.",
+   "source": "https://chaindesk.ai/tools/youtube-summarizer/how-jenny-hoyos-actually-makes-viral-shorts-5Dy1UDCvmkw"
+  },
+  {
+   "principle": "Constant progress toward an uncertain answer",
+   "detail": "Open with a question, build tension by making the answer feel uncertain, and keep showing movement toward it so the ending feels earned.",
+   "source": "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/"
+  },
+  {
+   "principle": "Every clip needs a reward",
+   "detail": "Hook gets attention, retain holds it, reward pays it off. A clear takeaway or punchline at the end is what makes people come back or share.",
+   "source": "https://www.skool.com/acceleratoruniversity/what-three-parts-make-up-an-effective-content-unit"
+  },
+  {
+   "principle": "Watch viewed vs swiped away on Shorts",
+   "detail": "Since March 31, 2025, any Short that starts playing counts as a view, so the viewed vs swiped away ratio is the better quality signal. vidIQ suggests aiming for about 70%+ and testing a few hooks a week; benchmark against your own channel average.",
+   "source": "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts"
+  },
+  {
+   "principle": "On Instagram, build for watch time, likes and sends",
+   "detail": "Mosseri named watch time, likes and sends as the top three ranking signals. Likes matter a bit more for followers, sends a bit more for non-followers, so content meant to reach strangers should be worth sending.",
+   "source": "https://www.socialmediatoday.com/news/instagram-shares-algorithm-2025/738034/"
+  },
+  {
+   "principle": "Fewer, better Shorts beats spamming",
+   "detail": "YouTube's Shorts lead Todd Sherman said volume alone doesn't grow reach and low-quality output can hurt. Deleting and re-uploading risks getting flagged as spam. Early view drops are often the system still looking for an audience.",
+   "source": "https://www.socialmediatoday.com/news/youtube-advice-for-shorts-creators-hashtags-algorithm/691835/"
+  },
+  {
+   "principle": "Change one variable at a time when testing",
+   "detail": "To learn which hook works, change only the hook and keep topic, payoff, length and posting window as close as possible. Judge it on early retention and how many people choose to watch.",
+   "source": "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+  }
+ ],
+ "packagingPrinciples": [
+  {
+   "principle": "Package before you produce",
+   "detail": "Clarity and curiosity beat production value. Top creators put far more time into the idea, title and thumbnail than small creators do. Write the title and sketch the thumbnail before scripting.",
+   "source": "https://www.colinandsamir.com/resources/the-new-rules-of-youtube-from-paddy-galloway"
+  },
+  {
+   "principle": "Check CCN fit",
+   "detail": "A video should work for your Core audience, Casual viewers and brand-New viewers. Too deep for core and it won't reach new people; too broad and you lose the core.",
+   "source": "https://x.com/PaddyG96/status/1912937707023856127"
+  },
+  {
+   "principle": "Titles hit curiosity plus fear or desire",
+   "detail": "Curiosity is the strongest title emotion, and the best titles pair it with fear or desire.",
+   "source": "https://www.netinfluencer.com/creator-hooks-jake-thomas-code-on-clickable-youtube-titles/"
+  },
+  {
+   "principle": "Avoid the four title failures",
+   "detail": "Titles flop when they're too wordy, too specific, too general or too boring. Model the structure of titles that already overperformed instead of starting from zero.",
+   "source": "https://www.passionfroot.me/creators-on-air/how-to-write-youtube-titles-to-get-more-views-with-jake-thomas"
+  },
+  {
+   "principle": "Thumbnail: simple, readable small, emotional face, consistent style",
+   "detail": "Overloaded thumbnails don't read on a phone. Strong facial emotion tends to pull clicks, a consistent style builds recognition, and the thumbnail should match the title and the opening.",
+   "source": "https://vidiq.com/blog/post/youtube-thumbnail-tips/"
+  },
+  {
+   "principle": "The thumbnail sets expectations; the intro has to cash them",
+   "detail": "The thumbnail makes a promise and the first minute has to prove it fast. The first minute is where most viewers leave.",
+   "source": "https://passionfru.it/?p=81151"
+  },
+  {
+   "principle": "Plan the first minute and a 3-minute re-engagement",
+   "detail": "Minutes 0-1, 1-3, 3-6 and 6-end each have a job, with a deliberate re-engagement moment around the 3-minute mark.",
+   "source": "https://www.alexanderjarvis.com/memo-how-to-succeed-in-mrbeast-production/"
+  },
+  {
+   "principle": "A/B test with Test & Compare, judge on watch time",
+   "detail": "YouTube's Test & Compare runs up to three thumbnails (title testing has been added since) and picks the winner by watch time share, not CTR, because watch time covers both clicks and retention.",
+   "source": "https://searchenginejournal.com/youtube-rolls-out-thumbnail-a-b-testing-to-all-channels/519281"
+  },
+  {
+   "principle": "Don't win the click and lose the viewer",
+   "detail": "The title and thumbnail are the first impression from a one-second glance. A thumbnail that over-promises gets the click, then viewers leave and average view duration tanks.",
+   "source": "https://summaries.com/blog/the-youtube-formula"
+  },
+  {
+   "principle": "Turn a format into a show",
+   "detail": "Returning viewers matter more as view counts inflate. A repeatable format that runs as a show gives people a reason to come back.",
+   "source": "https://news.thepublishpress.com/p/youtube-pays-youtubers-to-stay-on-youtube"
+  }
+ ]
+}
