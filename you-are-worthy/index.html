@@ -10,7 +10,7 @@
 </head>
 <body>
 <!-- ==================================================================
-  YOU ARE WORTHY · ClickFunnels embed
+  YOU ARE WORTHY · ClickFunnels embed · version 2 (Oct 22)
   ------------------------------------------------------------------
   1. Add a "Custom Code" (Custom JS/HTML) element to an empty page.
   2. Paste this entire file into it.
@@ -20,6 +20,27 @@
   Optional: add data-share-url="https://your-link" to the #gw-worthy
   div to control the link the share button sends.
 =================================================================== -->
+<script>
+/* Phones: make sure the page has a mobile viewport tag. Without it, phones lay
+   the page out at desktop width (about 980px) and shrink it to fit the screen,
+   so the phone layout never kicks in. Runs first, before anything draws. */
+(function () {
+  function fix(doc) {
+    var want = 'width=device-width, initial-scale=1';
+    var m = doc.querySelector('meta[name="viewport"]');
+    if (!m) {
+      m = doc.createElement('meta');
+      m.setAttribute('name', 'viewport');
+      m.setAttribute('content', want);
+      (doc.head || doc.documentElement).appendChild(m);
+    } else if (!/width\s*=\s*device-width/i.test(m.getAttribute('content') || '')) {
+      m.setAttribute('content', want);
+    }
+  }
+  try { fix(document); } catch (e) {}
+  try { if (window.top !== window) fix(window.top.document); } catch (e) {}
+})();
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400;1,500;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
