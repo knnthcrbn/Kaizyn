@@ -17,6 +17,7 @@ import Calendar from "@/app/calendar/page";
 import Analytics from "@/app/analytics/page";
 import Accounts from "@/app/accounts/page";
 import Settings from "@/app/settings/page";
+import { LoginScreen } from "@/components/login/LoginScreen";
 
 const SCREENS: Record<string, ComponentType> = {
   "/": Today,
@@ -32,7 +33,23 @@ const SCREENS: Record<string, ComponentType> = {
   "/analytics": Analytics,
   "/accounts": Accounts,
   "/settings": Settings,
+  "/login": LoginPreview,
 };
+
+/** On claude.ai the page is already private to you, so this is a preview. */
+function LoginPreview() {
+  const go = useRoute((s) => s.go);
+  return (
+    <LoginScreen
+      note="Preview: any password opens the hub here."
+      onSignIn={async () => {
+        await new Promise((r) => setTimeout(r, 500));
+        go("/");
+        return null;
+      }}
+    />
+  );
+}
 
 function Screen() {
   const path = useRoute((s) => s.path);

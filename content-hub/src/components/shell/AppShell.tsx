@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { useHub, useHydrated } from "@/lib/store";
 import { Sidebar } from "./Sidebar";
@@ -18,6 +18,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const openItem = useHub((s) => s.openItem);
+  const onLogin = pathname === "/login";
+  const onLoginRef = useRef(onLogin);
+  useEffect(() => {
+    onLoginRef.current = onLogin;
+  });
 
   // Close any open card when changing screens.
   useEffect(() => {
@@ -26,6 +31,7 @@ export function AppShell({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
+      if (onLoginRef.current) return;
       const s = useHub.getState();
       const mod = e.metaKey || e.ctrlKey;
       if (mod && e.key.toLowerCase() === "k") {
@@ -45,6 +51,9 @@ export function AppShell({ children }: { children: ReactNode }) {
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
+
+  // The sign-in screen stands alone, outside the app frame.
+  if (onLogin) return <div className="h-full overflow-y-auto">{children}</div>;
 
   if (!ready) {
     return <div className="h-full bg-bg" />;

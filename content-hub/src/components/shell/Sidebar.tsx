@@ -7,14 +7,13 @@ import { NAV } from "@/lib/nav";
 import { dayKey, useHub } from "@/lib/store";
 import { streaks } from "@/lib/metrics";
 import { cx } from "../ui";
+import { BrandMark } from "../BrandMark";
 
 export function Logo() {
   return (
     <div className="flex items-center gap-2.5">
       <div className="grid size-6 place-items-center rounded-md bg-brand">
-        <svg viewBox="0 0 16 16" className="size-3.5" aria-hidden>
-          <path d="M3 11.5 6.5 4l3 5 1.5-2.5L13 11.5" fill="none" stroke="#0b0b0c" strokeWidth="1.8" strokeLinejoin="round" strokeLinecap="round" />
-        </svg>
+        <BrandMark className="size-3.5" />
       </div>
       <span className="text-[13px] font-semibold tracking-tight text-ink">Content Hub</span>
     </div>

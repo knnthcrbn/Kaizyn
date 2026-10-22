@@ -29,6 +29,32 @@ republish `artifact-dist/content-hub.html` to the same artifact. The build
 bundles the same screens into one page (`src/artifact/`) with in-page
 navigation instead of Next.js routes.
 
+## Deploy (recommended: Vercel + Supabase)
+
+The same setup as the Leads Management App, and the natural home for a
+Next.js app:
+
+1. **Vercel** (hosting). In vercel.com → Add New → Project, import
+   `knnthcrbn/kaizyn` and set **Root Directory** to `content-hub`. Every push
+   then deploys on its own.
+2. **Environment variables** (Vercel → Project → Settings → Environment
+   Variables):
+   - `HUB_PASSWORD`: the sign-in password. Leave it unset and the hub is open.
+   - `AUTH_SECRET`: any long random string; it signs the session cookie.
+   - `ANTHROPIC_API_KEY`: turns on Claude.
+3. **Supabase** (next step, not wired yet): a database so phone and laptop
+   share the same data, file storage for videos in the Studio phase, and
+   email sign-in if a team joins later.
+
+## Sign-in
+
+`/login` is the sign-in screen: the saved constellation background in brand
+purple, the logo hovering on a glass tile that tilts toward the cursor, and
+pieces of the hub drifting around it (wide screens). `src/proxy.ts` sends
+everything else, including the Claude route, to it until the password is
+entered; the session lasts 30 days. Settings has **Sign out** and a link to
+the screen.
+
 ## Run it
 
 ```bash

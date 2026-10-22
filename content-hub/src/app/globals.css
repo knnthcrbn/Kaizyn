@@ -64,7 +64,8 @@ body {
   scrollbar-color: rgb(255 255 255 / 0.1) transparent;
 }
 
-:focus-visible {
+/* Text fields show focus on their own border; this ring is for everything else. */
+:where(a, button, summary, select, [tabindex]):focus-visible {
   outline: 2px solid rgb(255 255 255 / 0.35);
   outline-offset: 2px;
 }
@@ -102,6 +103,72 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .fade-in,
   .slide-in {
+    animation: none;
+  }
+}
+
+/* ---- Sign-in screen --------------------------------------------------- */
+
+@keyframes constellation-drift {
+  from {
+    transform: translate3d(-2%, -1%, 0) scale(1.12);
+  }
+  to {
+    transform: translate3d(2%, 2%, 0) scale(1.18);
+  }
+}
+
+.constellation-glow {
+  animation: constellation-drift 30s ease-in-out infinite alternate;
+}
+
+/* The logo tile hovers; its shadow on the "ground" shrinks as it rises. */
+@keyframes hover-up {
+  from {
+    transform: translateY(4px);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes hover-shadow {
+  from {
+    transform: scaleX(1);
+    opacity: 0.55;
+  }
+  to {
+    transform: scaleX(0.7);
+    opacity: 0.25;
+  }
+}
+
+@keyframes drift {
+  from {
+    transform: translate3d(0, 0, 0) rotate(var(--tilt, 0deg));
+  }
+  to {
+    transform: translate3d(0, -14px, 0) rotate(calc(var(--tilt, 0deg) * -0.5));
+  }
+}
+
+.hover-up {
+  animation: hover-up 3.2s ease-in-out infinite alternate;
+}
+
+.hover-shadow {
+  animation: hover-shadow 3.2s ease-in-out infinite alternate;
+}
+
+.drift {
+  animation: drift var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .constellation-glow,
+  .hover-up,
+  .hover-shadow,
+  .drift {
     animation: none;
   }
 }

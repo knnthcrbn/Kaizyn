@@ -4,7 +4,7 @@ import { ALL_NAV } from "@/lib/nav";
 // In-page navigation for the claude.ai-hosted copy, which is a single page
 // with no server to answer /pipeline, /voice and so on.
 
-const known = new Set(ALL_NAV.map((n) => n.href));
+const known = new Set([...ALL_NAV.map((n) => n.href), "/login"]);
 
 /** "#pipeline" on the artifact link opens that screen. */
 function pathFromHash() {

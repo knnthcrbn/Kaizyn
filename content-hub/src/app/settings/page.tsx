@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Download, Upload, RotateCcw, CircleCheck, CircleAlert } from "lucide-react";
+import Link from "next/link";
+import { Download, Upload, RotateCcw, CircleCheck, CircleAlert, LogOut, ArrowRight } from "lucide-react";
 import { Badge, Button, Card, ConfirmAction, PageHeader } from "@/components/ui";
 import { capability, IN_CLAUDE, type Downloads, type Sample } from "@/lib/platform";
 import { useHub } from "@/lib/store";
@@ -109,6 +110,30 @@ export default function SettingsPage() {
                   app. Everything else works without it.
                 </div>
               </>
+            )}
+          </div>
+        </Card>
+
+        <Card title="Sign-in" description={IN_CLAUDE ? "This copy is private to your claude.ai account, so it needs no sign-in." : "One password, set as HUB_PASSWORD on the server. With none set, the hub stays open."}>
+          <div className="flex flex-wrap items-center gap-2 px-4 pb-4 pt-3">
+            <Link
+              href="/login"
+              className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong bg-surface-2 px-3 text-[13px] font-medium text-ink hover:bg-surface-3"
+            >
+              See the sign-in screen <ArrowRight className="size-3.5" />
+            </Link>
+            {!IN_CLAUDE && (
+              <Button
+                variant="ghost"
+                onClick={async () => {
+                  await fetch("/api/logout", { method: "POST" });
+                  // A full load drops every page the router cached while signed in.
+                  // eslint-disable-next-line @next/next/no-location-assign-relative-destination
+                  window.location.assign("/login");
+                }}
+              >
+                <LogOut className="size-3.5" /> Sign out
+              </Button>
             )}
           </div>
         </Card>
