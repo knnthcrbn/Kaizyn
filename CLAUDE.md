@@ -32,4 +32,10 @@ Offer it first for new landing pages, recoloured for the brand.
   https://claude.ai/artifact/QdLdoiqSi1cYKSP9ipn5iD: rebuild with
   `npm run build:artifact` and republish `artifact-dist/content-hub.html` to
   that URL (Claude there uses the `sample` capability; backups use
-  `downloads`). The Vercel connector can't create projects on this account.
+  `downloads`). Live on Vercel: https://content-hub-theta-one.vercel.app (project
+  `content-hub`, team "Kenneth Corbin's projects"). It is NOT linked to GitHub,
+  so a push deploys nothing: redeploy with the Vercel connector's
+  `create_deployment` (gitSource knnthcrbn/Kaizyn, ref `main`, root
+  `content-hub`). Sign-in password is the `HUB_PASSWORD` env var there; Claude
+  needs `ANTHROPIC_API_KEY` added the same way. Vercel's own login wall covers
+  previews only, so production shows the app's sign-in.
