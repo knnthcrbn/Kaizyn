@@ -70,15 +70,39 @@ Open http://localhost:3000.
 
 ### Connect Claude
 
-The Claude panel, the voice profile builder and the idea generator need an
-Anthropic API key. Get one at console.anthropic.com, then create
-`content-hub/.env.local`:
+Claude needs an Anthropic API key (console.anthropic.com → Billing, then API
+Keys). On Vercel, add it as `ANTHROPIC_API_KEY` under Settings → Environment
+Variables and redeploy. Locally, put it in `content-hub/.env.local`:
 
 ```
 ANTHROPIC_API_KEY=sk-ant-...
 ```
 
-Restart `npm run dev`. Everything else in the hub works without a key.
+API use is billed per reply, separately from a Claude subscription. Each reply
+shows its estimated cost, and Settings shows the month's total. Everything
+else in the hub works without a key.
+
+## Claude in the hub
+
+`/chat` is Claude full screen, meant to replace opening the Claude app; the
+**Ask Claude** panel (⌘J) shows the same chats beside any screen.
+
+- **Model and effort** under the message box: Opus 5.5 (default), Sonnet 5.5,
+  Haiku 5.5, Fable 5.1; effort Low to Max. A new chat starts with whatever
+  was used last. The list and prices live in `src/lib/models.ts`.
+- **Web search** (globe) lets Claude look things up and read links, with
+  sources under the answer. **Hub context** (layers) sends your voice
+  profile, samples, stories and the open card; turn it off for plain Claude.
+- **Attachments**: images and PDFs (up to 4.4 MB, uploaded once to
+  Anthropic's Files API) and text files (sent inline). Paste or drop them in.
+- Thinking is shown as a summary you can expand. Chats are saved in this
+  browser (IndexedDB), searchable, and included in the backup.
+
+## On your phone
+
+Open the hub in Safari, tap Share → **Add to Home Screen**. It opens full
+screen with its own icon, like an app. In Chrome on a laptop, use the install
+icon in the address bar.
 
 ## What's in Phase 1
 
@@ -102,7 +126,8 @@ Shortcuts: `C` capture an idea, `⌘K` / `Ctrl+K` search and jump, `⌘J` /
 
 ## Where data lives
 
-For now, everything is saved in this browser (localStorage). Use
+For now, everything is saved in this browser (localStorage, and IndexedDB
+for Claude chats). Use
 **Settings → Download backup** to keep a copy or move to another computer. A
 real database and login come with the later phases, when accounts and
 publishing are added.
@@ -118,7 +143,8 @@ publishing are added.
 ## Code map
 
 - `src/app/*/page.tsx`: one file per screen
-- `src/app/api/claude/route.ts`: the server route that talks to Claude (streams replies)
+- `src/app/api/claude/route.ts`: the server route that talks to Claude (streams thinking, text, searches and sources)
+- `src/lib/chats.ts`: saved chats and the send/stream/stop logic; `src/components/chat/`: the chat UI
 - `src/lib/store.ts`: all hub data and actions (Zustand, saved to localStorage)
 - `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
 - `src/lib/antiAi.ts`: the phrases that make writing sound generated

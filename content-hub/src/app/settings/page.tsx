@@ -6,6 +6,8 @@ import { Download, Upload, RotateCcw, CircleCheck, CircleAlert, LogOut, ArrowRig
 import { Badge, Button, Card, ConfirmAction, PageHeader } from "@/components/ui";
 import { capability, IN_CLAUDE, type Downloads, type Sample } from "@/lib/platform";
 import { useHub } from "@/lib/store";
+import { clearChats, exportChats, importChats, monthSpend, useChats } from "@/lib/chats";
+import { formatCost } from "@/lib/models";
 
 const ROADMAP = [
   { phase: "Phase 1", title: "Shell + writing system", status: "Now", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
@@ -20,6 +22,10 @@ export default function SettingsPage() {
   const resetAll = useHub((s) => s.resetAll);
   const fileRef = useRef<HTMLInputElement>(null);
   const [claude, setClaude] = useState<boolean | null>(null);
+  const [host, setHost] = useState<"vercel" | "local">("vercel");
+  // Re-read when chats change so the month's spend stays current.
+  useChats((st) => st.chats);
+  const spend = monthSpend();
   const [msg, setMsg] = useState("");
 
   useEffect(() => {
@@ -29,7 +35,10 @@ export default function SettingsPage() {
     }
     fetch("/api/claude")
       .then((r) => r.json())
-      .then((d) => setClaude(!!d.configured))
+      .then((d) => {
+        setClaude(!!d.configured);
+        if (d.host === "local") setHost("local");
+      })
       .catch(() => setClaude(false));
   }, []);
 
@@ -43,6 +52,7 @@ export default function SettingsPage() {
       voiceProfile: s.voiceProfile,
       swipe: s.swipe,
       activityDays: s.activityDays,
+      chats: exportChats(),
     };
     const json = JSON.stringify(data, null, 2);
     const filename = `content-hub-backup-${data.exportedAt.slice(0, 10)}.json`;
@@ -71,6 +81,7 @@ export default function SettingsPage() {
       const data = JSON.parse(await file.text());
       if (!Array.isArray(data.items)) throw new Error();
       importData(data);
+      importChats(data.chats);
       setMsg(`Restored ${data.items.length} cards from ${file.name}.`);
     } catch {
       setMsg("That file isn't a Content Hub backup.");
@@ -89,11 +100,19 @@ export default function SettingsPage() {
             ) : claude ? (
               <>
                 <CircleCheck className="mt-0.5 size-4 text-good-text" />
-                <span className="text-muted">
-                  {IN_CLAUDE
-                    ? "Connected through your claude.ai account. The first time Claude runs, it asks your permission."
-                    : "Connected. The Claude panel, voice profile and idea generator are live."}
-                </span>
+                <div className="text-muted">
+                  {IN_CLAUDE ? (
+                    "Connected through your claude.ai account. The first time Claude runs, it asks your permission."
+                  ) : (
+                    <>
+                      Connected. Pick the model and effort under the message box in any chat.
+                      <div className="mt-2 text-xs text-faint">
+                        This month: ≈{formatCost(spend.total)} across {spend.replies} repl{spend.replies === 1 ? "y" : "ies"}{" "}
+                        (estimated from token counts; your Anthropic Console has the exact bill).
+                      </div>
+                    </>
+                  )}
+                </div>
               </>
             ) : IN_CLAUDE ? (
               <>
@@ -104,10 +123,17 @@ export default function SettingsPage() {
               <>
                 <CircleAlert className="mt-0.5 size-4 text-warning" />
                 <div className="text-muted">
-                  Not connected yet. Create an API key at console.anthropic.com, then add{" "}
-                  <code className="rounded bg-surface-3 px-1 font-mono text-xs text-ink">ANTHROPIC_API_KEY=…</code> to{" "}
-                  <code className="rounded bg-surface-3 px-1 font-mono text-xs text-ink">content-hub/.env.local</code> and restart the
-                  app. Everything else works without it.
+                  Not connected yet. Create an API key at console.anthropic.com (Billing, then API Keys), then add it as{" "}
+                  <code className="rounded bg-surface-3 px-1 font-mono text-xs text-ink">ANTHROPIC_API_KEY</code>{" "}
+                  {host === "vercel" ? (
+                    <>in Vercel under content-hub → Settings → Environment Variables, and redeploy.</>
+                  ) : (
+                    <>
+                      in <code className="rounded bg-surface-3 px-1 font-mono text-xs text-ink">content-hub/.env.local</code> and restart
+                      the app.
+                    </>
+                  )}{" "}
+                  API use is billed per reply, separately from a Claude subscription. Everything else works without it.
                 </div>
               </>
             )}
@@ -159,6 +185,7 @@ export default function SettingsPage() {
               confirmLabel="Reset"
               onConfirm={() => {
                 resetAll();
+                clearChats();
                 setMsg("Reset to starter content.");
               }}
               className="inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-critical-text hover:bg-critical/10"

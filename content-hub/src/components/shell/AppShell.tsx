@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { useHub, useHydrated } from "@/lib/store";
+import { chatForQuickAsk, loadChats, sendMessage, useChats } from "@/lib/chats";
+import { pageName } from "@/lib/nav";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ClaudePanel } from "./ClaudePanel";
@@ -19,10 +21,37 @@ export function AppShell({ children }: { children: ReactNode }) {
   const [navOpen, setNavOpen] = useState(false);
   const openItem = useHub((s) => s.openItem);
   const onLogin = pathname === "/login";
+  const onChat = pathname === "/chat";
   const onLoginRef = useRef(onLogin);
+  const onChatRef = useRef(onChat);
+  const pageRef = useRef(pageName(pathname));
   useEffect(() => {
     onLoginRef.current = onLogin;
+    onChatRef.current = onChat;
+    pageRef.current = pageName(pathname);
   });
+
+  // Chats load after the hub store, which hands over the old single chat.
+  useEffect(() => {
+    if (ready && !onLogin) void loadChats();
+  }, [ready, onLogin]);
+
+  // "Ask Claude" buttons anywhere in the hub queue a prompt; send it once chats are loaded.
+  useEffect(() => {
+    const run = () => {
+      if (!useHub.getState().pendingPrompt || !useChats.getState().loaded) return;
+      const id = chatForQuickAsk();
+      const prompt = useHub.getState().takePendingPrompt();
+      if (prompt) void sendMessage(id, prompt, [], pageRef.current);
+    };
+    const offHub = useHub.subscribe(run);
+    const offChats = useChats.subscribe((s, prev) => s.loaded !== prev.loaded && run());
+    run();
+    return () => {
+      offHub();
+      offChats();
+    };
+  }, []);
 
   // Close any open card when changing screens.
   useEffect(() => {
@@ -39,7 +68,9 @@ export function AppShell({ children }: { children: ReactNode }) {
         s.setPaletteOpen(!s.paletteOpen);
       } else if (mod && e.key.toLowerCase() === "j") {
         e.preventDefault();
-        s.setClaudeOpen(!s.claudeOpen);
+        // Claude already has the whole screen on /chat.
+        if (onChatRef.current) document.querySelector<HTMLTextAreaElement>("[data-composer]")?.focus();
+        else s.setClaudeOpen(!s.claudeOpen);
       } else if (e.key === "Escape") {
         if (s.captureOpen) s.setCaptureOpen(false);
         else if (!s.paletteOpen) s.openItem(null);
@@ -76,13 +107,17 @@ export function AppShell({ children }: { children: ReactNode }) {
 
       <div className="relative flex min-w-0 flex-1 flex-col">
         <Topbar onMenu={() => setNavOpen(true)} />
-        <main className="relative flex-1 overflow-y-auto">
-          <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
-        </main>
+        {onChat ? (
+          <main className="relative flex min-h-0 flex-1 flex-col overflow-hidden">{children}</main>
+        ) : (
+          <main className="relative flex-1 overflow-y-auto">
+            <div className="mx-auto w-full max-w-[1280px] px-4 py-6 sm:px-6 lg:px-8 lg:py-8">{children}</div>
+          </main>
+        )}
         <ItemDrawer />
       </div>
 
-      <ClaudePanel />
+      {!onChat && <ClaudePanel />}
       <CommandPalette />
       <CaptureDialog />
     </div>

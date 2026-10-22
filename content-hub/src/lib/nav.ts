@@ -8,6 +8,7 @@ import {
   KanbanSquare,
   Lightbulb,
   Link2,
+  Magnet,
   Mic,
   Sparkles,
   Settings,
@@ -28,6 +29,7 @@ export const NAV: { group: string; items: NavItem[] }[] = [
     group: "Create",
     items: [
       { href: "/", label: "Today", icon: Home },
+      { href: "/chat", label: "Claude", icon: Sparkles },
       { href: "/pipeline", label: "Pipeline", icon: KanbanSquare },
       { href: "/ideas", label: "Ideas", icon: Lightbulb },
     ],
@@ -36,7 +38,7 @@ export const NAV: { group: string; items: NavItem[] }[] = [
     group: "Write",
     items: [
       { href: "/voice", label: "Voice Lab", icon: Mic },
-      { href: "/hooks", label: "Hooks & overlays", icon: Sparkles },
+      { href: "/hooks", label: "Hooks & overlays", icon: Magnet },
       { href: "/stories", label: "Story bank", icon: BookOpen },
       { href: "/swipe", label: "Swipe file", icon: Bookmark },
       { href: "/playbooks", label: "Playbooks", icon: Library },
@@ -58,3 +60,9 @@ export const NAV: { group: string; items: NavItem[] }[] = [
 ];
 
 export const ALL_NAV = NAV.flatMap((g) => g.items);
+
+/** "Pipeline screen": how Claude is told where the creator is in the hub. */
+export function pageName(pathname: string) {
+  const n = ALL_NAV.find((x) => (x.href === "/" ? pathname === "/" : pathname.startsWith(x.href)));
+  return n ? `${n.label} screen` : pathname;
+}

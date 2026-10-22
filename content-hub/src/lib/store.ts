@@ -4,7 +4,6 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { useEffect, useState } from "react";
 import type {
-  ChatMessage,
   ContentItem,
   Pillar,
   StageId,
@@ -13,6 +12,11 @@ import type {
   VoiceEntry,
 } from "./types";
 import { SEED_ITEMS, SEED_STORIES, SEED_VOICE } from "./seed";
+
+// Where the pre-chat-list conversation waits for the chat store (lib/chats.ts)
+// to pick it up. Kept in storage rather than memory: whichever copy of the
+// app loads chats first (dev mode can run two) must still find it.
+export const LEGACY_CHAT_KEY = "content-hub-legacy-chat";
 
 export const uid = () =>
   Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
@@ -29,7 +33,6 @@ interface HubState {
   voiceEntries: VoiceEntry[];
   voiceProfile: string;
   swipe: SwipeItem[];
-  chat: ChatMessage[];
   activityDays: string[];
 
   // UI state (not persisted)
@@ -56,10 +59,6 @@ interface HubState {
   addSwipe: (url: string, note: string) => void;
   deleteSwipe: (id: string) => void;
 
-  pushChat: (msg: ChatMessage) => void;
-  patchChat: (id: string, content: string) => void;
-  clearChat: () => void;
-
   openItem: (id: string | null) => void;
   setClaudeOpen: (open: boolean) => void;
   setPaletteOpen: (open: boolean) => void;
@@ -80,7 +79,6 @@ const initialData = () => ({
   voiceEntries: SEED_VOICE,
   voiceProfile: "",
   swipe: [] as SwipeItem[],
-  chat: [] as ChatMessage[],
   activityDays: [] as string[],
 });
 
@@ -173,11 +171,6 @@ export const useHub = create<HubState>()(
         set((s) => ({ swipe: [{ id: uid(), url, note, createdAt: Date.now() }, ...s.swipe] })),
       deleteSwipe: (id) => set((s) => ({ swipe: s.swipe.filter((x) => x.id !== id) })),
 
-      pushChat: (msg) => set((s) => ({ chat: [...s.chat, msg] })),
-      patchChat: (id, content) =>
-        set((s) => ({ chat: s.chat.map((m) => (m.id === id ? { ...m, content } : m)) })),
-      clearChat: () => set({ chat: [] }),
-
       openItem: (openItemId) => set({ openItemId }),
       setClaudeOpen: (claudeOpen) => set({ claudeOpen }),
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
@@ -209,9 +202,20 @@ export const useHub = create<HubState>()(
         voiceEntries: s.voiceEntries,
         voiceProfile: s.voiceProfile,
         swipe: s.swipe,
-        chat: s.chat.slice(-60),
         activityDays: s.activityDays,
       }),
+      // Chats moved to their own store (lib/chats.ts). The old single chat is
+      // handed over once, the first time the new store loads.
+      merge: (persisted, current) => {
+        const saved = { ...((persisted ?? {}) as Record<string, unknown>) };
+        if (Array.isArray(saved.chat) && saved.chat.length) {
+          try {
+            localStorage.setItem(LEGACY_CHAT_KEY, JSON.stringify(saved.chat));
+          } catch {}
+        }
+        delete saved.chat;
+        return { ...current, ...(saved as Partial<HubState>) };
+      },
     },
   ),
 );

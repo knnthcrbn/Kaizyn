@@ -37,5 +37,9 @@ Offer it first for new landing pages, recoloured for the brand.
   so a push deploys nothing: redeploy with the Vercel connector's
   `create_deployment` (gitSource knnthcrbn/Kaizyn, ref `main`, root
   `content-hub`). Sign-in password is the `HUB_PASSWORD` env var there; Claude
-  needs `ANTHROPIC_API_KEY` added the same way. Vercel's own login wall covers
+  needs `ANTHROPIC_API_KEY` added the same way. Claude chat (`/chat` and the
+  ⌘J panel) is meant to stand in for the Claude app: model and effort
+  pickers, web search, attachments, saved chats (IndexedDB, one entry per
+  chat). Models and prices: `src/lib/models.ts`. Earlier turns go back to the
+  API as text only, never replayed thinking blocks. Vercel's own login wall covers
   previews only, so production shows the app's sign-in.

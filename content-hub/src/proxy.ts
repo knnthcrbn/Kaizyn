@@ -20,5 +20,7 @@ export async function proxy(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico).*)"],
+  // The app manifest and icons stay public: browsers fetch the manifest
+  // without cookies, and a home-screen icon is no secret.
+  matcher: ["/((?!_next/static|_next/image|favicon.ico|manifest.webmanifest|icons/|apple-icon.png).*)"],
 };

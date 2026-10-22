@@ -5,6 +5,7 @@ import type { ComponentType } from "react";
 import { AppShell } from "@/components/shell/AppShell";
 import { useRoute } from "./router";
 import Today from "@/app/page";
+import Chat from "@/app/chat/page";
 import Pipeline from "@/app/pipeline/page";
 import Ideas from "@/app/ideas/page";
 import Voice from "@/app/voice/page";
@@ -21,6 +22,7 @@ import { LoginScreen } from "@/components/login/LoginScreen";
 
 const SCREENS: Record<string, ComponentType> = {
   "/": Today,
+  "/chat": Chat,
   "/pipeline": Pipeline,
   "/ideas": Ideas,
   "/voice": Voice,

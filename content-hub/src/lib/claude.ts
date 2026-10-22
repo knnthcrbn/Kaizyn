@@ -5,6 +5,7 @@ import { capability, IN_CLAUDE, type Sample } from "./platform";
 import { contextBlock, SYSTEM } from "./prompt";
 import { formatLabel, pillarLabel, scriptModeLabel, stageLabel } from "./meta";
 import { useHub } from "./store";
+import type { Usage } from "./models";
 
 /** Everything Claude should know about where the user is and how they talk. */
 export function buildContext(page: string) {
@@ -42,8 +43,88 @@ export function buildContext(page: string) {
 }
 
 /**
- * Streams a Claude reply. Calls onText with the full text so far on every chunk
- * and resolves with the final text.
+ * The hub context in two parts: what rarely changes in a conversation (voice,
+ * stories, rules) and what does (the screen and the open card). A chat sends
+ * the first part once and the second only when it moves.
+ */
+export function contextParts(page: string) {
+  const { item, page: where, ...rest } = buildContext(page);
+  return { full: contextBlock(rest), lite: contextBlock({ page: where, item }) };
+}
+
+export interface WireAttachment {
+  kind: "image" | "pdf" | "text";
+  name: string;
+  fileId?: string;
+  text?: string;
+}
+
+export interface WireMessage {
+  role: "user" | "assistant";
+  text: string;
+  context?: string;
+  attachments?: WireAttachment[];
+}
+
+export interface ChatRequest {
+  messages: WireMessage[];
+  model?: string;
+  effort?: string;
+  web?: boolean;
+}
+
+/** Mirrors the server route's StreamEvent. */
+export type ClaudeEvent =
+  | { t: "model"; model: string }
+  | { t: "thinking"; d: string }
+  | { t: "text"; d: string }
+  | { t: "search"; q: string }
+  | { t: "fetch"; url: string }
+  | { t: "source"; url: string; title: string }
+  | { t: "note"; d: string }
+  | { t: "done"; stop: string | null; model: string; usage: Usage }
+  | { t: "error"; message: string };
+
+/** Streams one Claude turn from the hub's server route, event by event. */
+export async function streamChat(req: ChatRequest, onEvent: (e: ClaudeEvent) => void, signal?: AbortSignal) {
+  const res = await fetch("/api/claude", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ ...req, tz: Intl.DateTimeFormat().resolvedOptions().timeZone }),
+    signal,
+  });
+  if (!res.ok || !res.body) {
+    let message = `Request failed (${res.status}).`;
+    try {
+      message = (await res.json()).error ?? message;
+    } catch {}
+    onEvent({ t: "error", message });
+    return;
+  }
+  const reader = res.body.getReader();
+  const decoder = new TextDecoder();
+  let buf = "";
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    buf += decoder.decode(value, { stream: true });
+    let nl: number;
+    while ((nl = buf.indexOf("\n")) >= 0) {
+      const line = buf.slice(0, nl).trim();
+      buf = buf.slice(nl + 1);
+      if (!line) continue;
+      try {
+        onEvent(JSON.parse(line) as ClaudeEvent);
+      } catch {
+        // A malformed line is skipped rather than ending the reply.
+      }
+    }
+  }
+}
+
+/**
+ * A one-off Claude call with the hub context attached (the Voice Lab's profile
+ * builder). Calls onText with the full text so far and resolves with it.
  */
 export async function streamClaude(
   messages: { role: "user" | "assistant"; content: string }[],
@@ -52,29 +133,22 @@ export async function streamClaude(
   signal?: AbortSignal,
 ) {
   if (IN_CLAUDE) return sampleClaude(messages, page, onText, signal);
-  const res = await fetch("/api/claude", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ messages, context: buildContext(page) }),
-    signal,
-  });
-  if (!res.ok || !res.body) {
-    let msg = `Request failed (${res.status}).`;
-    try {
-      msg = (await res.json()).error ?? msg;
-    } catch {}
-    onText(`⚠️ ${msg}`);
-    return `⚠️ ${msg}`;
-  }
-  const reader = res.body.getReader();
-  const decoder = new TextDecoder();
+  const { full, lite } = contextParts(page);
   let text = "";
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    text += decoder.decode(value, { stream: true });
-    onText(text);
-  }
+  await streamChat(
+    {
+      messages: messages.map((m, i) => ({
+        role: m.role,
+        text: m.content,
+        context: i === 0 ? [full, lite].filter(Boolean).join("\n\n") : undefined,
+      })),
+    },
+    (e) => {
+      if (e.t === "text") onText((text += e.d));
+      else if (e.t === "error") onText((text += `${text ? "\n\n" : ""}⚠️ ${e.message}`));
+    },
+    signal,
+  );
   return text;
 }
 
@@ -88,7 +162,7 @@ const SAMPLE_ERRORS: Record<string, string> = {
 };
 
 /** The claude.ai-hosted copy: ask Claude on the viewer's own account. */
-async function sampleClaude(
+export async function sampleClaude(
   messages: { role: "user" | "assistant"; content: string }[],
   page: string,
   onText: (text: string) => void,
