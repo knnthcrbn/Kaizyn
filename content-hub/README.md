@@ -98,6 +98,36 @@ else in the hub works without a key.
 - Thinking is shown as a summary you can expand. Chats are saved in this
   browser (IndexedDB), searchable, and included in the backup.
 
+## Footage library
+
+**Footage** (`/library`) holds the team's raw video: drop videos or whole
+folders in (sub-folders are kept), organise them in folders, and search what
+was said or shown. Typing "Tesla", "$1 million a month" or "Fort Lauderdale"
+lists the moments, each with a thumbnail and timestamp; clicking one plays
+from that second. A moment can be linked, or added to a pipeline card.
+
+How each video becomes searchable, all in the uploader's browser while the
+file uploads (keep the tab open until it says Searchable):
+
+- **Said:** Whisper (Transformers.js, loaded from its CDN on first use, the
+  ~80 MB model then cached) transcribes it with timestamps. Free, private.
+- **Shown:** a frame every 1-5 seconds goes to Claude Haiku 5.5, which groups
+  them into shots and describes each (people, objects, cars and models, the
+  setting, on-screen text) with search tags. Roughly 15-25¢ per hour of footage.
+- **Where and when:** read from the file's own GPS and date tags (iPhone and
+  most Android phones), and the place named ("Fort Lauderdale, Florida").
+- **Smart search** asks Claude for other ways the search might have been said
+  ("a million a month" for "$1 million month").
+
+Videos live in a private Vercel Blob store (`content-hub-footage`) and only
+reach a browser through the signed-in hub (`/api/library/file`, with Range
+for scrubbing). Records are JSON per video in the same store, so the whole
+team sees the same library. Without `BLOB_READ_WRITE_TOKEN` (local
+development) everything goes to `.footage-dev/` on disk instead. Any
+teammate can re-run processing on a stored video ("Process now"/"Process
+again"), reading it from storage. Code: `src/lib/footage/`,
+`src/app/api/library/`, `src/app/library/`.
+
 ## On your phone
 
 Open the hub in Safari, tap Share → **Add to Home Screen**. It opens full
@@ -126,8 +156,9 @@ Shortcuts: `C` capture an idea, `⌘K` / `Ctrl+K` search and jump, `⌘J` /
 
 ## Where data lives
 
-For now, everything is saved in this browser (localStorage, and IndexedDB
-for Claude chats). Use
+Footage is shared and stored on the server (see above). Everything else is
+saved in this browser for now (localStorage, and IndexedDB for Claude
+chats). Use
 **Settings → Download backup** to keep a copy or move to another computer. A
 real database and login come with the later phases, when accounts and
 publishing are added.
@@ -135,7 +166,7 @@ publishing are added.
 ## Roadmap
 
 1. **Shell + writing system** (this)
-2. Studio: a searchable footage library first (transcripts and what's on screen, so a search finds the moment), then editing, auto-captions, overlays, exports, repurposing
+2. Studio: the searchable footage library (live), then editing, auto-captions, overlays, exports, repurposing
 3. Calendar and habit: posting goals, batch recording days, weekly review
 4. Analytics and testing: results per post, trial reel A/B log, trending audio
 5. Accounts and publishing: main + clipping pages, multi-account scheduling

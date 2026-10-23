@@ -10,8 +10,8 @@ import { clearChats, exportChats, importChats, monthSpend, useChats } from "@/li
 import { formatCost } from "@/lib/models";
 
 const ROADMAP = [
-  { phase: "Phase 1", title: "Shell + writing system", status: "Now", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
-  { phase: "Phase 2", title: "Studio", status: "Next", items: "Footage library first: raw videos in folders, transcripts and what's on screen, search \"Tesla\" or \"$1M month\" and jump to the moment. Then editing, auto-captions, overlays, exports, repurposing long form into shorts" },
+  { phase: "Phase 1", title: "Shell + writing system", status: "Done", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
+  { phase: "Phase 2", title: "Studio", status: "Now", items: "Footage library (live): raw videos in folders, searchable by what's said and shown. Next: editing, auto-captions, overlays, exports, repurposing long form into shorts" },
   { phase: "Phase 3", title: "Calendar & habit", status: "", items: "Calendar, posting goals per pillar, batch recording days, weekly review" },
   { phase: "Phase 4", title: "Analytics & testing", status: "", items: "Results per post, trial reel A/B log, trending audio tracker, feedback into Claude" },
   { phase: "Phase 5", title: "Accounts & publishing", status: "Last", items: "Connect main + clipping pages, multi-account scheduling, staggered posts" },
@@ -204,7 +204,7 @@ export default function SettingsPage() {
                 <div className="flex-1">
                   <div className="flex items-center gap-2 text-[13px] text-ink">
                     {r.title}
-                    {r.status && <Badge tone={r.status === "Now" ? "good" : "neutral"}>{r.status}</Badge>}
+                    {r.status && <Badge tone={r.status === "Now" || r.status === "Done" ? "good" : "neutral"}>{r.status}</Badge>}
                   </div>
                   <div className="mt-0.5 text-xs text-muted">{r.items}</div>
                 </div>

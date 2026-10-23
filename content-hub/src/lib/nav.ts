@@ -3,6 +3,7 @@ import {
   BookOpen,
   CalendarDays,
   Clapperboard,
+  FolderOpen,
   Bookmark,
   Home,
   KanbanSquare,
@@ -47,6 +48,7 @@ export const NAV: { group: string; items: NavItem[] }[] = [
   {
     group: "Ship",
     items: [
+      { href: "/library", label: "Footage", icon: FolderOpen },
       { href: "/studio", label: "Studio", icon: Clapperboard, soon: "Phase 2" },
       { href: "/calendar", label: "Calendar", icon: CalendarDays, soon: "Phase 3" },
       { href: "/analytics", label: "Analytics", icon: BarChart3, soon: "Phase 4" },

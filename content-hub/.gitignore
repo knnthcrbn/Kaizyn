@@ -42,3 +42,6 @@ next-env.d.ts
 
 # claude.ai-hosted build output
 /artifact-dist
+
+# local stand-in for the footage Blob store
+/.footage-dev

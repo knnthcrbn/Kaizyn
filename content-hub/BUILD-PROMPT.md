@@ -132,7 +132,10 @@ that fit the idea they're cutting.
   videos where it's said or shown, filterable, so an editor jumps straight to
   the clip.
 
-How we'd build it (Claude's notes):
+Built 23 Oct 2026; how it works is in the README under "Footage library".
+Storage ended up as a private Vercel Blob store rather than Supabase.
+
+How we'd build it (Claude's notes, before building):
 - Transcript with word timestamps per video (speech-to-text; Claude can't
   take audio).
 - What's on screen: frames every ~2 seconds, described by Claude (people,

@@ -14,6 +14,7 @@ import Stories from "@/app/stories/page";
 import Swipe from "@/app/swipe/page";
 import Playbooks from "@/app/playbooks/page";
 import Studio from "@/app/studio/page";
+import Library from "@/app/library/page";
 import Calendar from "@/app/calendar/page";
 import Analytics from "@/app/analytics/page";
 import Accounts from "@/app/accounts/page";
@@ -30,6 +31,7 @@ const SCREENS: Record<string, ComponentType> = {
   "/stories": Stories,
   "/swipe": Swipe,
   "/playbooks": Playbooks,
+  "/library": Library,
   "/studio": Studio,
   "/calendar": Calendar,
   "/analytics": Analytics,

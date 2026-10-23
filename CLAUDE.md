@@ -42,7 +42,10 @@ Offer it first for new landing pages, recoloured for the brand.
   pickers, web search, attachments, saved chats (IndexedDB, one entry per
   chat). Models and prices: `src/lib/models.ts`. Earlier turns go back to the
   API as text only, never replayed thinking blocks. Vercel's own login wall covers
-  previews only, so production shows the app's sign-in. Phase 2 starts
-  with the footage library (the user's brain dump, 23 Oct 2026): every raw
-  video searchable by what's said and shown, for the editing team. Plan and
-  open decisions in `BUILD-PROMPT.md` §6b.
+  previews only, so production shows the app's sign-in. The footage
+  library (`/library`, built 23 Oct 2026) is live: private Vercel Blob store
+  `content-hub-footage` (BLOB_READ_WRITE_TOKEN; `.footage-dev/` on disk when
+  it's absent), processing in the uploader's browser (Mediabunny for frames,
+  audio and GPS/date tags; Whisper via Transformers.js from jsDelivr; Claude
+  Haiku 5.5 describes frames). The sandbox's Chromium can't decode H.264/AAC,
+  so test with VP9/Opus WebM clips. Details in the README.
