@@ -118,7 +118,35 @@ and by which lessons it can support. One story can power dozens of videos.
   (best moments found from the transcript) and push them into the pipeline as
   new cards.
 - **B-roll library.** Upload and tag my lifestyle footage so text-on-B-roll
-  posts take minutes.
+  posts take minutes. (Now part of the footage library below.)
+
+### 6b. Footage library: a searchable catalog of every raw video
+(Added 23 Oct 2026, my brain dump.) Like Google Drive for all our raw
+footage, but searchable by what's in it, so the editing team can pull clips
+that fit the idea they're cutting.
+- Drop in raw videos; organise them in folders; segment them.
+- Every video gets its transcript extracted, and the hub knows what is
+  *shown* in it, not just what's said.
+- Anyone on the team (me included) searches a term: "dog", "car", "Tesla",
+  "$1 million month", "Fort Lauderdale". Results are the moments in the
+  videos where it's said or shown, filterable, so an editor jumps straight to
+  the clip.
+
+How we'd build it (Claude's notes):
+- Transcript with word timestamps per video (speech-to-text; Claude can't
+  take audio).
+- What's on screen: frames every ~2 seconds, described by Claude (people,
+  objects, cars and brands, setting, on-screen text), grouped into shots.
+  Haiku 5.5 makes this cheap, roughly 15-25¢ per hour of footage.
+- Where and when: phone footage carries GPS and a date, so "Fort Lauderdale"
+  can come straight from the file, not a guess.
+- Search by keyword and by meaning ("a million a month" finds "$1M month"),
+  with filters for folder, pillar, date, place, and said vs shown. A result
+  plays from that second and can open in the Studio as a clip.
+- Needs a shared backend: video storage, a database and team logins
+  (Supabase is the plan), plus a processing worker for big files. If the
+  footage already lives in Google Drive, the hub can index those folders
+  instead of re-uploading.
 
 ### 7. Audio
 I want trending audio. **Be honest about the limits.** The official
@@ -182,8 +210,8 @@ review/approval comments in the Review stage.]
    - **Phase 1**: pipeline board, Claude panel, voice capture and voice
      profile, scripting modes, hook library, story bank, Today view.
      (This alone gets me creating.)
-   - **Phase 2**: editor, auto-captions, exports, repurposing, B-roll
-     library.
+   - **Phase 2**: footage library first (6b), then editor,
+     auto-captions, exports, repurposing.
    - **Phase 3**: calendar, posting goals, batch recording days, weekly
      review.
    - **Phase 4**: analytics loop, trial-reel testing, trending-audio

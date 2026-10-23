@@ -42,4 +42,7 @@ Offer it first for new landing pages, recoloured for the brand.
   pickers, web search, attachments, saved chats (IndexedDB, one entry per
   chat). Models and prices: `src/lib/models.ts`. Earlier turns go back to the
   API as text only, never replayed thinking blocks. Vercel's own login wall covers
-  previews only, so production shows the app's sign-in.
+  previews only, so production shows the app's sign-in. Phase 2 starts
+  with the footage library (the user's brain dump, 23 Oct 2026): every raw
+  video searchable by what's said and shown, for the editing team. Plan and
+  open decisions in `BUILD-PROMPT.md` §6b.

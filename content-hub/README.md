@@ -135,7 +135,7 @@ publishing are added.
 ## Roadmap
 
 1. **Shell + writing system** (this)
-2. Studio: editing, auto-captions, overlays, exports, repurposing, B-roll library
+2. Studio: a searchable footage library first (transcripts and what's on screen, so a search finds the moment), then editing, auto-captions, overlays, exports, repurposing
 3. Calendar and habit: posting goals, batch recording days, weekly review
 4. Analytics and testing: results per post, trial reel A/B log, trending audio
 5. Accounts and publishing: main + clipping pages, multi-account scheduling
