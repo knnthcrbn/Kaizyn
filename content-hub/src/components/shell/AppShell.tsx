@@ -5,6 +5,7 @@ import { usePathname } from "next/navigation";
 import { useHub, useHydrated } from "@/lib/store";
 import { chatForQuickAsk, loadChats, sendMessage, useChats } from "@/lib/chats";
 import { pageName } from "@/lib/nav";
+import { startSync } from "@/lib/sync";
 import { Sidebar } from "./Sidebar";
 import { Topbar } from "./Topbar";
 import { ClaudePanel } from "./ClaudePanel";
@@ -34,6 +35,11 @@ export function AppShell({ children }: { children: ReactNode }) {
   // Chats load after the hub store, which hands over the old single chat.
   useEffect(() => {
     if (ready && !onLogin) void loadChats();
+  }, [ready, onLogin]);
+
+  // The shared hub syncs once this browser's copy has loaded.
+  useEffect(() => {
+    if (ready && !onLogin) return startSync();
   }, [ready, onLogin]);
 
   // "Ask Claude" buttons anywhere in the hub queue a prompt; send it once chats are loaded.

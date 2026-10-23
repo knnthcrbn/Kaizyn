@@ -6,6 +6,7 @@ import { ALL_NAV } from "@/lib/nav";
 import { useHub } from "@/lib/store";
 import { Button, Kbd } from "../ui";
 import { Logo } from "./Sidebar";
+import { SyncStatus } from "./SyncStatus";
 
 export function Topbar({ onMenu }: { onMenu: () => void }) {
   const pathname = usePathname();
@@ -45,6 +46,7 @@ export function Topbar({ onMenu }: { onMenu: () => void }) {
         <Search className="size-4" />
       </button>
 
+      <SyncStatus />
       <Button onClick={() => setCaptureOpen(true)} title="Capture an idea (C)">
         <Plus className="size-3.5" />
         <span className="hidden sm:inline">Capture</span>

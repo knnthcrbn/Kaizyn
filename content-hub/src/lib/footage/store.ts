@@ -1,11 +1,12 @@
-// Server-side storage for the footage library. On Vercel it is the private
-// Blob store "content-hub-footage" (BLOB_READ_WRITE_TOKEN is set when the
-// store is connected); anywhere else it is a folder on disk, so the library
-// can be developed and tested without touching real footage.
+// Server-side storage for the footage library and the shared hub. On Vercel it
+// is the private Blob store "content-hub-footage" (BLOB_READ_WRITE_TOKEN is set
+// when the store is connected); anywhere else it is a folder on disk, so both
+// can be developed and tested without touching real data.
+import { createHash } from "node:crypto";
 import { createReadStream, promises as fs } from "node:fs";
 import path from "node:path";
 import { Readable } from "node:stream";
-import { del, get, list, put } from "@vercel/blob";
+import { BlobPreconditionFailedError, del, get, list, put } from "@vercel/blob";
 
 export const STORAGE: "blob" | "local" = process.env.BLOB_READ_WRITE_TOKEN ? "blob" : "local";
 
@@ -45,6 +46,75 @@ export async function writeJSON(p: string, data: unknown) {
     cacheControlMaxAge: 60,
   });
 }
+
+/** Someone else wrote the file between our read and our write. */
+export class WriteConflict extends Error {}
+
+const hash = (body: string) => `"${createHash("sha1").update(body).digest("hex")}"`;
+
+/**
+ * Reads a JSON file with its version tag. Passing the tag already held skips
+ * the download when nothing changed (`unchanged`), which keeps polling cheap.
+ */
+export async function readTagged<T>(
+  p: string,
+  since?: string,
+): Promise<{ data: T | null; etag: string | null; unchanged?: true }> {
+  if (STORAGE === "local") {
+    let body: string;
+    try {
+      body = await fs.readFile(local(p), "utf8");
+    } catch {
+      return { data: null, etag: null };
+    }
+    const etag = hash(body);
+    return etag === since ? { data: null, etag, unchanged: true } : { data: JSON.parse(body) as T, etag };
+  }
+  const res = await get(p, { access: "private", useCache: false, ...(since ? { ifNoneMatch: since } : {}) }).catch(
+    (e: Error) => (e.name === "BlobNotFoundError" ? null : Promise.reject(e)),
+  );
+  if (!res) return { data: null, etag: null };
+  if (res.statusCode === 304) return { data: null, etag: res.blob.etag, unchanged: true };
+  return { data: (await new Response(res.stream).json()) as T, etag: res.blob.etag };
+}
+
+/**
+ * Writes a JSON file only if it is still at version `etag` (or, with null,
+ * only if it doesn't exist yet), so two saves can't silently overwrite each
+ * other. Throws WriteConflict when it lost the race; read again and retry.
+ */
+export async function writeTagged(p: string, data: unknown, etag: string | null): Promise<string> {
+  const body = JSON.stringify(data);
+  if (STORAGE === "local") {
+    // One process in development, so a queue makes check-then-write atomic.
+    const run = localWrites.then(async () => {
+      const current = await fs.readFile(local(p), "utf8").then(hash, () => null);
+      if (current !== etag) throw new WriteConflict();
+      await fs.mkdir(path.dirname(local(p)), { recursive: true });
+      await fs.writeFile(local(p), body);
+      return hash(body);
+    });
+    localWrites = run.catch(() => {});
+    return run;
+  }
+  try {
+    const res = await put(p, body, {
+      access: "private",
+      addRandomSuffix: false,
+      contentType: "application/json",
+      cacheControlMaxAge: 60,
+      ...(etag ? { ifMatch: etag } : { allowOverwrite: false }),
+    });
+    return res.etag;
+  } catch (e) {
+    if (e instanceof BlobPreconditionFailedError) throw new WriteConflict();
+    // Creating a file that appeared meanwhile fails with a generic error;
+    // the caller re-reads and finds it there.
+    if (!etag) throw new WriteConflict((e as Error).message);
+    throw e;
+  }
+}
+let localWrites: Promise<unknown> = Promise.resolve();
 
 /** Everything under a prefix, with when each was last written. */
 export async function listPrefix(prefix: string): Promise<{ path: string; updatedAt: number; size: number }[]> {

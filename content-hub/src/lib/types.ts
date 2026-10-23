@@ -53,6 +53,7 @@ export interface Story {
   /** Prompts to help tell a story that hasn't been captured yet. */
   questions: string[];
   createdAt: number;
+  updatedAt: number;
 }
 
 export interface VoiceEntry {
@@ -60,6 +61,7 @@ export interface VoiceEntry {
   text: string;
   source: "recording" | "typed" | "seed";
   createdAt: number;
+  updatedAt: number;
 }
 
 export interface SwipeItem {
@@ -67,6 +69,7 @@ export interface SwipeItem {
   url: string;
   note: string;
   createdAt: number;
+  updatedAt: number;
 }
 
 export interface ChatAttachment {

@@ -198,6 +198,7 @@ export const SEED_STORIES: Story[] = [
       "What would you say to someone who's waiting for 'someday'?",
     ],
     createdAt: t0,
+    updatedAt: t0,
   },
   {
     id: "seed-story-agency",
@@ -211,6 +212,7 @@ export const SEED_STORIES: Story[] = [
       "What almost made you quit in the first year?",
     ],
     createdAt: t0 + 1,
+    updatedAt: t0 + 1,
   },
   {
     id: "seed-story-firing",
@@ -225,6 +227,7 @@ export const SEED_STORIES: Story[] = [
       "What do you do differently now?",
     ],
     createdAt: t0 + 2,
+    updatedAt: t0 + 2,
   },
   {
     id: "seed-story-ad-flop",
@@ -238,6 +241,7 @@ export const SEED_STORIES: Story[] = [
       "What did you change, and what happened next?",
     ],
     createdAt: t0 + 3,
+    updatedAt: t0 + 3,
   },
   {
     id: "seed-story-partner",
@@ -251,6 +255,7 @@ export const SEED_STORIES: Story[] = [
       "What are they comfortable sharing on camera?",
     ],
     createdAt: t0 + 4,
+    updatedAt: t0 + 4,
   },
 ];
 
@@ -261,12 +266,14 @@ export const SEED_VOICE: VoiceEntry[] = [
     id: "seed-voice-1",
     source: "seed",
     createdAt: t0,
+    updatedAt: t0,
     text: `All right, I'm just going to talk out loud so you can get the general consensus, and then obviously we're going to have to refine it. But what I'm realizing in the day and age that we live in is content is king. And so I have been trying my hardest to like do content, and it's just extremely hard for me. And I'm realizing I'm not happy because I'm not actually creating content. And there's a saying where it's like in the book Atomic Habits, it's like, you don't fall to your habits, you fall to the level of systems you have in place. And so I just need to create a process that helps me. I have noticed I try to use AI to help with scripting. And a lot of the times it just sounds too robotic and too AI-ish. It's too perfect. And I really don't have stuff to give you that is my voice. So it's like, we're having to like start from scratch. And the kind of realm that I'm in is like really anything. I talk about business. So it's like we run a marketing company. So within that, there's different things we're learning as far as like Facebook advertising, leadership, managing a team, sales, like everything business acumen I'm talking about. Also, the other side of that is like it is lifestyle. So there's gonna be lifestyle stuff where people are just clipping stuff up, B-roll. And then there's just like a text overlay on the screen that is tangible that people will resonate with and which why they would want to repost it. Then there's also just me talking about personal stuff. Like obviously I was killed in a motorcycle accident. So like there's a lot of life experiences or lessons that I can give there. I have a lady. So it's like, it's my brand and I don't want to be, I know people say niche down, but I want to talk about everything. I just want to create this all-inclusive hub that will help me systemize everything where I can really just find myself the ability to get in a flow state.`,
   },
   {
     id: "seed-voice-2",
     source: "seed",
     createdAt: t0 + 1,
+    updatedAt: t0 + 1,
     text: `I'll give you all the account stuff later down the road. Like, that's step 10. We don't really necessarily need all that right now. Like, I just, we got to start building out the shell and take it one step at a time.`,
   },
 ];

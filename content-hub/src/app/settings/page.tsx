@@ -2,10 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { Download, Upload, RotateCcw, CircleCheck, CircleAlert, LogOut, ArrowRight } from "lucide-react";
+import { Download, Upload, RotateCcw, CircleCheck, CircleAlert, LogOut, ArrowRight, RefreshCw } from "lucide-react";
 import { Badge, Button, Card, ConfirmAction, PageHeader } from "@/components/ui";
 import { capability, IN_CLAUDE, type Downloads, type Sample } from "@/lib/platform";
-import { useHub } from "@/lib/store";
+import { backupContent, starterContent, useHub } from "@/lib/store";
+import { replaceHub, syncNow, useSync } from "@/lib/sync";
+import { syncLabel, useNow } from "@/components/shell/SyncStatus";
 import { clearChats, exportChats, importChats, monthSpend, useChats } from "@/lib/chats";
 import { formatCost } from "@/lib/models";
 
@@ -18,8 +20,9 @@ const ROADMAP = [
 ];
 
 export default function SettingsPage() {
-  const importData = useHub((s) => s.importData);
-  const resetAll = useHub((s) => s.resetAll);
+  const sync = useSync();
+  const now = useNow();
+  const shared = sync.status !== "off";
   const fileRef = useRef<HTMLInputElement>(null);
   const [claude, setClaude] = useState<boolean | null>(null);
   const [host, setHost] = useState<"vercel" | "local">("vercel");
@@ -50,6 +53,7 @@ export default function SettingsPage() {
       stories: s.stories,
       voiceEntries: s.voiceEntries,
       voiceProfile: s.voiceProfile,
+      voiceProfileAt: s.voiceProfileAt,
       swipe: s.swipe,
       activityDays: s.activityDays,
       chats: exportChats(),
@@ -77,20 +81,34 @@ export default function SettingsPage() {
   };
 
   const onImport = async (file: File) => {
+    let data: Record<string, unknown> & { items: unknown[] };
     try {
-      const data = JSON.parse(await file.text());
+      data = JSON.parse(await file.text());
       if (!Array.isArray(data.items)) throw new Error();
-      importData(data);
-      importChats(data.chats);
-      setMsg(`Restored ${data.items.length} cards from ${file.name}.`);
     } catch {
-      setMsg("That file isn't a Content Hub backup.");
+      return setMsg("That file isn't a Content Hub backup.");
+    }
+    const from = typeof data.exportedAt === "string" ? ` from ${data.exportedAt.slice(0, 10)}` : "";
+    if (shared && !window.confirm(`Replace the shared hub with this backup${from}? Everyone sees the change.`)) return;
+    try {
+      await replaceHub(backupContent(data));
+      importChats(data.chats);
+      setMsg(`Restored ${data.items.length} cards from ${file.name}${shared ? " for the whole team" : ""}.`);
+    } catch (e) {
+      setMsg(`Couldn't restore: ${(e as Error).message}`);
     }
   };
 
   return (
     <div className="max-w-4xl">
-      <PageHeader title="Settings & backup" description="Your data lives in this browser for now. Back it up, move it to another computer, or start fresh." />
+      <PageHeader
+        title="Settings & backup"
+        description={
+          IN_CLAUDE
+            ? "This copy keeps its data in this browser. Back it up, move it to another computer, or start fresh."
+            : "Everyone who signs in shares this hub. Download a backup any time, restore one, or start fresh."
+        }
+      />
 
       <div className="space-y-6">
         <Card title="Claude">
@@ -140,6 +158,26 @@ export default function SettingsPage() {
           </div>
         </Card>
 
+        {!IN_CLAUDE && (
+          <Card
+            title="Team sync"
+            description="Cards, stories, voice notes, the voice profile and the swipe file are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
+          >
+            <div className="flex flex-wrap items-center gap-3 px-4 pb-4 pt-3 text-[13px]">
+              {sync.status === "synced" ? (
+                <CircleCheck className="size-4 text-good-text" />
+              ) : sync.status === "offline" || sync.status === "error" ? (
+                <CircleAlert className={`size-4 ${sync.status === "error" ? "text-critical-text" : "text-warning"}`} />
+              ) : null}
+              <span className="text-muted">{syncLabel(sync.status, sync.lastSync, sync.error, now) || "Starting…"}</span>
+              <div className="flex-1" />
+              <Button onClick={() => void syncNow()} disabled={sync.status === "syncing"}>
+                <RefreshCw className={`size-3.5 ${sync.status === "syncing" ? "animate-spin" : ""}`} /> Sync now
+              </Button>
+            </div>
+          </Card>
+        )}
+
         <Card title="Sign-in" description={IN_CLAUDE ? "This copy is private to your claude.ai account, so it needs no sign-in." : "One password, set as HUB_PASSWORD on the server. With none set, the hub stays open."}>
           <div className="flex flex-wrap items-center gap-2 px-4 pb-4 pt-3">
             <Link
@@ -181,12 +219,20 @@ export default function SettingsPage() {
             />
             <div className="flex-1" />
             <ConfirmAction
-              question="Erase everything and go back to the starter content?"
+              question={
+                shared
+                  ? "Erase the hub for the whole team and go back to the starter content? Your chats here go too."
+                  : "Erase everything and go back to the starter content?"
+              }
               confirmLabel="Reset"
-              onConfirm={() => {
-                resetAll();
-                clearChats();
-                setMsg("Reset to starter content.");
+              onConfirm={async () => {
+                try {
+                  await replaceHub(starterContent());
+                  clearChats();
+                  setMsg(shared ? "Reset to starter content for the whole team." : "Reset to starter content.");
+                } catch (e) {
+                  setMsg(`Couldn't reset: ${(e as Error).message}`);
+                }
               }}
               className="inline-flex h-8 items-center gap-1.5 rounded-lg px-3 text-[13px] font-medium text-critical-text hover:bg-critical/10"
             >

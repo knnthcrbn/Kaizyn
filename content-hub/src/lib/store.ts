@@ -11,6 +11,7 @@ import type {
   SwipeItem,
   VoiceEntry,
 } from "./types";
+import type { SyncBase } from "./hubsync";
 import { SEED_ITEMS, SEED_STORIES, SEED_VOICE } from "./seed";
 
 // Where the pre-chat-list conversation waits for the chat store (lib/chats.ts)
@@ -32,8 +33,12 @@ interface HubState {
   stories: Story[];
   voiceEntries: VoiceEntry[];
   voiceProfile: string;
+  /** When the voice profile was last saved; the newest save wins across the team. */
+  voiceProfileAt: number;
   swipe: SwipeItem[];
   activityDays: string[];
+  /** Team sync's record of what the server has (lib/sync.ts). */
+  syncBase: SyncBase | null;
 
   // UI state (not persisted)
   openItemId: string | null;
@@ -65,9 +70,6 @@ interface HubState {
   setCaptureOpen: (open: boolean) => void;
   askClaude: (prompt: string) => void;
   takePendingPrompt: () => string | null;
-
-  importData: (data: Partial<HubState>) => void;
-  resetAll: () => void;
 }
 
 const markActive = (days: string[]) =>
@@ -78,14 +80,40 @@ const initialData = () => ({
   stories: SEED_STORIES,
   voiceEntries: SEED_VOICE,
   voiceProfile: "",
+  voiceProfileAt: 0,
   swipe: [] as SwipeItem[],
   activityDays: [] as string[],
 });
+
+/** The parts of the hub that are saved and shared, as opposed to what's open on screen. */
+export type HubContent = ReturnType<typeof initialData>;
+
+/** What Reset goes back to. */
+export const starterContent = initialData;
+
+// Stories, voice notes and swipe items saved before team sync had no
+// updatedAt; their creation time stands in for it.
+const stamped = <T extends { createdAt: number; updatedAt?: number }>(list: unknown) =>
+  Array.isArray(list) ? (list as T[]).map((x) => (x.updatedAt ? x : { ...x, updatedAt: x.createdAt })) : undefined;
+
+/** Brings saved or backed-up data up to the current shape. */
+export function normalize(data: Record<string, unknown>): Partial<HubContent> {
+  const out = { ...data } as Partial<HubContent>;
+  if (data.stories) out.stories = stamped<Story>(data.stories);
+  if (data.voiceEntries) out.voiceEntries = stamped<VoiceEntry>(data.voiceEntries);
+  if (data.swipe) out.swipe = stamped<SwipeItem>(data.swipe);
+  if (typeof data.voiceProfile === "string" && typeof data.voiceProfileAt !== "number") {
+    // A profile from before sync counts as older than any saved since.
+    out.voiceProfileAt = data.voiceProfile ? 1 : 0;
+  }
+  return out;
+}
 
 export const useHub = create<HubState>()(
   persist(
     (set, get) => ({
       ...initialData(),
+      syncBase: null,
       openItemId: null,
       claudeOpen: false,
       paletteOpen: false,
@@ -150,25 +178,26 @@ export const useHub = create<HubState>()(
           ...partial,
           id,
           createdAt: Date.now(),
+          updatedAt: Date.now(),
         };
         set((s) => ({ stories: [story, ...s.stories], activityDays: markActive(s.activityDays) }));
         return id;
       },
       updateStory: (id, patch) =>
-        set((s) => ({ stories: s.stories.map((x) => (x.id === id ? { ...x, ...patch } : x)) })),
+        set((s) => ({ stories: s.stories.map((x) => (x.id === id ? { ...x, ...patch, updatedAt: Date.now() } : x)) })),
       deleteStory: (id) => set((s) => ({ stories: s.stories.filter((x) => x.id !== id) })),
 
       addVoiceEntry: (text, source) =>
         set((s) => ({
-          voiceEntries: [{ id: uid(), text, source, createdAt: Date.now() }, ...s.voiceEntries],
+          voiceEntries: [{ id: uid(), text, source, createdAt: Date.now(), updatedAt: Date.now() }, ...s.voiceEntries],
           activityDays: markActive(s.activityDays),
         })),
       deleteVoiceEntry: (id) =>
         set((s) => ({ voiceEntries: s.voiceEntries.filter((v) => v.id !== id) })),
-      setVoiceProfile: (voiceProfile) => set({ voiceProfile }),
+      setVoiceProfile: (voiceProfile) => set({ voiceProfile, voiceProfileAt: Date.now() }),
 
       addSwipe: (url, note) =>
-        set((s) => ({ swipe: [{ id: uid(), url, note, createdAt: Date.now() }, ...s.swipe] })),
+        set((s) => ({ swipe: [{ id: uid(), url, note, createdAt: Date.now(), updatedAt: Date.now() }, ...s.swipe] })),
       deleteSwipe: (id) => set((s) => ({ swipe: s.swipe.filter((x) => x.id !== id) })),
 
       openItem: (openItemId) => set({ openItemId }),
@@ -182,16 +211,6 @@ export const useHub = create<HubState>()(
         return p;
       },
 
-      importData: (data) =>
-        set({
-          items: data.items ?? get().items,
-          stories: data.stories ?? get().stories,
-          voiceEntries: data.voiceEntries ?? get().voiceEntries,
-          voiceProfile: data.voiceProfile ?? get().voiceProfile,
-          swipe: data.swipe ?? get().swipe,
-          activityDays: data.activityDays ?? get().activityDays,
-        }),
-      resetAll: () => set({ ...initialData(), openItemId: null }),
     }),
     {
       name: "content-hub-v1",
@@ -201,8 +220,10 @@ export const useHub = create<HubState>()(
         stories: s.stories,
         voiceEntries: s.voiceEntries,
         voiceProfile: s.voiceProfile,
+        voiceProfileAt: s.voiceProfileAt,
         swipe: s.swipe,
         activityDays: s.activityDays,
+        syncBase: s.syncBase,
       }),
       // Chats moved to their own store (lib/chats.ts). The old single chat is
       // handed over once, the first time the new store loads.
@@ -214,11 +235,26 @@ export const useHub = create<HubState>()(
           } catch {}
         }
         delete saved.chat;
-        return { ...current, ...(saved as Partial<HubState>) };
+        return { ...current, ...normalize(saved) };
       },
     },
   ),
 );
+
+/** A downloaded backup as hub content; anything it lacks stays as it is now. */
+export function backupContent(raw: Record<string, unknown>): HubContent {
+  const d = normalize(raw);
+  const s = useHub.getState();
+  return {
+    items: d.items ?? s.items,
+    stories: d.stories ?? s.stories,
+    voiceEntries: d.voiceEntries ?? s.voiceEntries,
+    voiceProfile: d.voiceProfile ?? s.voiceProfile,
+    voiceProfileAt: Date.now(),
+    swipe: d.swipe ?? s.swipe,
+    activityDays: d.activityDays ?? s.activityDays,
+  };
+}
 
 /** Loads saved data from the browser once, then reports ready. */
 export function useHydrated() {

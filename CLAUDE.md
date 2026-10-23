@@ -48,4 +48,11 @@ Offer it first for new landing pages, recoloured for the brand.
   it's absent), processing in the uploader's browser (Mediabunny for frames,
   audio and GPS/date tags; Whisper via Transformers.js from jsDelivr; Claude
   Haiku 5.5 describes frames). The sandbox's Chromium can't decode H.264/AAC,
-  so test with VP9/Opus WebM clips. Details in the README.
+  so test with VP9/Opus WebM clips. Details in the README. Team sync (built
+  23 Oct 2026): cards, stories, voice notes, voice profile and swipe file are
+  one shared document, `hub/state.json` in that Blob store, merged per record
+  by `updatedAt` with tombstones (`src/lib/hubsync.ts`, `src/lib/sync.ts`,
+  `/api/hub`). Every store action that changes a record must bump its
+  `updatedAt`, or the change never syncs. Reset and restore replace the hub
+  for everyone. Test sync against `next build && next start`: on 23 Oct
+  `next dev` kept reloading itself in the sandbox.

@@ -156,12 +156,39 @@ Shortcuts: `C` capture an idea, `⌘K` / `Ctrl+K` search and jump, `⌘J` /
 
 ## Where data lives
 
-Footage is shared and stored on the server (see above). Everything else is
-saved in this browser for now (localStorage, and IndexedDB for Claude
-chats). Use
-**Settings → Download backup** to keep a copy or move to another computer. A
-real database and login come with the later phases, when accounts and
-publishing are added.
+The hub is shared. Everyone who signs in sees the same cards, stories, voice
+notes, voice profile, swipe file and streak, and the same footage library.
+Claude chats stay on each device (IndexedDB).
+
+**Team sync** keeps each browser's copy in step with one document on the
+server, `hub/state.json` in the same private Blob store as the footage
+(`.footage-dev/` when run locally):
+
+- Edits save in the browser first, as before, then go up a few seconds
+  later (batched while typing, sent at once when the tab is hidden). Other
+  people's edits come down every minute while someone is using the tab, and
+  whenever it comes back into view. The cloud in the top bar shows the state;
+  click it to sync now.
+- Every save and check is a Blob operation the Vercel plan counts, so a tab
+  nobody has touched for 5 minutes stops checking, and the server answers
+  repeat checks from memory for 20 seconds. Each save numbers the hub
+  (`rev`), so a browser never steps back to an older copy.
+- Each card, story, voice note and swipe item keeps its own `updatedAt`, and
+  the newest copy wins, one record at a time. Two people working on
+  different cards never collide. If two people edit the *same* card in the
+  same minute, the later save wins the whole card.
+- A deleted record leaves a dated tombstone, so a browser with an old copy
+  can't bring it back.
+- Offline edits wait in the browser and go up when it's back online.
+- The server writes only if nobody wrote in between (Blob `ifMatch`), and
+  otherwise re-reads and merges again, so simultaneous saves all land.
+- **Reset** and **Restore from backup** replace the hub for the whole team.
+  They start a new generation, and every browser takes it on its next sync.
+- The first time a browser syncs, it merges what it had with the team's
+  hub. Starter cards nobody touched follow the team.
+
+Use **Settings → Download backup** to keep a copy any time. The claude.ai
+copy has no server, so it keeps its data in that browser.
 
 ## Roadmap
 
@@ -177,6 +204,7 @@ publishing are added.
 - `src/app/api/claude/route.ts`: the server route that talks to Claude (streams thinking, text, searches and sources)
 - `src/lib/chats.ts`: saved chats and the send/stream/stop logic; `src/components/chat/`: the chat UI
 - `src/lib/store.ts`: all hub data and actions (Zustand, saved to localStorage)
+- `src/lib/sync.ts`: team sync in the browser; `src/lib/hubsync.ts`: the shared document and its merge rules; `src/app/api/hub/route.ts`: the server side
 - `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
 - `src/lib/antiAi.ts`: the phrases that make writing sound generated
 - `src/lib/research.json`: the coach, hook and overlay research
