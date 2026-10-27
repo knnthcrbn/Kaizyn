@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Montserrat } from "next/font/google";
 import { AppShell } from "@/components/shell/AppShell";
 import "./globals.css";
 
@@ -11,6 +11,15 @@ const geistSans = Geist({
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+});
+
+// Studio's burned-in captions: LeadLab's caption face (Montserrat ExtraBold).
+// Loaded only when a caption is drawn, so other pages don't pay for it.
+const captionFont = Montserrat({
+  variable: "--font-caption",
+  subsets: ["latin"],
+  weight: ["800"],
+  preload: false,
 });
 
 export const metadata: Metadata = {
@@ -26,7 +35,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
+    <html lang="en" className={`${geistSans.variable} ${geistMono.variable} ${captionFont.variable} h-full antialiased`}>
       <body className="h-full">
         <AppShell>{children}</AppShell>
       </body>

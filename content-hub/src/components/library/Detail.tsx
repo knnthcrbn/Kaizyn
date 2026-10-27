@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import {
   Check,
+  Clapperboard,
   Download,
   Eye,
   Link2,
@@ -25,6 +27,8 @@ import {
   useLibrary,
 } from "@/lib/footage/library";
 import { highlight, timecode } from "@/lib/footage/search";
+import type { Footage } from "@/lib/footage/types";
+import { addClip, createEdit, momentRange, studioUrl } from "@/lib/studio/actions";
 import { useHub } from "@/lib/store";
 import { Button, ConfirmAction, cx, inputCls, selectCls, Tabs } from "../ui";
 import { formatBytes, formatDate, statusOf, useThumbs } from "./shared";
@@ -152,6 +156,7 @@ export function Detail({ id, at, terms, onClose }: { id: string; at?: number; te
                 {copied ? <Check className="size-3.5" /> : <Link2 className="size-3.5" />} {copied ? "Copied" : "Link to this moment"}
               </Button>
               <AddToCard name={item.name} at={now} />
+              {item.uploaded && <AddToEdit item={item} at={now} />}
               {item.uploaded && (
                 <a
                   href={fileUrl(item.file.path)}
@@ -391,6 +396,50 @@ function Empty({ icon: Icon, text }: { icon: typeof Eye; text: string }) {
 }
 
 /** Notes a clip on a pipeline card, so the editor cutting that video finds it. */
+/** Puts the sentence being said at this moment into a Studio edit: a new one (and opens it) or one already going. */
+function AddToEdit({ item, at }: { item: Footage; at: number }) {
+  const edits = useHub((s) => s.edits);
+  const router = useRouter();
+  const [done, setDone] = useState<string | null>(null);
+  return (
+    <label className="relative inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-muted hover:bg-surface-2 hover:text-ink">
+      {done ? <Check className="size-3.5 text-good-text" /> : <Clapperboard className="size-3.5" />}
+      {done ? `Added to ${done}` : "Edit in Studio"}
+      <select
+        value=""
+        onChange={(e) => {
+          const range = momentRange(item, at);
+          if (e.target.value === "new") {
+            const id = createEdit({ title: item.name });
+            addClip(id, item, range.from, range.to);
+            router.push(studioUrl(id));
+            return;
+          }
+          const edit = edits.find((x) => x.id === e.target.value);
+          if (!edit) return;
+          addClip(edit.id, item, range.from, range.to);
+          setDone(edit.title.length > 24 ? `${edit.title.slice(0, 22)}…` : edit.title);
+          setTimeout(() => setDone(null), 2000);
+        }}
+        className="absolute inset-0 cursor-pointer opacity-0"
+        aria-label="Edit this moment in Studio"
+      >
+        <option value="">Edit this moment in Studio…</option>
+        <option value="new">New edit with this moment</option>
+        {edits.length > 0 && (
+          <optgroup label="Add to an edit">
+            {edits.map((x) => (
+              <option key={x.id} value={x.id}>
+                {x.title || "Untitled edit"}
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </select>
+    </label>
+  );
+}
+
 function AddToCard({ name, at }: { name: string; at: number }) {
   const items = useHub((s) => s.items);
   const updateItem = useHub((s) => s.updateItem);

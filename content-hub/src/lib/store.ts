@@ -12,6 +12,7 @@ import type {
   VoiceEntry,
 } from "./types";
 import type { SyncBase } from "./hubsync";
+import { DEFAULT_CAPTIONS, type Edit } from "./studio/types";
 import { SEED_ITEMS, SEED_STORIES, SEED_VOICE } from "./seed";
 
 // Where the pre-chat-list conversation waits for the chat store (lib/chats.ts)
@@ -36,6 +37,8 @@ interface HubState {
   /** When the voice profile was last saved; the newest save wins across the team. */
   voiceProfileAt: number;
   swipe: SwipeItem[];
+  /** Studio edits, shared like cards. */
+  edits: Edit[];
   activityDays: string[];
   /** Team sync's record of what the server has (lib/sync.ts). */
   syncBase: SyncBase | null;
@@ -64,6 +67,11 @@ interface HubState {
   addSwipe: (url: string, note: string) => void;
   deleteSwipe: (id: string) => void;
 
+  addEdit: (partial?: Partial<Edit>) => string;
+  /** Changes an edit; pass a function to change it from its latest state. */
+  updateEdit: (id: string, patch: Partial<Edit> | ((e: Edit) => Partial<Edit>)) => void;
+  deleteEdit: (id: string) => void;
+
   openItem: (id: string | null) => void;
   setClaudeOpen: (open: boolean) => void;
   setPaletteOpen: (open: boolean) => void;
@@ -82,6 +90,7 @@ const initialData = () => ({
   voiceProfile: "",
   voiceProfileAt: 0,
   swipe: [] as SwipeItem[],
+  edits: [] as Edit[],
   activityDays: [] as string[],
 });
 
@@ -200,6 +209,33 @@ export const useHub = create<HubState>()(
         set((s) => ({ swipe: [{ id: uid(), url, note, createdAt: Date.now(), updatedAt: Date.now() }, ...s.swipe] })),
       deleteSwipe: (id) => set((s) => ({ swipe: s.swipe.filter((x) => x.id !== id) })),
 
+      addEdit: (partial) => {
+        const id = uid();
+        const now = Date.now();
+        const edit: Edit = {
+          title: "Untitled edit",
+          aspect: "9:16",
+          clips: [],
+          captions: DEFAULT_CAPTIONS,
+          captionText: {},
+          overlay: { text: "", until: 0, position: "top" },
+          ...partial,
+          id,
+          createdAt: now,
+          updatedAt: now,
+        };
+        set((s) => ({ edits: [edit, ...s.edits], activityDays: markActive(s.activityDays) }));
+        return id;
+      },
+      updateEdit: (id, patch) =>
+        set((s) => ({
+          edits: s.edits.map((e) =>
+            e.id === id ? { ...e, ...(typeof patch === "function" ? patch(e) : patch), updatedAt: Date.now() } : e,
+          ),
+          activityDays: markActive(s.activityDays),
+        })),
+      deleteEdit: (id) => set((s) => ({ edits: s.edits.filter((e) => e.id !== id) })),
+
       openItem: (openItemId) => set({ openItemId }),
       setClaudeOpen: (claudeOpen) => set({ claudeOpen }),
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
@@ -222,6 +258,7 @@ export const useHub = create<HubState>()(
         voiceProfile: s.voiceProfile,
         voiceProfileAt: s.voiceProfileAt,
         swipe: s.swipe,
+        edits: s.edits,
         activityDays: s.activityDays,
         syncBase: s.syncBase,
       }),
@@ -252,6 +289,7 @@ export function backupContent(raw: Record<string, unknown>): HubContent {
     voiceProfile: d.voiceProfile ?? s.voiceProfile,
     voiceProfileAt: Date.now(),
     swipe: d.swipe ?? s.swipe,
+    edits: d.edits ?? s.edits,
     activityDays: d.activityDays ?? s.activityDays,
   };
 }

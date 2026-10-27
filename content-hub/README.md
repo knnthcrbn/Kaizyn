@@ -128,6 +128,40 @@ teammate can re-run processing on a stored video ("Process now"/"Process
 again"), reading it from storage. Code: `src/lib/footage/`,
 `src/app/api/library/`, `src/app/library/`.
 
+## Studio
+
+`/studio` cuts library footage into a finished video.
+
+- **Start an edit** with New edit (it opens on the clip picker), from a
+  moment in the footage library (Edit in Studio: the sentence being said
+  there becomes the first clip), or from a pipeline card (Edit video: the
+  edit is linked to the card and takes its title and overlay).
+- **Clips** come from searching what's said or shown. Trim each one by
+  dragging the ends of its cut, with Start/End at playhead, or by picking
+  the sentence to start or end on from its transcript. Reorder, mute, and
+  frame it: fill the frame with the subject kept in view (one position
+  works for every shape), or show all of it over a blurred copy.
+- **Captions** are LeadLab Studio's bold look (`lead-lab-ai`
+  `studio/captions.py`): Montserrat ExtraBold capitals, black outline, the
+  spoken word in yellow, blue or green, at most 3 words and 11 letters at a
+  time, at chest height. There's also an all-white look. The wording comes
+  from the library's transcripts and can be fixed or hidden per line,
+  for that edit only. Transcripts time phrases, not words, so each phrase's
+  words are spread across it by length (what LeadLab does without word
+  times).
+- **Hook text** sits on a white box at the top or middle, for the whole video
+  or the first 3 or 5 seconds, typed or picked from the linked card.
+- **Export** 9:16, 4:5, 1:1 and 16:9 in one go. The video is made in the
+  browser (Mediabunny + WebCodecs): each clip is streamed from the library,
+  drawn frame by frame with the same `drawFrame` the preview uses, and
+  encoded as MP4 (H.264/AAC) where the browser can, WebM (VP9/Opus)
+  otherwise. No server rendering, no time limit. Exports download and can be
+  saved to Footage › Exports for the team.
+
+Edits are small records (no video in them) in the shared hub, so the team
+sees and edits the same ones. Code: `src/lib/studio/` (types, captions,
+`render.ts`, `export.ts`), `src/components/studio/`, `src/app/studio/`.
+
 ## On your phone
 
 Open the hub in Safari, tap Share → **Add to Home Screen**. It opens full
@@ -204,6 +238,7 @@ copy has no server, so it keeps its data in that browser.
 - `src/app/api/claude/route.ts`: the server route that talks to Claude (streams thinking, text, searches and sources)
 - `src/lib/chats.ts`: saved chats and the send/stream/stop logic; `src/components/chat/`: the chat UI
 - `src/lib/store.ts`: all hub data and actions (Zustand, saved to localStorage)
+- `src/lib/studio/`, `src/components/studio/`: the Studio editor (see Studio above)
 - `src/lib/sync.ts`: team sync in the browser; `src/lib/hubsync.ts`: the shared document and its merge rules; `src/app/api/hub/route.ts`: the server side
 - `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
 - `src/lib/antiAi.ts`: the phrases that make writing sound generated

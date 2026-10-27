@@ -13,7 +13,7 @@ import { formatCost } from "@/lib/models";
 
 const ROADMAP = [
   { phase: "Phase 1", title: "Shell + writing system", status: "Done", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
-  { phase: "Phase 2", title: "Studio", status: "Now", items: "Footage library (live): raw videos in folders, searchable by what's said and shown. Next: editing, auto-captions, overlays, exports, repurposing long form into shorts" },
+  { phase: "Phase 2", title: "Studio", status: "Now", items: "Footage library and Studio editor (live): find clips by what's said and shown, cut them together, LeadLab captions, hook text, export 9:16 / 4:5 / 1:1 / 16:9. Next: music, repurposing long form into shorts" },
   { phase: "Phase 3", title: "Calendar & habit", status: "", items: "Calendar, posting goals per pillar, batch recording days, weekly review" },
   { phase: "Phase 4", title: "Analytics & testing", status: "", items: "Results per post, trial reel A/B log, trending audio tracker, feedback into Claude" },
   { phase: "Phase 5", title: "Accounts & publishing", status: "Last", items: "Connect main + clipping pages, multi-account scheduling, staggered posts" },
@@ -55,6 +55,7 @@ export default function SettingsPage() {
       voiceProfile: s.voiceProfile,
       voiceProfileAt: s.voiceProfileAt,
       swipe: s.swipe,
+      edits: s.edits,
       activityDays: s.activityDays,
       chats: exportChats(),
     };
@@ -161,7 +162,7 @@ export default function SettingsPage() {
         {!IN_CLAUDE && (
           <Card
             title="Team sync"
-            description="Cards, stories, voice notes, the voice profile and the swipe file are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
+            description="Cards, stories, voice notes, the voice profile, the swipe file and Studio edits are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
           >
             <div className="flex flex-wrap items-center gap-3 px-4 pb-4 pt-3 text-[13px]">
               {sync.status === "synced" ? (

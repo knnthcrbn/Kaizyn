@@ -1,6 +1,6 @@
 import { connection } from "next/server";
 import { readTagged, writeTagged, WriteConflict } from "@/lib/footage/store";
-import { applyOps, cleanOps, emptyDoc, HUB_PATH, type HubDoc } from "@/lib/hubsync";
+import { applyOps, cleanOps, emptyDoc, HUB_PATH, normalizeDoc, type HubDoc } from "@/lib/hubsync";
 
 // Every open tab checks in about once a minute, and each Blob read counts
 // against the plan's monthly allowance. One server instance answers those
@@ -24,7 +24,7 @@ export async function GET(req: Request) {
   try {
     const { data, etag } = await load();
     if (since && etag === since) return Response.json({ unchanged: true, etag });
-    return Response.json({ doc: data ?? emptyDoc(), etag });
+    return Response.json({ doc: data ? normalizeDoc(data) : emptyDoc(), etag });
   } catch (err) {
     return Response.json({ error: `Couldn't read the hub: ${(err as Error).message}` }, { status: 500 });
   }
@@ -46,7 +46,7 @@ export async function POST(req: Request) {
       // write below); every retry reads what's really stored.
       if (attempt > 0) cache = null;
       const { data, etag } = await load();
-      const doc = data ?? emptyDoc();
+      const doc = data ? normalizeDoc(data) : emptyDoc();
       // Made before a reset or restore: the browser adopts the new hub instead.
       if (data && ops.gen !== doc.gen && !ops.reset) {
         if (attempt === 0) continue; // be sure against the stored copy first

@@ -55,4 +55,13 @@ Offer it first for new landing pages, recoloured for the brand.
   `/api/hub`). Every store action that changes a record must bump its
   `updatedAt`, or the change never syncs. Reset and restore replace the hub
   for everyone. Test sync against `next build && next start`: on 23 Oct
-  `next dev` kept reloading itself in the sandbox.
+  `next dev` kept reloading itself in the sandbox. Studio (`/studio`, built
+  27 Oct 2026): edits are a synced collection (`edits`, `lib/studio/types.ts`);
+  preview and export share `lib/studio/render.ts` `drawFrame`, so what plays
+  is what exports; export runs in the browser with Mediabunny (MP4 H.264/AAC,
+  WebM fallback; the sandbox Chromium only makes WebM). Captions copy
+  LeadLab's bold look from `lead-lab-ai/studio/captions.py` (Montserrat
+  ExtraBold 108px on 1080, 7px outline, yellow/blue/green spoken word, 3 words
+  / 11 letters, y 1130 of 1920). If the stored hub is wiped, browsers that
+  synced before put everything back (the hub's `rev` going backwards, or no
+  stored file, is the signal).

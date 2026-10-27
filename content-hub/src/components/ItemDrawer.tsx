@@ -1,7 +1,10 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Check, MonitorPlay, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Check, Clapperboard, MonitorPlay, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { editForCard, studioUrl } from "@/lib/studio/actions";
+import { IN_CLAUDE } from "@/lib/platform";
 import { useHub } from "@/lib/store";
 import { FORMATS, PILLARS, PILLAR_STYLE, SCRIPT_MODES, STAGES, scriptModeLabel } from "@/lib/meta";
 import type { ContentItem, Format, Pillar, ScriptMode, StageId } from "@/lib/types";
@@ -36,6 +39,8 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
   const [tab, setTab] = useState<Tab>(item.script ? "script" : "hooks");
   const [newHook, setNewHook] = useState("");
   const [prompter, setPrompter] = useState(false);
+  const router = useRouter();
+  const hasEdit = useHub((s) => s.edits.some((e) => e.cardId === item.id));
   const set = (patch: Partial<ContentItem>) => update(item.id, patch);
 
   const words = item.script.trim() ? item.script.trim().split(/\s+/).length : 0;
@@ -51,6 +56,11 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
           <span className="text-xs text-ghost">/</span>
           <span className="truncate text-xs text-muted">{STAGES.find((s) => s.id === item.stage)?.label}</span>
           <div className="flex-1" />
+          {!IN_CLAUDE && (
+            <Button size="sm" onClick={() => router.push(studioUrl(editForCard(item.id)))} title="Cut this card's video in Studio">
+              <Clapperboard className="size-3.5" /> {hasEdit ? "Open edit" : "Edit video"}
+            </Button>
+          )}
           <Button size="sm" onClick={() => setPrompter(true)}>
             <MonitorPlay className="size-3.5" /> Teleprompter
           </Button>

@@ -6,9 +6,10 @@
 // a dated tombstone, so a browser that still has an old copy can't bring it
 // back. Resetting or restoring a backup starts a new generation, which every
 // browser adopts wholesale on its next sync.
+import type { Edit } from "./studio/types";
 import type { ContentItem, Story, SwipeItem, VoiceEntry } from "./types";
 
-export const COLLECTIONS = ["items", "stories", "voiceEntries", "swipe"] as const;
+export const COLLECTIONS = ["items", "stories", "voiceEntries", "swipe", "edits"] as const;
 export type Collection = (typeof COLLECTIONS)[number];
 
 export interface HubRecord {
@@ -22,6 +23,8 @@ export interface HubData {
   stories: Story[];
   voiceEntries: VoiceEntry[];
   swipe: SwipeItem[];
+  /** Studio edits (lib/studio/types.ts). */
+  edits: Edit[];
   voiceProfile: { text: string; at: number };
   activityDays: string[];
 }
@@ -76,10 +79,23 @@ export const emptyDoc = (gen = 1): HubDoc => ({
   stories: [],
   voiceEntries: [],
   swipe: [],
+  edits: [],
   voiceProfile: { text: "", at: 0 },
   activityDays: [],
-  deleted: { items: {}, stories: {}, voiceEntries: {}, swipe: {} },
+  deleted: { items: {}, stories: {}, voiceEntries: {}, swipe: {}, edits: {} },
 });
+
+/**
+ * A stored hub with every part present. Collections added after a hub was
+ * first saved (Studio's edits, 27 Oct) are simply missing from older ones.
+ */
+export function normalizeDoc(doc: Partial<HubDoc> | null | undefined): HubDoc {
+  const base = emptyDoc(doc?.gen ?? 1);
+  const out = { ...base, ...(doc ?? {}) } as HubDoc;
+  for (const c of COLLECTIONS) if (!Array.isArray(out[c])) (out[c] as HubRecord[]) = [];
+  out.deleted = { ...base.deleted, ...(doc?.deleted ?? {}) };
+  return out;
+}
 
 export const isEmpty = (d: HubData) =>
   COLLECTIONS.every((c) => d[c].length === 0) && !d.voiceProfile.text && d.activityDays.length === 0;
@@ -120,7 +136,8 @@ export function cleanOps(raw: unknown): HubOps | null {
 }
 
 /** Applies one browser's changes to the stored hub and returns the new one. */
-export function applyOps(doc: HubDoc, ops: HubOps, now = Date.now()): HubDoc {
+export function applyOps(stored: HubDoc, ops: HubOps, now = Date.now()): HubDoc {
+  const doc = normalizeDoc(stored);
   if (ops.reset) {
     const next = emptyDoc(doc.gen + 1);
     next.rev = (doc.rev ?? 0) + 1;

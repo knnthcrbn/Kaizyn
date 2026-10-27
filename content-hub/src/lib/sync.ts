@@ -33,16 +33,20 @@ export const useSync = create<{ status: SyncStatus; lastSync: number | null; err
 const POLL_MS = 60_000;
 /** Polling stops once nobody has touched the tab for this long. */
 const IDLE_MS = 5 * 60_000;
-const DATA_KEYS = ["items", "stories", "voiceEntries", "swipe", "voiceProfile", "voiceProfileAt", "activityDays"] as const;
+const DATA_KEYS = ["items", "stories", "voiceEntries", "swipe", "edits", "voiceProfile", "voiceProfileAt", "activityDays"] as const;
 
 const recordsOf = (s: HubContent) =>
-  ({ items: s.items, stories: s.stories, voiceEntries: s.voiceEntries, swipe: s.swipe }) as Record<Collection, HubRecord[]>;
+  ({ items: s.items, stories: s.stories, voiceEntries: s.voiceEntries, swipe: s.swipe, edits: s.edits }) as Record<
+    Collection,
+    HubRecord[]
+  >;
 
 const contentOf = (doc: HubDoc): HubContent => ({
   items: doc.items,
   stories: doc.stories,
   voiceEntries: doc.voiceEntries,
   swipe: doc.swipe,
+  edits: doc.edits,
   voiceProfile: doc.voiceProfile.text,
   voiceProfileAt: doc.voiceProfile.at,
   activityDays: doc.activityDays,
@@ -87,12 +91,13 @@ function pending(s: HubContent, base: SyncBase): HubOps | null {
  * what was agreed before, which tells a record deleted here (in base, missing
  * here) from one added elsewhere (in neither), and so on.
  */
-function merge(doc: HubDoc, base: SyncBase | null, s: HubContent): HubContent {
+function merge(doc: HubDoc, base: SyncBase | null, s: HubContent, seedsFollowTeam = true): HubContent {
   // A reset or a restored backup: take the new hub as it is.
   if (base && doc.gen !== base.gen) return contentOf(doc);
   // First sync in this browser. Starter cards nobody touched follow the team:
   // ones the team deleted go here too, and ones deleted here go there.
-  const joining = !base;
+  // (Not when putting back a wiped hub: then everything here goes back.)
+  const joining = !base && seedsFollowTeam;
   const local = recordsOf(s);
   const out = {} as Record<Collection, HubRecord[]>;
   for (const c of COLLECTIONS) {
@@ -121,6 +126,7 @@ function merge(doc: HubDoc, base: SyncBase | null, s: HubContent): HubContent {
     stories: out.stories as HubContent["stories"],
     voiceEntries: out.voiceEntries as HubContent["voiceEntries"],
     swipe: out.swipe as HubContent["swipe"],
+    edits: out.edits as HubContent["edits"],
     voiceProfile: remoteProfile ? doc.voiceProfile.text : s.voiceProfile,
     voiceProfileAt: remoteProfile ? doc.voiceProfile.at : s.voiceProfileAt,
     activityDays: days,
@@ -183,6 +189,9 @@ function post<T>(ops: HubOps) {
 }
 
 let lastPull = 0;
+let rejoin = false;
+/** The stored hub was lost; this browser is putting back everything it has. */
+let restoring = false;
 let retry: ReturnType<typeof setTimeout> | undefined;
 
 async function cycle(pull: boolean) {
@@ -194,6 +203,13 @@ async function cycle(pull: boolean) {
       lastPull = Date.now();
       const since = base?.etag ? `?since=${encodeURIComponent(base.etag)}` : "";
       const res = await call<{ doc?: HubDoc; etag: string | null; unchanged?: true }>(`/api/hub${since}`);
+      if (base && res.doc && res.etag === null) {
+        // Nothing is stored any more, though this browser has synced before:
+        // the hub was wiped. Everything here goes back up.
+        base = null;
+        restoring = true;
+        useHub.setState({ syncBase: null });
+      }
       // A server can answer from a copy a few seconds old; never step back to it.
       const older = !!res.doc && !!base && (res.doc.rev ?? 0) <= base.rev;
       if (older && base && (res.doc!.rev ?? 0) === base.rev && res.etag !== base.etag) {
@@ -208,7 +224,7 @@ async function cycle(pull: boolean) {
           useHub.setState({ syncBase: base });
         } else {
           const next = baseOf(res.doc, res.etag);
-          apply(merge(res.doc, base, useHub.getState()), next);
+          apply(merge(res.doc, base, useHub.getState(), !restoring), next);
           base = next;
         }
       }
@@ -217,10 +233,26 @@ async function cycle(pull: boolean) {
     if (ops) {
       useSync.setState({ status: "syncing" });
       const res = await post<{ doc: HubDoc; etag: string }>(ops);
-      const next = baseOf(res.doc, res.etag);
-      apply(merge(res.doc, base, useHub.getState()), next);
-      base = next;
+      if ((res.doc.rev ?? 0) < base!.rev) {
+        // A save answers from what's really stored, so a lower count means the
+        // stored hub was lost or wiped. Merging against it would delete here
+        // what was deleted there; instead this browser joins afresh and puts
+        // back everything it has.
+        useHub.setState({ syncBase: null });
+        rejoin = true;
+        restoring = true;
+      } else {
+        const next = baseOf(res.doc, res.etag);
+        apply(merge(res.doc, base, useHub.getState()), next);
+        base = next;
+      }
     }
+    if (rejoin) {
+      rejoin = false;
+      void sync(true);
+      return;
+    }
+    restoring = false;
     useSync.setState({ status: "synced", lastSync: Date.now(), error: null });
     // Edits made while this was on the wire.
     if (pending(useHub.getState(), base!)) schedulePush();

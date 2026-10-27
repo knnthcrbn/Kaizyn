@@ -1,20 +1,44 @@
-import { Captions, Download, Film, Layers, Scissors, Search } from "lucide-react";
-import { ComingSoon } from "@/components/ComingSoon";
+"use client";
+
+import { useEffect, useState } from "react";
+import { PageHeader } from "@/components/ui";
+import { EditList } from "@/components/studio/EditList";
+import { Editor } from "@/components/studio/Editor";
+import { loadLibrary } from "@/lib/footage/library";
+import { IN_CLAUDE } from "@/lib/platform";
+import { studioUrl } from "@/lib/studio/actions";
 
 export default function StudioPage() {
-  return (
-    <ComingSoon
-      title="Studio"
-      phase="Phase 2"
-      pitch="Edit and export without leaving the hub, built on the same patterns as LeadLab Studio."
-      features={[
-        { icon: Search, title: "Footage library", body: "Every raw video in folders, searchable by what's said and shown. Type \"Tesla\" or \"$1M month\" and jump to the moment." },
-        { icon: Scissors, title: "Trim and cut", body: "Open raw footage straight from a card and cut it down." },
-        { icon: Captions, title: "Auto-captions", body: "Word-level timing, styled to your brand, burned in on export." },
-        { icon: Layers, title: "Hook overlays", body: "Pull the hook and overlay text from the card, ready for trial reels." },
-        { icon: Download, title: "Multi-format export", body: "9:16, 1:1 and 16:9 in one go." },
-        { icon: Film, title: "Repurpose", body: "Turn one YouTube video into suggested short clips, each a new card." },
-      ]}
-    />
-  );
+  if (IN_CLAUDE) {
+    return (
+      <PageHeader
+        title="Studio"
+        description="Studio edits video from the team's footage library, so it runs in the hosted hub, not this claude.ai copy."
+      />
+    );
+  }
+  return <Studio />;
+}
+
+const editFromUrl = () => new URLSearchParams(window.location.search).get("e");
+
+function Studio() {
+  const [editId, setEditId] = useState<string | null>(null);
+
+  useEffect(() => {
+    void loadLibrary();
+    // The URL says which edit is open, so a link to an edit opens it and Back
+    // returns to the list.
+    const sync = () => setEditId(editFromUrl());
+    sync();
+    window.addEventListener("popstate", sync);
+    return () => window.removeEventListener("popstate", sync);
+  }, []);
+
+  const open = (id: string | null) => {
+    window.history.pushState(null, "", studioUrl(id ?? undefined));
+    setEditId(id);
+  };
+
+  return editId ? <Editor key={editId} id={editId} onClose={() => open(null)} /> : <EditList onOpen={open} />;
 }

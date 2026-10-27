@@ -120,6 +120,13 @@ and by which lessons it can support. One story can power dozens of videos.
 - **B-roll library.** Upload and tag my lifestyle footage so text-on-B-roll
   posts take minutes. (Now part of the footage library below.)
 
+Built 27 Oct 2026 as the Studio (`/studio`): trim and cut from the footage
+library, LeadLab Studio's bold captions (`lead-lab-ai/studio/captions.py`)
+from the library's transcripts, hook text from the card, export at 9:16, 4:5,
+1:1 and 16:9 in the browser. Captions time each spoken phrase and spread its
+words by length rather than true word-level timing. Repurposing is still to
+come.
+
 ### 6b. Footage library: a searchable catalog of every raw video
 (Added 23 Oct 2026, my brain dump.) Like Google Drive for all our raw
 footage, but searchable by what's in it, so the editing team can pull clips
