@@ -1,14 +1,16 @@
 "use client";
 
 import { useRef } from "react";
-import { ArrowDown, ArrowUp, Plus, Trash2, Volume2, VolumeX } from "lucide-react";
+import { ArrowDown, ArrowUp, Plus, RotateCcw, Trash2, TriangleAlert, Volume2, VolumeX } from "lucide-react";
 import { MomentThumb } from "@/components/library/shared";
 import { Button, Segmented, cx } from "@/components/ui";
 import { timecode } from "@/lib/footage/search";
 import type { Footage } from "@/lib/footage/types";
+import { captionsStale, restoreClip } from "@/lib/studio/ops";
 import { seek, usePlayer } from "@/lib/studio/player";
-import { clipLength, clipStarts, type Edit, type EditClip } from "@/lib/studio/types";
+import { clipStarts, keptLength, locate, type Edit, type EditClip } from "@/lib/studio/types";
 import { useHub } from "@/lib/store";
+import { Label, Slider } from "./controls";
 import { precise } from "./format";
 
 const MIN_CLIP = 0.3;
@@ -71,7 +73,8 @@ export function ClipPanel({
                     {i + 1}. {item?.name ?? "Missing video"}
                   </div>
                   <div className="font-mono text-[11px] tabular-nums text-faint">
-                    {timecode(c.in)}–{timecode(c.out)} · {clipLength(c).toFixed(1)}s{c.muted ? " · muted" : ""}
+                    {timecode(c.in)}–{timecode(c.out)} · {keptLength(c).toFixed(1)}s{c.cuts?.length ? ` · ${c.cuts.length} cut${c.cuts.length === 1 ? "" : "s"}` : ""}
+                    {c.muted ? " · muted" : ""}
                   </div>
                 </div>
                 <div className="flex opacity-0 transition-opacity group-hover:opacity-100">
@@ -88,6 +91,7 @@ export function ClipPanel({
               </div>
               {on && item && (
                 <ClipDetail
+                  edit={edit}
                   clip={c}
                   item={item}
                   start={starts[i]}
@@ -103,11 +107,13 @@ export function ClipPanel({
 }
 
 function ClipDetail({
+  edit,
   clip,
   item,
   start,
   onChange,
 }: {
+  edit: Edit;
   clip: EditClip;
   item: Footage;
   start: number;
@@ -115,8 +121,10 @@ function ClipDetail({
 }) {
   const duration = item.duration ?? clip.out;
   // Re-render only when the playhead enters or leaves this clip, not every frame.
-  const inside = usePlayer((s) => s.t >= start && s.t <= start + clipLength(clip));
-  const here = () => clip.in + (usePlayer.getState().t - start);
+  const inside = usePlayer((s) => s.t >= start && s.t <= start + keptLength(clip));
+  // The source moment under the playhead, allowing for anything cut out before it.
+  const here = () => locate(edit, usePlayer.getState().t)?.source ?? clip.in;
+  const cutSeconds = (clip.cuts ?? []).reduce((n, k) => n + Math.max(0, Math.min(clip.out, k.to) - Math.max(clip.in, k.from)), 0);
   const setIn = (v: number) => onChange({ in: Math.max(0, Math.min(v, clip.out - MIN_CLIP)) });
   const setOut = (v: number) => onChange({ out: Math.min(duration, Math.max(v, clip.in + MIN_CLIP)) });
   const portrait = (item.height ?? 9) > (item.width ?? 16);
@@ -135,6 +143,44 @@ function ClipDetail({
           </Button>
         </div>
       </section>
+
+      {((clip.cuts?.length ?? 0) > 0 || (clip.zooms?.length ?? 0) > 0 || captionsStale(clip)) && (
+        <section className="space-y-1.5 text-xs text-muted">
+          {(clip.cuts?.length ?? 0) > 0 && (
+            <div className="flex items-center justify-between">
+              <span>
+                {clip.cuts!.length} cut{clip.cuts!.length === 1 ? "" : "s"} out ({cutSeconds.toFixed(1)}s)
+              </span>
+              <Button size="sm" variant="ghost" onClick={() => restoreClip(edit.id, clip.id)}>
+                <RotateCcw className="size-3.5" /> Restore
+              </Button>
+            </div>
+          )}
+          {(clip.zooms?.length ?? 0) > 0 && (
+            <div className="flex items-center justify-between">
+              <span>
+                {clip.zooms!.length} zoom{clip.zooms!.length === 1 ? "" : "s"}
+              </span>
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => {
+                  // Only this clip's zooms.
+                  useHub.getState().updateEdit(edit.id, (e) => ({ clips: e.clips.map((x) => (x.id === clip.id ? { ...x, zooms: [] } : x)) }));
+                }}
+              >
+                Clear
+              </Button>
+            </div>
+          )}
+          {captionsStale(clip) && (
+            <p className="flex items-start gap-1.5 text-[11px] text-warning">
+              <TriangleAlert className="mt-0.5 size-3 shrink-0" />
+              Trimmed wider than its captions reach: run auto captions again.
+            </p>
+          )}
+        </section>
+      )}
 
       {!!item.transcript?.length && (
         <section>
@@ -282,44 +328,6 @@ function TrimBar({
         <span>{precise(clip.out)}</span>
       </div>
     </div>
-  );
-}
-
-function Label({ children, className }: { children: React.ReactNode; className?: string }) {
-  return <div className={cx("mb-2 text-[11px] font-medium uppercase tracking-wide text-faint", className)}>{children}</div>;
-}
-
-export function Slider({
-  label,
-  value,
-  min,
-  max,
-  step,
-  onChange,
-  format,
-}: {
-  label: string;
-  value: number;
-  min: number;
-  max: number;
-  step: number;
-  onChange: (v: number) => void;
-  format?: (v: number) => string;
-}) {
-  return (
-    <label className="grid grid-cols-[96px_1fr_40px] items-center gap-2 text-xs text-muted">
-      {label}
-      <input
-        type="range"
-        min={min}
-        max={max}
-        step={step}
-        value={value}
-        onChange={(e) => onChange(Number(e.target.value))}
-        className="accent-white"
-      />
-      <span className="text-right font-mono text-[11px] tabular-nums text-faint">{format ? format(value) : value.toFixed(2)}</span>
-    </label>
   );
 }
 

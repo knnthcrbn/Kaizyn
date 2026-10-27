@@ -25,6 +25,7 @@ export function ClipPicker({ edit, onClose, onAdded }: { edit: Edit; onClose: ()
   const [q, setQ] = useState("");
   const [added, setAdded] = useState<Set<string>>(new Set());
   const query = q.trim();
+  const long = edit.aspect === "16:9";
   const results = useMemo(() => (query.length >= 2 ? search(items, [query], { kinds: ALL_KINDS, folder: "" }) : []), [items, query]);
 
   const add = (key: string, item: Footage, range: { from: number; to: number }) => {
@@ -72,7 +73,7 @@ export function ClipPicker({ edit, onClose, onAdded }: { edit: Edit; onClose: ()
                       ? momentRange(r.item, h.start)
                       : h.kind === "shown"
                         ? { from: h.start, to: Math.max(h.end, h.start + 2) }
-                        : wholeRange(r.item);
+                        : wholeRange(r.item, long);
                   return (
                     <li key={key}>
                       <button
@@ -119,7 +120,7 @@ export function ClipPicker({ edit, onClose, onAdded }: { edit: Edit; onClose: ()
                   const key = `whole:${item.id}`;
                   return (
                     <li key={item.id}>
-                      <button onClick={() => add(key, item, wholeRange(item))} className="group relative block w-full overflow-hidden rounded-lg border border-line text-left hover:border-line-strong">
+                      <button onClick={() => add(key, item, wholeRange(item, long))} className="group relative block w-full overflow-hidden rounded-lg border border-line text-left hover:border-line-strong">
                         <MomentThumb item={item} at={0} className="aspect-video w-full" />
                         <div className="flex items-center gap-2 px-2 py-1.5">
                           <span className="min-w-0 flex-1 truncate text-xs text-ink">{item.name}</span>
@@ -139,7 +140,7 @@ export function ClipPicker({ edit, onClose, onAdded }: { edit: Edit; onClose: ()
       </div>
 
       <div className="flex items-center justify-between border-t border-line px-4 py-3">
-        <span className="text-xs text-faint">{added.size ? `${added.size} added. Trim them on the right.` : "Clips go on the end of the edit."}</span>
+        <span className="text-xs text-faint">{added.size ? `${added.size} added. Trim them on the right.` : long ? "Whole videos go on the end of the edit." : "Clips go on the end of the edit."}</span>
         <Button variant="primary" onClick={onClose}>
           Done
         </Button>

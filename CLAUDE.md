@@ -62,6 +62,15 @@ Offer it first for new landing pages, recoloured for the brand.
   WebM fallback; the sandbox Chromium only makes WebM). Captions copy
   LeadLab's bold look from `lead-lab-ai/studio/captions.py` (Montserrat
   ExtraBold 108px on 1080, 7px outline, yellow/blue/green spoken word, 3 words
-  / 11 letters, y 1130 of 1920). If the stored hub is wiped, browsers that
+  / 11 letters, y 1130 of 1920). Studio 2 (27 Oct): clips carry `cuts`,
+  `zooms` and auto-caption `words`, all in source time (`segments()` turns
+  a clip minus its cuts into pieces; use it, not in/out, for edit time);
+  dead space, waveform cut, AI zoom (Sonnet 5.5 via `/api/studio/emphasis`)
+  and auto captions (word-timestamp Whisper) live in `lib/studio/ops.ts`,
+  each one undo step. Fonts and music go to `studio/fonts|audio/` in the
+  footage store. Druk Wide is paid: the user uploads their .otf; Unbounded
+  is the stand-in. Test auto captions with a fake transformers module routed
+  in place of the jsDelivr URL, AI zoom with a mock on ANTHROPIC_BASE_URL.
+  If the stored hub is wiped, browsers that
   synced before put everything back (the hub's `rev` going backwards, or no
   stored file, is the signal).

@@ -130,37 +130,69 @@ again"), reading it from storage. Code: `src/lib/footage/`,
 
 ## Studio
 
-`/studio` cuts library footage into a finished video.
+`/studio` cuts library footage into a finished video, CapCut-style.
 
-- **Start an edit** with New edit (it opens on the clip picker), from a
-  moment in the footage library (Edit in Studio: the sentence being said
-  there becomes the first clip), or from a pipeline card (Edit video: the
-  edit is linked to the card and takes its title and overlay).
-- **Clips** come from searching what's said or shown. Trim each one by
-  dragging the ends of its cut, with Start/End at playhead, or by picking
-  the sentence to start or end on from its transcript. Reorder, mute, and
-  frame it: fill the frame with the subject kept in view (one position
-  works for every shape), or show all of it over a blurred copy.
-- **Captions** are LeadLab Studio's bold look (`lead-lab-ai`
-  `studio/captions.py`): Montserrat ExtraBold capitals, black outline, the
-  spoken word in yellow, blue or green, at most 3 words and 11 letters at a
-  time, at chest height. There's also an all-white look. The wording comes
-  from the library's transcripts and can be fixed or hidden per line,
-  for that edit only. Transcripts time phrases, not words, so each phrase's
-  words are spread across it by length (what LeadLab does without word
-  times).
-- **Hook text** sits on a white box at the top or middle, for the whole video
-  or the first 3 or 5 seconds, typed or picked from the linked card.
-- **Export** 9:16, 4:5, 1:1 and 16:9 in one go. The video is made in the
-  browser (Mediabunny + WebCodecs): each clip is streamed from the library,
-  drawn frame by frame with the same `drawFrame` the preview uses, and
-  encoded as MP4 (H.264/AAC) where the browser can, WebM (VP9/Opus)
-  otherwise. No server rendering, no time limit. Exports download and can be
-  saved to Footage › Exports for the team.
+- **Start an edit** with New short (9:16, for Reels, TikTok and Shorts) or
+  New YouTube video (16:9, 1920×1080; clips come in whole, and its captions
+  start in a lower-third YouTube look). Both open on the clip picker. An
+  edit also starts from a moment in the footage library (Edit in Studio) or
+  a pipeline card (Edit video: linked to the card, takes its title and
+  overlay). Any edit can switch shape at the top, and export in several.
+- **Timeline**: a ruler to scrub on, the clips (red marks where something was
+  cut out), the zooms, the sound's waveform and the music. Zoom in to slice
+  precisely; long edits scroll. Drag across the waveform to select a
+  stretch, then Cut out (or Delete). Space plays and pauses from anywhere
+  but a text box; ← → step a frame (a second with Shift). The playhead
+  drags: paused stays paused, playing carries on from where it's let go.
+  ⌘Z / ⇧⌘Z undo and redo (a slider drag is one step; every tool is its own).
+- **Remove dead space** cuts the silences between what's said from every
+  clip (Tight 0.25 s+, Natural 0.45 s+, Loose 0.8 s+, keeping a little air
+  either side). Pauses come back with one tap; cuts made by hand stay. The
+  waveform is measured in the browser (`lib/studio/peaks.ts`, kept in
+  IndexedDB) from the library copy.
+- **Auto captions** listen to the clips in the browser and time every word
+  (Whisper through Transformers.js, the `_timestamped` models on WASM; same
+  CDN as the library). Where word timing can't load, each phrase's words are
+  spread across it. Wording can be fixed or hidden per line, for that edit.
+- **AI zoom** (Subtle / Normal / Strong): Claude (Sonnet 5.5,
+  `/api/studio/emphasis`) reads the captions as numbered words and picks the
+  lines an editor would punch in on (the hook, a number, the turn, the call
+  to action). Each becomes an eased zoom on its clip; Strong lines zoom
+  further. Zoom here adds one by hand at the playhead.
+- **Caption styles**: 12 presets (LeadLab bold, Punchy, Wide, Karaoke,
+  Boxed, Neon, Bouncy, YouTube…) and then every control: any font (14
+  built in, plus uploads), size, italic, caps, letter spacing, colour, the
+  spoken word in any colour or with a box behind it (and a grow), outline
+  (colour, width), shadow (colour, opacity, blur, distance, angle),
+  background box (colour, opacity, roundness, padding, border), words at
+  once and height. Animations: pop, bounce, rise, slide, fade, word by word,
+  zoom.
+- **Hook text**: 8 styles (Instagram white, black box, glass, lilac, yellow
+  sticker, red caps, outline, wide headline) and the same controls as
+  captions, plus position, line width, how long it shows and an animation
+  (pop, rise, slide, fade, typewriter).
+- **Fonts**: Druk Wide is a paid Commercial Type font, so it can't be built
+  in: upload the licensed .otf (Captions or Hook text › Font) and the whole
+  team can use it. Unbounded Black is the free wide stand-in. Uploads live
+  in shared storage under `studio/fonts/`.
+- **Music**: upload a song or sound (or pick one the team uploaded, under
+  `studio/audio/`), set its volume, where in the song to start, and fade
+  in/out. The clips' own sound has its own volume (up to 200% in the
+  export).
+- **Export** 9:16, 4:5, 1:1 and 16:9. The video is made in the browser
+  (Mediabunny + WebCodecs): each clip is streamed from the library, drawn
+  frame by frame with the same `drawFrame` the preview uses, and encoded as
+  MP4 (H.264/AAC) where the browser can, WebM (VP9/Opus) otherwise. Sound
+  is made in 8-second windows ahead of the frames. An edit over 3 minutes
+  asks where to save first (Chrome/Edge) and streams to that file, so a
+  long YouTube video never has to fit in memory. Short exports download and
+  can be saved to Footage › Exports for the team.
 
 Edits are small records (no video in them) in the shared hub, so the team
-sees and edits the same ones. Code: `src/lib/studio/` (types, captions,
-`render.ts`, `export.ts`), `src/components/studio/`, `src/app/studio/`.
+sees and edits the same ones. Code: `src/lib/studio/` (`types.ts` model and
+segments, `captions.ts`, `render.ts`, `export.ts`, `ops.ts` the tools,
+`peaks.ts`, `fonts.ts`, `presets.ts`), `src/components/studio/`,
+`src/app/studio/`, `src/app/api/studio/`.
 
 ## On your phone
 
@@ -220,6 +252,9 @@ server, `hub/state.json` in the same private Blob store as the footage
   They start a new generation, and every browser takes it on its next sync.
 - The first time a browser syncs, it merges what it had with the team's
   hub. Starter cards nobody touched follow the team.
+
+Studio's uploaded fonts and music sit in the same store, under
+`studio/fonts/` and `studio/audio/`, for the whole team.
 
 Use **Settings → Download backup** to keep a copy any time. The claude.ai
 copy has no server, so it keeps its data in that browser.

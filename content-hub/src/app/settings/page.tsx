@@ -13,7 +13,7 @@ import { formatCost } from "@/lib/models";
 
 const ROADMAP = [
   { phase: "Phase 1", title: "Shell + writing system", status: "Done", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
-  { phase: "Phase 2", title: "Studio", status: "Now", items: "Footage library and Studio editor (live): find clips by what's said and shown, cut them together, LeadLab captions, hook text, export 9:16 / 4:5 / 1:1 / 16:9. Next: music, repurposing long form into shorts" },
+  { phase: "Phase 2", title: "Studio", status: "Now", items: "Footage library and Studio editor (live): find clips by what's said and shown, cut them together, remove dead space, auto captions, AI zoom, styled hook text, music, export shorts and YouTube videos. Next: repurposing long form into shorts" },
   { phase: "Phase 3", title: "Calendar & habit", status: "", items: "Calendar, posting goals per pillar, batch recording days, weekly review" },
   { phase: "Phase 4", title: "Analytics & testing", status: "", items: "Results per post, trial reel A/B log, trending audio tracker, feedback into Claude" },
   { phase: "Phase 5", title: "Accounts & publishing", status: "Last", items: "Connect main + clipping pages, multi-account scheduling, staggered posts" },

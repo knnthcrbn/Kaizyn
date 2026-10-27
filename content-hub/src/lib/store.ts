@@ -12,7 +12,7 @@ import type {
   VoiceEntry,
 } from "./types";
 import type { SyncBase } from "./hubsync";
-import { DEFAULT_CAPTIONS, type Edit } from "./studio/types";
+import { defaultOverlay, leadlabCaptions, youtubeCaptions, type Edit } from "./studio/types";
 import { SEED_ITEMS, SEED_STORIES, SEED_VOICE } from "./seed";
 
 // Where the pre-chat-list conversation waits for the chat store (lib/chats.ts)
@@ -216,9 +216,9 @@ export const useHub = create<HubState>()(
           title: "Untitled edit",
           aspect: "9:16",
           clips: [],
-          captions: DEFAULT_CAPTIONS,
+          captions: partial?.aspect === "16:9" ? youtubeCaptions() : leadlabCaptions(),
           captionText: {},
-          overlay: { text: "", until: 0, position: "top" },
+          overlay: defaultOverlay(),
           ...partial,
           id,
           createdAt: now,

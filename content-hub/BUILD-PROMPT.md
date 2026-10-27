@@ -123,9 +123,11 @@ and by which lessons it can support. One story can power dozens of videos.
 Built 27 Oct 2026 as the Studio (`/studio`): trim and cut from the footage
 library, LeadLab Studio's bold captions (`lead-lab-ai/studio/captions.py`)
 from the library's transcripts, hook text from the card, export at 9:16, 4:5,
-1:1 and 16:9 in the browser. Captions time each spoken phrase and spread its
-words by length rather than true word-level timing. Repurposing is still to
-come.
+1:1 and 16:9 in the browser. Same day, Studio 2: waveform slicing, remove
+dead space, auto captions timed word by word, AI zoom on the lines that
+land, CapCut-style caption and hook styling (any font including an uploaded
+Druk Wide, outline, shadow, box, animations), music, undo, space bar and
+playhead scrubbing, and YouTube (16:9) edits. Repurposing is still to come.
 
 ### 6b. Footage library: a searchable catalog of every raw video
 (Added 23 Oct 2026, my brain dump.) Like Google Drive for all our raw

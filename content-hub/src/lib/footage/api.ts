@@ -40,8 +40,10 @@ export async function uploadVideo(
   storage: "blob" | "local",
   onProgress: (pct: number) => void,
   signal?: AbortSignal,
+  type?: string,
 ) {
-  const contentType = file.type || (/\.mov$/i.test(file.name) ? "video/quicktime" : "video/mp4");
+  // Studio's fonts and music come through here too, with their own type.
+  const contentType = type || file.type || (/\.mov$/i.test(file.name) ? "video/quicktime" : "video/mp4");
   if (storage === "blob") {
     const { upload } = await import("@vercel/blob/client");
     await upload(path, file, {

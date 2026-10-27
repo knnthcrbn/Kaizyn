@@ -10,9 +10,11 @@ export async function structured<T>(opts: {
   content: Anthropic.ContentBlockParam[];
   schema: Record<string, unknown>;
   maxTokens?: number;
+  /** Haiku unless the job needs more judgement. */
+  model?: string;
 }): Promise<T> {
   const res = await new Anthropic().messages.create({
-    model: LIBRARY_MODEL,
+    model: opts.model ?? LIBRARY_MODEL,
     max_tokens: opts.maxTokens ?? 4000,
     output_config: { effort: "low", format: { type: "json_schema", schema: opts.schema } },
     system: opts.system,

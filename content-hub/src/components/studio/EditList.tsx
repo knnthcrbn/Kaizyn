@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { Clapperboard, FolderOpen, Plus, Trash2 } from "lucide-react";
+import { Clapperboard, FolderOpen, MonitorPlay, Smartphone, Trash2 } from "lucide-react";
 import { Poster } from "@/components/library/shared";
 import { Badge, Button, ConfirmAction, PageHeader } from "@/components/ui";
 import { useLibrary } from "@/lib/footage/library";
@@ -21,12 +21,8 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
     <div>
       <PageHeader
         title="Studio"
-        description="Cut clips from the footage library into a finished video: trim, captions in the LeadLab style, hook text, then export for Reels, the feed or YouTube."
-        actions={
-          <Button variant="primary" onClick={() => onOpen(createEdit())}>
-            <Plus className="size-3.5" /> New edit
-          </Button>
-        }
+        description="Cut clips from the footage library into a finished video: trim, cut the dead space, auto captions, zooms, hook text and music, then export for Reels, TikTok or YouTube."
+        actions={<NewButtons onOpen={onOpen} />}
       />
 
       {!sorted.length ? (
@@ -34,13 +30,11 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
           <Clapperboard className="size-6 text-ghost" />
           <h2 className="mt-3 text-[13px] font-medium text-ink">No edits yet</h2>
           <p className="mt-1 max-w-sm text-xs leading-relaxed text-faint">
-            Start one here, or open a moment in the footage library and choose Edit in Studio. Captions come from the
-            transcripts the library already made.
+            Start a short (9:16, for Reels, TikTok and Shorts) or a YouTube video (16:9), or open a moment in the footage
+            library and choose Edit in Studio.
           </p>
-          <div className="mt-4 flex gap-2">
-            <Button variant="primary" onClick={() => onOpen(createEdit())}>
-              <Plus className="size-3.5" /> New edit
-            </Button>
+          <div className="mt-4 flex flex-wrap justify-center gap-2">
+            <NewButtons onOpen={onOpen} />
             <Link
               href="/library"
               className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong bg-surface-2 px-3 text-[13px] font-medium text-ink hover:bg-surface-3"
@@ -87,5 +81,18 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
         </div>
       )}
     </div>
+  );
+}
+
+function NewButtons({ onOpen }: { onOpen: (id: string) => void }) {
+  return (
+    <>
+      <Button variant="primary" onClick={() => onOpen(createEdit())} data-studio-new-short>
+        <Smartphone className="size-3.5" /> New short
+      </Button>
+      <Button onClick={() => onOpen(createEdit({ aspect: "16:9" }))} data-studio-new-youtube>
+        <MonitorPlay className="size-3.5" /> New YouTube video
+      </Button>
+    </>
   );
 }

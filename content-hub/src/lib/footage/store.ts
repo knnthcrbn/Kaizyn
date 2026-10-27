@@ -234,8 +234,24 @@ function parseRange(range: string | null, size: number): [number, number] | null
 function guessType(p: string) {
   const ext = p.split(".").pop()?.toLowerCase();
   return (
-    { mp4: "video/mp4", m4v: "video/mp4", mov: "video/quicktime", webm: "video/webm", json: "application/json", jpg: "image/jpeg" }[
-      ext ?? ""
-    ] ?? "application/octet-stream"
+    {
+      mp4: "video/mp4",
+      m4v: "video/mp4",
+      mov: "video/quicktime",
+      webm: "video/webm",
+      json: "application/json",
+      jpg: "image/jpeg",
+      otf: "font/otf",
+      ttf: "font/ttf",
+      woff: "font/woff",
+      woff2: "font/woff2",
+      mp3: "audio/mpeg",
+      m4a: "audio/mp4",
+      aac: "audio/aac",
+      wav: "audio/wav",
+      ogg: "audio/ogg",
+      opus: "audio/ogg",
+      flac: "audio/flac",
+    }[ext ?? ""] ?? "application/octet-stream"
   );
 }

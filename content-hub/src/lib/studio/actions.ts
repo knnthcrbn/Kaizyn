@@ -4,7 +4,8 @@
 // in the footage library, a card in the pipeline, or the Studio itself.
 import type { Footage } from "../footage/types";
 import { uid, useHub } from "../store";
-import { newClip, type Edit } from "./types";
+import { defaultOverlay, newClip, type Edit } from "./types";
+import { newUndoStep } from "./undo";
 
 /** A sensible cut around a moment: the sentence being said there, else ten seconds from it. */
 export function momentRange(item: Footage, at: number) {
@@ -14,14 +15,18 @@ export function momentRange(item: Footage, at: number) {
   return { from: Math.max(0, at - 0.5), to: Math.min(end, Math.max(at - 0.5, 0) + 10) };
 }
 
-/** The whole video if it's short, else its first 15 seconds; trim from there. */
-export function wholeRange(item: Footage) {
+/**
+ * For a short (or a vertical edit), the whole video if it's short, else its
+ * first 15 seconds; trim from there. A YouTube edit takes the whole video.
+ */
+export function wholeRange(item: Footage, long = false) {
   const d = item.duration ?? 15;
-  return { from: 0, to: d <= 60 ? d : 15 };
+  return { from: 0, to: long || d <= 60 ? d : 15 };
 }
 
 export function addClip(editId: string, item: Footage, from: number, to: number) {
   const clip = newClip(item.id, from, to, uid());
+  newUndoStep();
   useHub.getState().updateEdit(editId, (e) => ({ clips: [...e.clips, clip] }));
   return clip.id;
 }
@@ -39,7 +44,7 @@ export function editForCard(cardId: string) {
   return s.addEdit({
     title: card?.title ?? "Untitled edit",
     cardId,
-    overlay: { text: card?.overlay ?? "", until: 0, position: "top" },
+    overlay: { ...defaultOverlay(), text: card?.overlay ?? "" },
   });
 }
 
