@@ -3,13 +3,18 @@
 import { useState } from "react";
 import { Check, Copy, FlaskConical, Plus } from "lucide-react";
 import { Sources } from "@/components/Sources";
-import { Card, PageHeader, Segmented, cx, selectCls } from "@/components/ui";
+import { Badge, Card, PageHeader, Segmented, cx, selectCls } from "@/components/ui";
 import { PILLARS, PILLAR_STYLE } from "@/lib/meta";
 import { useHub } from "@/lib/store";
 import type { Pillar } from "@/lib/types";
 import research from "@/lib/research.json";
 
 type Tab = "hooks" | "overlays" | "trials";
+
+// Entries added to the research after the first pass carry the date they were
+// added, and say "New" for a few weeks so returning visitors can spot them.
+const NEW_FOR_MS = 21 * 86_400_000;
+const isNew = (added?: string) => !!added && Date.now() - Date.parse(added) < NEW_FOR_MS;
 
 export default function HooksPage() {
   const [tab, setTab] = useState<Tab>("hooks");
@@ -84,7 +89,10 @@ export default function HooksPage() {
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
           {research.hookTypes.map((h) => (
             <div key={h.id} className="flex flex-col rounded-xl border border-line bg-surface p-4">
-              <div className="text-[13px] font-medium text-ink">{h.name}</div>
+              <div className="flex items-start justify-between gap-2">
+                <div className="text-[13px] font-medium text-ink">{h.name}</div>
+                {isNew(h.added) && <Badge>New</Badge>}
+              </div>
               <p className="mt-1 text-xs leading-relaxed text-faint">{h.whyItWorks}</p>
               <div className="mt-3 rounded-md bg-surface-2 px-3 py-2 font-mono text-[11px] leading-relaxed text-muted">{h.template}</div>
               <ul className="mt-3 flex-1 space-y-2">
@@ -121,7 +129,10 @@ export default function HooksPage() {
                 </span>
               </div>
               <div className="mt-3 flex items-start justify-between gap-2">
-                <div className="text-[13px] font-medium text-ink">{o.name}</div>
+                <div className="flex items-center gap-2 text-[13px] font-medium text-ink">
+                  {o.name}
+                  {isNew(o.added) && <Badge>New</Badge>}
+                </div>
                 <span className="flex shrink-0 gap-0.5 opacity-0 transition-opacity group-hover:opacity-100">
                   <IconBtn onClick={() => copy(o.example)} title="Copy">
                     {flash === o.example ? <Check className="size-3.5 text-good-text" /> : <Copy className="size-3.5" />}
@@ -134,7 +145,8 @@ export default function HooksPage() {
                 </span>
               </div>
               <div className="mt-1 font-mono text-[11px] text-faint">{o.template}</div>
-              <p className="mt-2 text-xs leading-relaxed text-muted">{o.whenToUse}</p>
+              <p className="mt-2 flex-1 text-xs leading-relaxed text-muted">{o.whenToUse}</p>
+              <Sources urls={o.sources} />
             </div>
           ))}
         </div>

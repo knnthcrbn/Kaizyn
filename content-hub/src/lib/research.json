@@ -663,6 +663,380 @@
     "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts",
     "https://www.netinfluencer.com/creator-hooks-jake-thomas-code-on-clickable-youtube-titles/"
    ]
+  },
+  {
+   "id": "prediction",
+   "name": "Prediction / Fortune teller",
+   "whyItWorks": "It stakes a claim about what's about to change and dares the viewer to disagree. Anything that might affect their near future feels urgent. One of Kallaway's six core archetypes. Strongest when you can show the change already starting.",
+   "template": "[Thing] is about to change how [audience] [does action]. Here's what's coming.",
+   "examples": {
+    "business": [
+     "In 12 months, half the agencies running Meta ads won't exist. Here's why.",
+     "AI is about to change how small businesses hire salespeople. Most owners aren't ready."
+    ],
+    "lifestyle": [
+     "The people who win the next five years are doing this right now.",
+     "In a year, you'll wish you started this today."
+    ],
+    "personal": [
+     "My kids won't remember what I bought them. They'll remember this.",
+     "One day you'll get a call that changes everything. Don't wait for it."
+    ]
+   },
+   "sources": [
+    "https://www.content.game/p/hooks",
+    "https://prealgo.com/blog/hook-archetypes-2026"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "investigator",
+   "name": "Investigator / I found",
+   "whyItWorks": "It reveals something hidden inside something familiar, so the viewer feels they're getting found information, not opinion. Kallaway names it among his six archetypes, and it's the steady one: fewer flops than the more polarizing hooks.",
+   "template": "I found [hidden thing] in [familiar place] that [unexpected effect].",
+   "examples": {
+    "business": [
+     "I found a setting in Ads Manager that's been quietly eating 30% of your budget.",
+     "I found the one line in our sales script that was losing us deals."
+    ],
+    "lifestyle": [
+     "I found the reason my mornings felt rushed. It wasn't the alarm.",
+     "I found a spot in Fort Lauderdale nobody's posting about."
+    ],
+    "personal": [
+     "I found the real reason I stopped riding. It wasn't fear.",
+     "I found out why I kept picking fights at home. It had nothing to do with her."
+    ]
+   },
+   "sources": [
+    "https://www.content.game/p/hooks",
+    "https://prealgo.com/blog/hook-archetypes-2026"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "case-study",
+   "name": "Case study / Teacher",
+   "whyItWorks": "A specific person, a specific result and a slightly unexpected method. The advice arrives through someone else's win, so it doesn't sound like a lecture, and the result is the proof. Kallaway's 'teacher' archetype.",
+   "template": "[Person] got [specific result] by [unexpected method].",
+   "examples": {
+    "business": [
+     "This roofer got 212 leads in 30 days by turning off half his ads.",
+     "My client doubled close rate without hiring a single new rep. Here's what he changed."
+    ],
+    "lifestyle": [
+     "My buddy went from broke to buying his mom a house. One habit did it.",
+     "The calmest founder I know checks his phone twice a day. Here's how."
+    ],
+    "personal": [
+     "The happiest couple I know does one thing every single night.",
+     "My nurse after the accident taught me the best lesson I've ever learned about pressure."
+    ]
+   },
+   "sources": [
+    "https://www.content.game/p/hooks",
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-archetypes.md"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "social-proof",
+   "name": "Name drop / Social proof",
+   "whyItWorks": "Leading with a recognizable name, a big result or someone people trust borrows their credibility in the first second. In a study of 121,820 short-form hooks, social-proof openers had the highest median views of 11 types. Only use names and results that are real.",
+   "template": "[Recognizable person or big result] [did / told me] [thing]. Here's what it means for you.",
+   "examples": {
+    "business": [
+     "A founder doing $40M a year told me the one hire he'd make first.",
+     "We've run ads for 300+ businesses. These are the 3 offers that always win."
+    ],
+    "lifestyle": [
+     "Every millionaire I've had dinner with does this one thing.",
+     "The most successful guy in my building never posts. Here's what he does instead."
+    ],
+    "personal": [
+     "The surgeon who saved my life told me something I think about every day.",
+     "My pastor said one sentence that fixed how I lead at home."
+    ]
+   },
+   "sources": [
+    "https://quso.ai/research/best-hooks-for-short-form"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "cost-confession",
+   "name": "Cost confession",
+   "whyItWorks": "Burning real time or money on the viewer's behalf reads as effort, and visible effort raises how much the advice seems worth. The number does the work: a vague 'I did a lot of research' buys nothing, a real receipt buys attention.",
+   "template": "I spent [specific cost] on [thing] so you don't have to. Here's what I learned.",
+   "examples": {
+    "business": [
+     "I've spent $2.3M on Meta ads so you don't have to. Here's what actually matters.",
+     "I paid for 4 sales trainings this year. Only one was worth it."
+    ],
+    "lifestyle": [
+     "I spent $14,000 on productivity tools. I use two.",
+     "I tried 6 morning routines so you don't have to. Here's the one that stuck."
+    ],
+    "personal": [
+     "Almost dying cost me 3 months in a hospital bed. Here's what it taught me for free.",
+     "I wasted 5 years chasing the wrong things. Learn from my receipt."
+    ]
+   },
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-tactics.md",
+    "https://marketingmonk.so/tools/video-hook-generator"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "credibility-curiosity",
+   "name": "Credibility + curiosity",
+   "whyItWorks": "One short line of real experience, then a gap: credibility in second one, curiosity in second two. On its own an authority line is one of the weakest openers (last of 11 types in a 121K-hook study), so it only works as the setup for a surprising turn.",
+   "template": "I've [spent X years / done Y] in [field]. The real reason [outcome] isn't [common answer].",
+   "examples": {
+    "business": [
+     "I've managed ad budgets for 8 years. The real reason your ads stopped working isn't the creative.",
+     "I've hired over 40 people. The best ones never had the best resume."
+    ],
+    "lifestyle": [
+     "I've worked from 11 countries. The best office was the cheapest one.",
+     "I've driven a Tesla for [3] years. Here's what nobody tells you before you buy one."
+    ],
+    "personal": [
+     "I've been with my lady [7] years. The thing that saved us wasn't date night.",
+     "I was dead for [X] minutes. What scared me most wasn't dying."
+    ]
+   },
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-tactics.md",
+    "https://quso.ai/research/best-hooks-for-short-form"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "price-comparison",
+   "name": "This vs that / Price comparison",
+   "whyItWorks": "Two extremes side by side make the viewer guess which wins before you show it. The contrast carries the video, and it's one of the biggest formats on YouTube ('$1 vs $1,000,000,000 Yacht!' and its many copies).",
+   "template": "$[cheap] [thing] vs $[expensive] [thing]. [Which one wins / What's the difference]?",
+   "examples": {
+    "business": [
+     "$500 ad vs $50,000 ad. Same offer. Guess which one got more leads.",
+     "$15/hour assistant vs $150/hour consultant. Which one grew my business more?"
+    ],
+    "lifestyle": [
+     "$4 coffee vs $40 coffee in Miami. Worth it?",
+     "$80 hotel vs $800 hotel. I stayed in both this week."
+    ],
+    "personal": [
+     "The $20 date vs the $2,000 date. She remembers one of them.",
+     "What $0 looked like vs what [now] looks like. Same guy."
+    ]
+   },
+   "sources": [
+    "https://www.digitalinformationworld.com/2023/06/mrbeasts-latest-video-racks-up-47.html",
+    "https://boingboing.net/2020/07/20/1-million-vs-1-billion-comp.html"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "ranking",
+   "name": "Ranking / Tier list",
+   "whyItWorks": "People can't help arguing with a ranking, and arguing means commenting. YouTube reports more than 1 billion views on videos with 'tier list' in the title in the first half of 2025 alone, in Shorts as well as long form. A ranking nobody disagrees with gets no comments.",
+   "template": "Ranking every [thing] I've [used / tried / hired] from worst to best.",
+   "examples": {
+    "business": [
+     "Ranking every lead source we've tested for local businesses, worst to best.",
+     "Tier list of every type of salesperson I've hired."
+    ],
+    "lifestyle": [
+     "Ranking every city I've lived in for running a business.",
+     "Ranking my cars by how much they actually cost me."
+    ],
+    "personal": [
+     "Ranking the hardest things I've been through. Number one isn't the accident.",
+     "Ranking the best advice I've ever gotten."
+    ]
+   },
+   "sources": [
+    "https://blog.youtube/culture-and-trends/tier-list/",
+    "https://www.rostercon.com/en/magazine/video-games-esport/why-tier-lists-keep-dominating-fan-culture-442092"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "comment-reply",
+   "name": "Reply to a comment",
+   "whyItWorks": "Answering a real viewer's question proves people are already asking, puts the question on screen as a sticker, and tells the asker (and everyone like them) you listen. TikTok built 'reply to comments with video' for this; #replytocomments passed 1.8 billion views when it launched.",
+   "template": "Replying to @[name]: '[their question or pushback]'. [Your answer, starting with the payoff].",
+   "examples": {
+    "business": [
+     "Replying to @[name]: 'how do you find clients with no portfolio?' Here's exactly what I'd do.",
+     "Someone said Facebook ads are dead. Here's last month's dashboard."
+    ],
+    "lifestyle": [
+     "Replying to @[name]: 'what does a day actually look like for you?' Let me show you.",
+     "You asked what car I'd buy again. Not the one you think."
+    ],
+    "personal": [
+     "Replying to @[name]: 'what was the accident actually like?' I've never told the full story.",
+     "You asked how we stay together while building a business. Honestly?"
+    ]
+   },
+   "sources": [
+    "https://newsroom.tiktok.com/en-us/product-tutorial-reply-to-comments-with-video",
+    "https://techcrunch.com/2021/03/04/tiktok-launches-tiktok-qa-a-new-feature-for-creators-to-engage-with-users-questions/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "day-in-life",
+   "name": "Day in the life",
+   "whyItWorks": "People are curious how other people actually live and work, and an unpolished day reads as honest next to produced ads. #dayinmylife and #dailyvlog have tens of billions of views. For a business owner it doubles as recruiting and trust-building.",
+   "template": "A day in the life of a [role] who [specific detail].",
+   "examples": {
+    "business": [
+     "A day in the life of an agency owner with 30 clients and no office.",
+     "A day in my life the week we almost lost our biggest client."
+    ],
+    "lifestyle": [
+     "A day in the life working from Fort Lauderdale.",
+     "A realistic Tuesday as a 7-figure business owner. It's mostly emails."
+    ],
+    "personal": [
+     "A day in my life one year after the accident.",
+     "A day in our life running a business as a couple."
+    ]
+   },
+   "sources": [
+    "https://www.uschamber.com/co/grow/marketing/tiktok-social-media-marketing-trends",
+    "https://playplay.com/blog/day-in-the-life-video-ideas/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "behind-the-scenes",
+   "name": "Behind the scenes / Watch me",
+   "whyItWorks": "It shows the part people never see, live, instead of describing it. In a 2025 Clutch survey, 80% of people said they pay more attention when a video feels personal, and 44% prefer casual creator-style clips to polished brand spots.",
+   "template": "Watch me [do the hard or hidden part of the job] [right now / for real].",
+   "examples": {
+    "business": [
+     "Watch me audit a client's ad account live. I'm not editing out the bad parts.",
+     "Behind the scenes of a $50K/month client onboarding call."
+    ],
+    "lifestyle": [
+     "Watch me plan a full week of content in one hour.",
+     "What a 'work trip' actually looks like behind the photos."
+    ],
+    "personal": [
+     "Watch me have the conversation I've been avoiding for a month.",
+     "The part of physical therapy nobody films."
+    ]
+   },
+   "sources": [
+    "https://www.businesswire.com/news/home/20251112921539/en",
+    "https://adspyder.io/behind-the-scenes-videos-building-authenticity-and-trust"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "news-reaction",
+   "name": "News reaction / Green screen",
+   "whyItWorks": "Something just happened and you tell them what it means for them. Recency and relevance do the hooking, and showing the headline behind you proves it's real. Green screen has become a go-to format for commentary and news reaction on TikTok and Reels.",
+   "template": "[Headline on screen behind you]. Here's what this means if you [audience situation].",
+   "examples": {
+    "business": [
+     "Meta just changed how it counts leads. If you run ads, here's what to do today.",
+     "This company just laid off its whole sales team for AI. Here's what they got wrong."
+    ],
+    "lifestyle": [
+     "Everyone's talking about this article on remote work. Here's my take as someone who's done it for 5 years.",
+     "This headline says nobody can afford a house. Here's what I'd do at 25."
+    ],
+    "personal": [
+     "A study just came out about near-death experiences. I've had one.",
+     "This viral post about marriage is half right."
+    ]
+   },
+   "sources": [
+    "https://kapwing.com/resources/how-to-make-tiktok-green-screen-videos",
+    "https://posteverywhere.ai/glossary/tiktok-green-screen"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "series",
+   "name": "Series / Day [N] of",
+   "whyItWorks": "A numbered series promises another episode, so following becomes the way not to miss it, and new viewers go back to your profile to catch up. The open loop between episodes is the hook.",
+   "template": "Day [N] of [specific goal or challenge]. [Today's twist].",
+   "examples": {
+    "business": [
+     "Day 1 of growing a brand new client from $0 to $100K a month. Watch every step.",
+     "Part 3 of fixing a business owner's ads. This is where it got ugly."
+    ],
+    "lifestyle": [
+     "Day 14 of no phone before 9am. Here's what changed.",
+     "Day 1 of building the life I want by 35."
+    ],
+    "personal": [
+     "Day 1 of telling the full accident story. Part 1: the morning of.",
+     "Day 30 of getting back on a bike."
+    ]
+   },
+   "sources": [
+    "https://socialk.it/en/blog/tiktok-series-content-strategy",
+    "https://sitegiant.my/blog/get-more-followers-on-tiktok/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "wish-i-knew",
+   "name": "Wish I knew / Younger self",
+   "whyItWorks": "Hindsight from someone a few steps ahead. The viewer is where you were, so they listen to save themselves the mistake. Justin Welsh's most-copied title stem, and it works in any niche because the structure carries the hook, not the topic.",
+   "template": "[N] things I wish I knew before I [milestone the viewer is facing].",
+   "examples": {
+    "business": [
+     "3 things I wish I knew before I hired my first employee.",
+     "What I'd tell myself before signing my first $10K client."
+    ],
+    "lifestyle": [
+     "What I'd tell 22-year-old me about money.",
+     "4 things I wish I knew before I moved to Florida."
+    ],
+    "personal": [
+     "What I wish I knew before the accident. It's not what you'd guess.",
+     "2 things I wish I knew before I moved in with my girlfriend."
+    ]
+   },
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-archetypes.md",
+    "https://desert-sun-5bd.notion.site/Hook-Library-13d951963f2280ada451d14f0269a173"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "id": "stakes-tease",
+   "name": "Stakes tease / Ending first",
+   "whyItWorks": "You give away how big the ending is, but not how you got there. The viewer stays to close the loop. Different from in medias res: you're not in the moment, you're promising the consequence ('…and it cost me everything').",
+   "template": "This [decision / mistake / moment] cost me [big consequence]. Here's how it happened.",
+   "examples": {
+    "business": [
+     "This one hire cost me $200K. Here's how it happened.",
+     "Saying yes to one client almost cost me the whole company."
+    ],
+    "lifestyle": [
+     "One weekend in Vegas changed how I spend money forever.",
+     "This trip cost me a client and I'd do it again."
+    ],
+    "personal": [
+     "One text I didn't send almost cost me my relationship.",
+     "Riding that morning cost me [X] minutes of my life. Literally."
+    ]
+   },
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-short-form/references/formats.md",
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/"
+   ],
+   "added": "2026-10-27"
   }
  ],
  "overlayPatterns": [
@@ -670,73 +1044,299 @@
    "name": "POV line",
    "template": "POV: [oddly specific moment your audience lives through]",
    "example": "POV: you own the business and still answer emails on vacation",
-   "whenToUse": "Lifestyle B-roll meant to be reposted. Works through recognition, so make the situation specific. Good first test on trial reels since one overlay can be swapped over identical B-roll."
+   "whenToUse": "Lifestyle B-roll meant to be reposted. Works through recognition, so make the situation specific. Good first test on trial reels since one overlay can be swapped over identical B-roll.",
+   "sources": [
+    "https://async.com/blog/instagram-reels-formats/",
+    "https://www.socialmediatoday.com/news/instagram-shares-algorithm-2025/738034/"
+   ]
   },
   {
    "name": "Send-this-to callout",
    "template": "Send this to the [person] who [specific trait]",
    "example": "Send this to the business partner who still won't take a day off",
-   "whenToUse": "When the goal is reach to non-followers. Mosseri says sends weigh slightly more for unconnected (non-follower) distribution, which is exactly the audience trial reels go to."
+   "whenToUse": "When the goal is reach to non-followers. Mosseri says sends weigh slightly more for unconnected (non-follower) distribution, which is exactly the audience trial reels go to.",
+   "sources": [
+    "https://searchenginejournal.com/instagram-algorithm-shift-why-sends-matter-more-than-ever/521389"
+   ]
   },
   {
    "name": "Nobody tells you",
    "template": "Nobody tells you [hard truth about X]",
    "example": "Nobody tells you how quiet it gets after you almost die",
-   "whenToUse": "Lifestyle and Personal clips with reflective B-roll. Test against a POV line on the same clip."
+   "whenToUse": "Lifestyle and Personal clips with reflective B-roll. Test against a POV line on the same clip.",
+   "sources": []
   },
   {
    "name": "Identity callout banner",
    "template": "If you [run X / are going through Y], this one's for you",
    "example": "If you run an agency and still do the fulfillment yourself, this one's for you",
-   "whenToUse": "Business talking-head Reels. Filters for buyers. Pin it top-center inside the safe zone for the whole clip."
+   "whenToUse": "Business talking-head Reels. Filters for buyers. Pin it top-center inside the safe zone for the whole clip.",
+   "sources": [
+    "https://socialbu.com/blog/?p=12171",
+    "https://videohighlight.com/v/2byPP_9F0-Q"
+   ]
   },
   {
    "name": "Result-first banner",
    "template": "[Specific result] in [timeframe]. [What we changed] ↓",
    "example": "212 leads in 30 days. We changed one thing ↓",
-   "whenToUse": "Business case studies and ad breakdowns. Test a version with the number vs a version without it."
+   "whenToUse": "Business case studies and ad breakdowns. Test a version with the number vs a version without it.",
+   "sources": [
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts",
+    "https://socialbu.com/blog/?p=12171"
+   ]
   },
   {
    "name": "Number list banner",
    "template": "[N] things I [stopped/started] after [event]",
    "example": "2 things I stopped doing after I flatlined",
-   "whenToUse": "Personal lessons and Business tips. Sets a clear end point so people stay to the last item."
+   "whenToUse": "Personal lessons and Business tips. Sets a clear end point so people stay to the last item.",
+   "sources": [
+    "https://vidiq.com/blog/post/viral-video-hooks-youtube-shorts",
+    "https://metricool.com/viral-video-hooks/"
+   ]
   },
   {
    "name": "Contrarian banner",
    "template": "[Common advice] is why you're [stuck]",
    "example": "'Go broad' is why your CPA doubled",
-   "whenToUse": "Business pillar when you can back the claim up in the clip. Good A/B against a question version of the same idea."
+   "whenToUse": "Business pillar when you can back the claim up in the clip. Good A/B against a question version of the same idea.",
+   "sources": [
+    "https://opentools.ai/youtube-summary/how-to-create-irresistible-hooks-and-blow-up-your-content",
+    "https://jellymarketing.ca/blog/stop-the-scroll-in-3-seconds-secrets-to-high-performing-short-form-video-hooks/"
+   ]
   },
   {
    "name": "Before vs now",
    "template": "[Then] vs [now]",
    "example": "[year]: kitchen table office. Now: [where you work now]",
-   "whenToUse": "Split-screen or two-shot B-roll. Lifestyle and Personal growth posts."
+   "whenToUse": "Split-screen or two-shot B-roll. Lifestyle and Personal growth posts.",
+   "sources": [
+    "https://postiz.com/tools/instagram-reels-hook-generator",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
   },
   {
    "name": "Story cold open",
    "template": "The day I [dramatic event]",
    "example": "The day I died",
-   "whenToUse": "Personal story Reels and the first Short cut from a long-form story video. Keep the text up until the spoken story catches up."
+   "whenToUse": "Personal story Reels and the first Short cut from a long-form story video. Keep the text up until the spoken story catches up.",
+   "sources": [
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
   },
   {
    "name": "Would-you question",
    "template": "Would you [choice A] or [choice B]?",
    "example": "Would you rather 10 clients at 2k or 2 clients at 10k?",
-   "whenToUse": "When you want comments. Pairs well with a keyword-reply CTA, since commenters on a trial reel are strangers you otherwise lose."
+   "whenToUse": "When you want comments. Pairs well with a keyword-reply CTA, since commenters on a trial reel are strangers you otherwise lose.",
+   "sources": [
+    "https://www.contentgrip.com/how-to-tell-a-great-story-in-60-seconds/",
+    "https://www.bytecap.io/research/best-hooks-for-youtube-shorts"
+   ]
   },
   {
    "name": "Reminder / quote card",
    "template": "Reminder: [one hard truth in plain words]",
    "example": "Reminder: your team copies how you act, not what you say",
-   "whenToUse": "Repostable Lifestyle and Leadership B-roll. Short enough to read in one pass while the clip loops."
+   "whenToUse": "Repostable Lifestyle and Leadership B-roll. Short enough to read in one pass while the clip loops.",
+   "sources": []
   },
   {
    "name": "Expectation vs reality",
    "template": "What I thought [X] would be / What it actually is",
    "example": "What I thought owning an agency would be / Me on a client call at 9pm",
-   "whenToUse": "Two-beat B-roll with a cut on the reveal. Humor angle for Lifestyle that still says something about the business."
+   "whenToUse": "Two-beat B-roll with a cut on the reveal. Humor angle for Lifestyle that still says something about the business.",
+   "sources": []
+  },
+  {
+   "name": "Tell me without telling me",
+   "template": "Tell me you [are X] without telling me you [are X]",
+   "example": "Tell me you run an agency without telling me you run an agency",
+   "whenToUse": "B-roll that shows the answer instead of saying it: the 9pm client call, the three phones, the Slack pings. Insiders recognize themselves and add their own versions in the comments.",
+   "sources": [
+    "https://www.thelist.com/585719/the-origins-of-the-telling-me-without-telling-me-meme/",
+    "https://www.fatherly.com/news/tell-me-you-have-kids-without-telling-me-you-have-kids-tiktok"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Hard pill to swallow",
+   "template": "Hard pill to swallow: [truth your audience avoids]",
+   "example": "Hard pill to swallow: your offer is the problem, not your ads",
+   "whenToUse": "A truth your audience half-knows and resents. Lands best over calm B-roll, so the line does the work. Pick ones you can defend in the caption.",
+   "sources": [
+    "https://knowyourmeme.com/memes/hard-to-swallow-pills",
+    "https://www.kapwing.com/explore/hard-to-swallow-pills-meme-template"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Things that just make sense",
+   "template": "Things in my [office / home / car] that just make sense",
+   "example": "Things in my office that just make sense",
+   "whenToUse": "A tour, one item per cut, each with a one-line caption saying why it's there. Lifestyle reach with a business angle: the setup of someone the viewer wants to be.",
+   "sources": [
+    "https://knowyourmeme.com/memes/things-that-just-make-sense"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Me explaining to…",
+   "template": "Me explaining to [person] why [funny situation from your world]",
+   "example": "Me explaining to my girlfriend why I'm 'just checking one email' at dinner",
+   "whenToUse": "Over a clip of you talking with your hands, or any 'trying to explain' B-roll. Pure relatability, built to be sent to the person it describes.",
+   "sources": [
+    "https://www.dailydot.com/memes/me-explaining-meme/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Day [N] / Part [N]",
+   "template": "Day [N] of [specific goal]  ·  Part [N]: [this episode]",
+   "example": "Day 1 of taking a new client from $0 to $100K a month",
+   "whenToUse": "Anything that unfolds over time. The number in the corner tells new viewers there's more on your profile and tells followers to come back for the next one. Keep the format identical every episode.",
+   "sources": [
+    "https://socialk.it/en/blog/tiktok-series-content-strategy",
+    "https://sitegiant.my/blog/get-more-followers-on-tiktok/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Tier list banner",
+   "template": "Ranking [things] from worst to best",
+   "example": "Ranking every lead source we've tested, worst to best",
+   "whenToUse": "Talking head or screen recording with the tiers filling in. Put one surprising pick near the top so people argue in the comments; the argument is the point.",
+   "sources": [
+    "https://blog.youtube/culture-and-trends/tier-list/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Comment reply sticker",
+   "template": "Replying to @[name]: [their question, word for word]",
+   "example": "Replying to @mike: how do I get my first client with no portfolio?",
+   "whenToUse": "Turn your best comments into videos. Use the platform's reply sticker so the real comment shows; it proves people are asking and pulls the asker back in.",
+   "sources": [
+    "https://newsroom.tiktok.com/en-us/product-tutorial-reply-to-comments-with-video"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Comment keyword",
+   "template": "Comment '[WORD]' and I'll send you [specific thing]",
+   "example": "Comment 'ADS' and I'll send you our ad account checklist",
+   "whenToUse": "Only with a real thing to send and an auto-DM tool (ManyChat) set to that word. Never 'comment YES if you agree': Meta demotes that kind of engagement bait.",
+   "sources": [
+    "https://manychat.com/blog/the-ultimate-guide-for-instagram-comment-automation/",
+    "https://about.fb.com/news/2017/12/news-feed-fyi-fighting-engagement-bait-on-facebook/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Price comparison",
+   "template": "$[cheap] [thing] vs $[expensive] [thing]",
+   "example": "$500 ad vs $50,000 ad. Same offer.",
+   "whenToUse": "Split screen or back-to-back clips. Keep it to the numbers and the arrow or 'vs', so a muted viewer gets it in one glance.",
+   "sources": [
+    "https://www.digitalinformationworld.com/2023/06/mrbeasts-latest-video-racks-up-47.html",
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-tactics.md"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Receipt banner",
+   "template": "I spent $[X] on [thing] so you don't have to",
+   "example": "$2.3M in ad spend. Here's what actually matters.",
+   "whenToUse": "Lessons videos. The real number is the hook: a precise figure reads as measured, a round one reads as made up.",
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-tactics.md"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Headline + my take",
+   "template": "[News headline]  →  my take",
+   "example": "'Meta changes how leads are counted'  →  what it means for you",
+   "whenToUse": "Green screen with the real article behind you. Post the same day; recency is most of the hook. Lead with what it means for the viewer, not the summary.",
+   "sources": [
+    "https://kapwing.com/resources/how-to-make-tiktok-green-screen-videos",
+    "https://posteverywhere.ai/glossary/tiktok-green-screen"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Prediction banner",
+   "template": "In [timeframe], [thing] will [change]",
+   "example": "In 12 months, half of ad agencies won't exist",
+   "whenToUse": "Opinion videos where you can back the claim. Pairs with a talking head; the caption should hold your reasoning so the debate has something to argue with.",
+   "sources": [
+    "https://www.content.game/p/hooks"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Younger self",
+   "template": "What I'd tell [age]-year-old me about [topic]",
+   "example": "What I'd tell 22-year-old me about money",
+   "whenToUse": "Lifestyle B-roll or a reflective talking head. Pick the age your audience is right now so they see themselves in it.",
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-archetypes.md"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Day in the life",
+   "template": "A day in the life of a [role] who [specific detail]",
+   "example": "A day in the life of an agency owner with no office",
+   "whenToUse": "Quick cuts through a real day with small captions on each moment. Keep the boring parts; the realness is why people watch. Doubles as a recruiting video.",
+   "sources": [
+    "https://playplay.com/blog/day-in-the-life-video-ideas/",
+    "https://www.uschamber.com/co/grow/marketing/tiktok-social-media-marketing-trends"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Green flags / Red flags",
+   "template": "[Green / Red] flags in a [client / hire / partner]",
+   "example": "Red flags in a new client (from someone who ignored all of them)",
+   "whenToUse": "A list video, one flag per cut. The flag language is everywhere right now (green, red, even 'beige'), so the format reads instantly.",
+   "sources": [
+    "https://later.com/social-media-glossary/beige-flag/"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Behind the scenes",
+   "template": "What [thing] actually looks like behind the [results / photos]",
+   "example": "What a $50K/month client looks like behind the scenes",
+   "whenToUse": "Raw, unpolished footage of the real work. People pay more attention when a video feels personal, so don't over-edit it.",
+   "sources": [
+    "https://www.businesswire.com/news/home/20251112921539/en"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "I found",
+   "template": "I found [hidden thing] in [familiar place]",
+   "example": "I found the setting eating 30% of your ad budget",
+   "whenToUse": "Screen recordings and walkthroughs where you show the thing. The steady performer of Kallaway's six hook archetypes.",
+   "sources": [
+    "https://www.content.game/p/hooks"
+   ],
+   "added": "2026-10-27"
+  },
+  {
+   "name": "Credibility line",
+   "template": "[N] years / $[X] in [field]. [Surprising turn].",
+   "example": "8 years running Meta ads. The creative was never the problem.",
+   "whenToUse": "Only with a turn after it. Credibility on its own is one of the weakest openers; credibility followed by a surprise is one of the strongest.",
+   "sources": [
+    "https://github.com/vyralcontent/content-skills/blob/main/skills/viral-hooks/references/hook-tactics.md",
+    "https://quso.ai/research/best-hooks-for-short-form"
+   ],
+   "added": "2026-10-27"
   }
  ],
  "trialReels": {
@@ -855,5 +1455,6 @@
    "detail": "Returning viewers matter more as view counts inflate. A repeatable format that runs as a show gives people a reason to come back.",
    "source": "https://news.thepublishpress.com/p/youtube-pays-youtubers-to-stay-on-youtube"
   }
- ]
+ ],
+ "updatedAt": "2026-10-27"
 }
