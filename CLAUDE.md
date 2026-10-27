@@ -71,6 +71,11 @@ Offer it first for new landing pages, recoloured for the brand.
   footage store. Druk Wide is paid: the user uploads their .otf; Unbounded
   is the stand-in. Test auto captions with a fake transformers module routed
   in place of the jsDelivr URL, AI zoom with a mock on ANTHROPIC_BASE_URL.
+  Repurposing (`/studio?long=<footage id>`, `lib/studio/shorts.ts`,
+  `/api/studio/shorts`): Claude returns transcript line numbers, never times;
+  the route drops picks that overlap, run off the transcript or miss the
+  length; suggestions live in IndexedDB per video, the shorts made are
+  ordinary edits (+ cards in Editing).
   If the stored hub is wiped, browsers that
   synced before put everything back (the hub's `rev` going backwards, or no
   stored file, is the signal).

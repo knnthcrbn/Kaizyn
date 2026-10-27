@@ -49,3 +49,5 @@ export function editForCard(cardId: string) {
 }
 
 export const studioUrl = (editId?: string) => (editId ? `/studio?e=${editId}` : "/studio");
+/** Where a long video is cut into shorts. */
+export const repurposeUrl = (footageId: string) => `/studio?long=${footageId}`;

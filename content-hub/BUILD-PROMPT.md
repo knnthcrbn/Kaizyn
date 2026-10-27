@@ -127,7 +127,9 @@ from the library's transcripts, hook text from the card, export at 9:16, 4:5,
 dead space, auto captions timed word by word, AI zoom on the lines that
 land, CapCut-style caption and hook styling (any font including an uploaded
 Druk Wide, outline, shadow, box, animations), music, undo, space bar and
-playhead scrubbing, and YouTube (16:9) edits. Repurposing is still to come.
+playhead scrubbing, and YouTube (16:9) edits. Repurposing built 27 Oct too:
+Shorts from a long video, where Claude picks the moments from the
+transcript and each one picked becomes an edit and a pipeline card.
 
 ### 6b. Footage library: a searchable catalog of every raw video
 (Added 23 Oct 2026, my brain dump.) Like Google Drive for all our raw

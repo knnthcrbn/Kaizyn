@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { PageHeader } from "@/components/ui";
 import { EditList } from "@/components/studio/EditList";
 import { Editor } from "@/components/studio/Editor";
+import { Repurpose } from "@/components/studio/Repurpose";
 import { loadLibrary } from "@/lib/footage/library";
 import { IN_CLAUDE } from "@/lib/platform";
-import { studioUrl } from "@/lib/studio/actions";
+import { repurposeUrl, studioUrl } from "@/lib/studio/actions";
 
 export default function StudioPage() {
   if (IN_CLAUDE) {
@@ -20,16 +21,21 @@ export default function StudioPage() {
   return <Studio />;
 }
 
-const editFromUrl = () => new URLSearchParams(window.location.search).get("e");
+type View = { edit: string | null; long: string | null };
+
+const viewFromUrl = (): View => {
+  const q = new URLSearchParams(window.location.search);
+  return { edit: q.get("e"), long: q.get("long") };
+};
 
 function Studio() {
-  const [editId, setEditId] = useState<string | null>(null);
+  const [view, setView] = useState<View>({ edit: null, long: null });
 
   useEffect(() => {
     void loadLibrary();
-    // The URL says which edit is open, so a link to an edit opens it and Back
-    // returns to the list.
-    const sync = () => setEditId(editFromUrl());
+    // The URL says what's open (an edit, or a long video being cut into
+    // shorts), so a link opens it and Back returns to where you were.
+    const sync = () => setView(viewFromUrl());
     sync();
     window.addEventListener("popstate", sync);
     return () => window.removeEventListener("popstate", sync);
@@ -37,8 +43,14 @@ function Studio() {
 
   const open = (id: string | null) => {
     window.history.pushState(null, "", studioUrl(id ?? undefined));
-    setEditId(id);
+    setView({ edit: id, long: null });
+  };
+  const openLong = (footageId: string) => {
+    window.history.pushState(null, "", repurposeUrl(footageId));
+    setView({ edit: null, long: footageId });
   };
 
-  return editId ? <Editor key={editId} id={editId} onClose={() => open(null)} /> : <EditList onOpen={open} />;
+  if (view.edit) return <Editor key={view.edit} id={view.edit} onClose={() => open(null)} />;
+  if (view.long) return <Repurpose key={view.long} footageId={view.long} onClose={() => open(null)} onOpenEdit={open} />;
+  return <EditList onOpen={open} onOpenLong={openLong} />;
 }

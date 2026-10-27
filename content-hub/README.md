@@ -138,6 +138,19 @@ again"), reading it from storage. Code: `src/lib/footage/`,
   edit also starts from a moment in the footage library (Edit in Studio) or
   a pipeline card (Edit video: linked to the card, takes its title and
   overlay). Any edit can switch shape at the top, and export in several.
+- **Shorts from a long video** (Studio › Shorts from a long video, or Find
+  shorts on any library video over a minute): Claude (Sonnet 5.5,
+  `/api/studio/shorts`) reads the transcript as numbered lines and picks the
+  moments that stand on their own (a hook up front, a payoff at the end, no
+  "like I said earlier"), 15–30, 30–60 or 60–90 seconds, up to 5, 10 or 20,
+  best first, each with a score, a title, the hook to put on screen, a post
+  caption and its pillar. Cuts land on the transcript's own line times, never
+  a guessed timestamp. Watch any of them, fix a title or hook, untick the
+  weak ones, and Make N shorts: each becomes a 9:16 edit with its hook on
+  screen and, if chosen, a pipeline card in Editing (caption, hook, where it
+  was clipped from), the dead space cut and captions timed word by word.
+  What Claude found is kept in that browser per video, so coming back
+  doesn't ask again.
 - **Timeline**: a ruler to scrub on, the clips (red marks where something was
   cut out), the zooms, the sound's waveform and the music. Zoom in to slice
   precisely; long edits scroll. Drag across the waveform to select a
@@ -262,7 +275,7 @@ copy has no server, so it keeps its data in that browser.
 ## Roadmap
 
 1. **Shell + writing system** (this)
-2. Studio: the searchable footage library (live), then editing, auto-captions, overlays, exports, repurposing
+2. Studio (built): the searchable footage library, editing, auto captions, AI zoom, overlays, music, exports, repurposing long videos into shorts
 3. Calendar and habit: posting goals, batch recording days, weekly review
 4. Analytics and testing: results per post, trial reel A/B log, trending audio
 5. Accounts and publishing: main + clipping pages, multi-account scheduling

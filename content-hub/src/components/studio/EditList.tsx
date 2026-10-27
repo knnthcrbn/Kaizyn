@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Clapperboard, FolderOpen, MonitorPlay, Smartphone, Trash2 } from "lucide-react";
+import { useState } from "react";
+import { Clapperboard, FolderOpen, MonitorPlay, Smartphone, Sparkles, Trash2 } from "lucide-react";
 import { Poster } from "@/components/library/shared";
 import { Badge, Button, ConfirmAction, PageHeader } from "@/components/ui";
 import { useLibrary } from "@/lib/footage/library";
@@ -9,8 +10,11 @@ import { timecode } from "@/lib/footage/search";
 import { createEdit } from "@/lib/studio/actions";
 import { editLength } from "@/lib/studio/types";
 import { useHub } from "@/lib/store";
+import { Modal } from "./Modal";
+import { LongVideoList } from "./Repurpose";
 
-export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
+export function EditList({ onOpen, onOpenLong }: { onOpen: (id: string) => void; onOpenLong: (footageId: string) => void }) {
+  const [picking, setPicking] = useState(false);
   const edits = useHub((s) => s.edits);
   const cards = useHub((s) => s.items);
   const deleteEdit = useHub((s) => s.deleteEdit);
@@ -22,7 +26,7 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
       <PageHeader
         title="Studio"
         description="Cut clips from the footage library into a finished video: trim, cut the dead space, auto captions, zooms, hook text and music, then export for Reels, TikTok or YouTube."
-        actions={<NewButtons onOpen={onOpen} />}
+        actions={<NewButtons onOpen={onOpen} onLong={() => setPicking(true)} />}
       />
 
       {!sorted.length ? (
@@ -34,7 +38,7 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
             library and choose Edit in Studio.
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-2">
-            <NewButtons onOpen={onOpen} />
+            <NewButtons onOpen={onOpen} onLong={() => setPicking(true)} />
             <Link
               href="/library"
               className="inline-flex h-8 items-center gap-1.5 rounded-lg border border-line-strong bg-surface-2 px-3 text-[13px] font-medium text-ink hover:bg-surface-3"
@@ -80,13 +84,28 @@ export function EditList({ onOpen }: { onOpen: (id: string) => void }) {
           })}
         </div>
       )}
+
+      {picking && (
+        <Modal title="Cut a long video into shorts" onClose={() => setPicking(false)} className="max-w-lg">
+          <p className="border-b border-line px-4 py-3 text-xs leading-relaxed text-faint">
+            Pick a podcast, YouTube video or livestream from the footage library. Claude reads what&apos;s said and picks the
+            moments that work as shorts on their own.
+          </p>
+          <div className="min-h-0 flex-1 overflow-y-auto p-2">
+            <LongVideoList onPick={(id) => (setPicking(false), onOpenLong(id))} />
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }
 
-function NewButtons({ onOpen }: { onOpen: (id: string) => void }) {
+function NewButtons({ onOpen, onLong }: { onOpen: (id: string) => void; onLong: () => void }) {
   return (
     <>
+      <Button variant="ai" onClick={onLong} data-studio-repurpose>
+        <Sparkles className="size-3.5" /> Shorts from a long video
+      </Button>
       <Button variant="primary" onClick={() => onOpen(createEdit())} data-studio-new-short>
         <Smartphone className="size-3.5" /> New short
       </Button>

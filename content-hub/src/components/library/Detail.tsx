@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   Check,
@@ -12,6 +13,7 @@ import {
   MapPin,
   MessageSquareQuote,
   RefreshCw,
+  Sparkles,
   Square,
   Trash2,
   X,
@@ -28,7 +30,8 @@ import {
 } from "@/lib/footage/library";
 import { highlight, timecode } from "@/lib/footage/search";
 import type { Footage } from "@/lib/footage/types";
-import { addClip, createEdit, momentRange, studioUrl } from "@/lib/studio/actions";
+import { addClip, createEdit, momentRange, repurposeUrl, studioUrl } from "@/lib/studio/actions";
+import { canRepurpose } from "@/lib/studio/shorts";
 import { useHub } from "@/lib/store";
 import { Button, ConfirmAction, cx, inputCls, selectCls, Tabs } from "../ui";
 import { formatBytes, formatDate, statusOf, useThumbs } from "./shared";
@@ -157,6 +160,15 @@ export function Detail({ id, at, terms, onClose }: { id: string; at?: number; te
               </Button>
               <AddToCard name={item.name} at={now} />
               {item.uploaded && <AddToEdit item={item} at={now} />}
+              {canRepurpose(item) && (
+                <Link
+                  href={repurposeUrl(item.id)}
+                  className="inline-flex h-7 items-center gap-1.5 rounded-lg px-2.5 text-xs font-medium text-brand hover:bg-brand/10"
+                  data-library-shorts
+                >
+                  <Sparkles className="size-3.5" /> Find shorts
+                </Link>
+              )}
               {item.uploaded && (
                 <a
                   href={fileUrl(item.file.path)}

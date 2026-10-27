@@ -12,11 +12,13 @@ export async function structured<T>(opts: {
   maxTokens?: number;
   /** Haiku unless the job needs more judgement. */
   model?: string;
+  /** Low unless the job is taste over a lot of reading (picking shorts). */
+  effort?: "low" | "medium" | "high";
 }): Promise<T> {
   const res = await new Anthropic().messages.create({
     model: opts.model ?? LIBRARY_MODEL,
     max_tokens: opts.maxTokens ?? 4000,
-    output_config: { effort: "low", format: { type: "json_schema", schema: opts.schema } },
+    output_config: { effort: opts.effort ?? "low", format: { type: "json_schema", schema: opts.schema } },
     system: opts.system,
     messages: [{ role: "user", content: opts.content }],
   });
