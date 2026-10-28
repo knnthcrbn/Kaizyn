@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Download, Upload, RotateCcw, CircleCheck, CircleAlert, LogOut, ArrowRight, RefreshCw } from "lucide-react";
 import { Badge, Button, Card, ConfirmAction, PageHeader } from "@/components/ui";
 import { capability, IN_CLAUDE, type Downloads, type Sample } from "@/lib/platform";
+import { PLAN_COLLECTIONS } from "@/lib/hubsync";
 import { backupContent, starterContent, useHub } from "@/lib/store";
 import { replaceHub, syncNow, useSync } from "@/lib/sync";
 import { syncLabel, useNow } from "@/components/shell/SyncStatus";
@@ -14,9 +15,9 @@ import { formatCost } from "@/lib/models";
 const ROADMAP = [
   { phase: "Phase 1", title: "Shell + writing system", status: "Done", items: "Pipeline, Today, Claude panel, Voice Lab, hooks, story bank, swipe file, playbooks, teleprompter" },
   { phase: "Phase 2", title: "Studio", status: "Done", items: "Footage library and Studio editor (live): find clips by what's said and shown, cut them together, remove dead space, auto captions, AI zoom, styled hook text, music, export shorts and YouTube videos, and cut a long video into a batch of shorts with Claude" },
-  { phase: "Phase 3", title: "Calendar & habit", status: "Next", items: "Calendar, posting goals per pillar, batch recording days, weekly review" },
-  { phase: "Phase 4", title: "Analytics & testing", status: "", items: "Results per post, trial reel A/B log, trending audio tracker, feedback into Claude" },
-  { phase: "Phase 5", title: "Accounts & publishing", status: "Last", items: "Connect main + clipping pages, multi-account scheduling, staggered posts" },
+  { phase: "Phase 3", title: "Calendar & habit", status: "Done", items: "Calendar (week and month, drag to reschedule), posting goals per pillar and platform, recording days with a back-to-back teleprompter, the weekly review with Claude" },
+  { phase: "Phase 4", title: "Analytics & testing", status: "Done", items: "Results per post, what's working by hook type, pillar, length and time, trial reel A/B tests, trending audio tracker, all fed back into Claude" },
+  { phase: "Phase 5", title: "Accounts & publishing", status: "Now", items: "Accounts and clipping pages in groups, one video to many accounts at staggered times with a caption each (live, posted from a checklist). Next: connect a posting service so they go out on their own" },
 ];
 
 export default function SettingsPage() {
@@ -56,6 +57,7 @@ export default function SettingsPage() {
       voiceProfileAt: s.voiceProfileAt,
       swipe: s.swipe,
       edits: s.edits,
+      ...Object.fromEntries(PLAN_COLLECTIONS.map((c) => [c, s[c]])),
       activityDays: s.activityDays,
       chats: exportChats(),
     };
@@ -162,7 +164,7 @@ export default function SettingsPage() {
         {!IN_CLAUDE && (
           <Card
             title="Team sync"
-            description="Cards, stories, voice notes, the voice profile, the swipe file and Studio edits are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
+            description="Cards, stories, voice notes, the voice profile, the swipe file, Studio edits, the calendar, results, tests, sounds and accounts are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
           >
             <div className="flex flex-wrap items-center gap-3 px-4 pb-4 pt-3 text-[13px]">
               {sync.status === "synced" ? (

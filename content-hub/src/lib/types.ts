@@ -40,6 +40,8 @@ export interface ContentItem {
   dueDate?: string;
   /** When the card entered each stage. Drives the week-over-week numbers. */
   stageHistory?: { stage: StageId; at: number }[];
+  /** The hook library type its hook is (research.json hookTypes id), for Analytics. */
+  hookType?: string;
   createdAt: number;
   updatedAt: number;
 }
@@ -131,3 +133,152 @@ export interface Chat {
   /** The voice/stories part of the hub context has gone out in this chat. */
   contextSent?: boolean;
 }
+
+// ---------------------------------------------------------------------------
+// Calendar, analytics and accounts (Phases 3 to 5). Each is a shared record
+// collection, synced with the team like cards (lib/hubsync.ts).
+
+export type Platform = "instagram" | "tiktok" | "youtube" | "facebook" | "linkedin" | "x" | "threads";
+
+/** A profile posted to: the main accounts and every clipping page. No logins are kept here. */
+export interface Account {
+  id: string;
+  platform: Platform;
+  /** Without the @. */
+  handle: string;
+  kind: "main" | "clipping";
+  /** Clipping pages are scheduled by group: "IG clips A", "TikTok clips". */
+  group: string;
+  /** What it posts; empty means anything. */
+  pillars: Pillar[];
+  active: boolean;
+  notes: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** What a post did, typed in from the app's insights (or, later, pulled in). */
+export interface PostResults {
+  views?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+  saves?: number;
+  follows?: number;
+  /** Average percentage of the video watched, 0 to 100. */
+  avgWatch?: number;
+  /** When these numbers were read, for "results at 48 hours" comparisons. */
+  at: number;
+}
+
+/** One video going out on one account at one time: planned, then posted, then measured. */
+export interface Post {
+  id: string;
+  cardId?: string;
+  platform: Platform;
+  accountId?: string;
+  /** When it goes out (planned) or went out (posted). */
+  at: number;
+  status: "planned" | "posted" | "skipped";
+  caption: string;
+  /** The live post, once it's up. */
+  url?: string;
+  /** Posted as an Instagram trial reel (shown to non-followers first). */
+  trial?: boolean;
+  /** Part of an A/B test, as this variant. */
+  testId?: string;
+  variantId?: string;
+  /** The trending sound to add in the app when posting. */
+  soundId?: string;
+  results?: PostResults;
+  notes?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** A weekly posting target, per platform and pillar ("any" for either). */
+export interface Goal {
+  id: string;
+  platform: Platform | "any";
+  pillar: Pillar | "any";
+  perWeek: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** A batch recording session: scripts lined up to record back to back. */
+export interface RecordingDay {
+  id: string;
+  /** Day key, 2026-10-30. */
+  date: string;
+  /** "10:00", or empty for any time. */
+  time: string;
+  title: string;
+  /** In recording order. */
+  cardIds: string[];
+  /** Cards already recorded in this session. */
+  recorded: string[];
+  notes: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** The weekly review ritual: the numbers, what they said, and what's next. */
+export interface Review {
+  id: string;
+  /** Monday's day key. */
+  week: string;
+  worked: string;
+  didnt: string;
+  learned: string;
+  next: string;
+  /** Claude's read of the week. */
+  summary: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export type TestVariable = "hook" | "overlay" | "caption" | "audio" | "thumbnail" | "length" | "other";
+export type TestMetric = "views" | "avgWatch" | "shares" | "saves" | "follows";
+
+/** A trial reel A/B test: one video, a few versions of one thing. */
+export interface Test {
+  id: string;
+  cardId?: string;
+  name: string;
+  variable: TestVariable;
+  /** What decides the winner. */
+  metric: TestMetric;
+  variants: { id: string; label: string; value: string; postId?: string; editId?: string }[];
+  winner?: string;
+  learned: string;
+  status: "running" | "done";
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** A trending sound spotted in the app, to add in-app at publish time. */
+export interface Sound {
+  id: string;
+  name: string;
+  artist: string;
+  platform: Platform;
+  url: string;
+  status: "spotted" | "saved" | "used" | "faded";
+  pillars: Pillar[];
+  notes: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** The shared collections added with the calendar, analytics and accounts. */
+export interface PlanRecords {
+  accounts: Account;
+  posts: Post;
+  goals: Goal;
+  days: RecordingDay;
+  reviews: Review;
+  tests: Test;
+  sounds: Sound;
+}
+export type PlanCollection = keyof PlanRecords;

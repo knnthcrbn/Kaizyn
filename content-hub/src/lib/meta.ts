@@ -1,4 +1,4 @@
-import type { Format, Pillar, ScriptMode, StageId } from "./types";
+import type { Format, Pillar, Platform, ScriptMode, StageId } from "./types";
 
 export type Phase = "plan" | "make" | "ship" | "learn";
 
@@ -89,3 +89,15 @@ export const SCRIPT_MODES: { id: ScriptMode; label: string; shape: string }[] = 
 
 export const scriptModeLabel = (id: ScriptMode) =>
   SCRIPT_MODES.find((m) => m.id === id)?.label ?? id;
+
+export const PLATFORMS: { id: Platform; label: string; hex: string }[] = [
+  { id: "instagram", label: "Instagram", hex: "#E1306C" },
+  { id: "tiktok", label: "TikTok", hex: "#25F4EE" },
+  { id: "youtube", label: "YouTube", hex: "#FF3B30" },
+  { id: "facebook", label: "Facebook", hex: "#4C8DFF" },
+  { id: "linkedin", label: "LinkedIn", hex: "#2BB0A6" },
+  { id: "x", label: "X", hex: "#D4D4D8" },
+  { id: "threads", label: "Threads", hex: "#A78BFA" },
+];
+
+export const platformLabel = (p: Platform | "any") => (p === "any" ? "Any platform" : (PLATFORMS.find((x) => x.id === p)?.label ?? p));

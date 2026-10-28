@@ -33,24 +33,18 @@ export const useSync = create<{ status: SyncStatus; lastSync: number | null; err
 const POLL_MS = 60_000;
 /** Polling stops once nobody has touched the tab for this long. */
 const IDLE_MS = 5 * 60_000;
-const DATA_KEYS = ["items", "stories", "voiceEntries", "swipe", "edits", "voiceProfile", "voiceProfileAt", "activityDays"] as const;
+const DATA_KEYS = [...COLLECTIONS, "voiceProfile", "voiceProfileAt", "activityDays"] as const;
 
 const recordsOf = (s: HubContent) =>
-  ({ items: s.items, stories: s.stories, voiceEntries: s.voiceEntries, swipe: s.swipe, edits: s.edits }) as Record<
-    Collection,
-    HubRecord[]
-  >;
+  Object.fromEntries(COLLECTIONS.map((c) => [c, s[c] ?? []])) as unknown as Record<Collection, HubRecord[]>;
 
-const contentOf = (doc: HubDoc): HubContent => ({
-  items: doc.items,
-  stories: doc.stories,
-  voiceEntries: doc.voiceEntries,
-  swipe: doc.swipe,
-  edits: doc.edits,
-  voiceProfile: doc.voiceProfile.text,
-  voiceProfileAt: doc.voiceProfile.at,
-  activityDays: doc.activityDays,
-});
+const contentOf = (doc: HubDoc): HubContent =>
+  ({
+    ...Object.fromEntries(COLLECTIONS.map((c) => [c, doc[c] ?? []])),
+    voiceProfile: doc.voiceProfile.text,
+    voiceProfileAt: doc.voiceProfile.at,
+    activityDays: doc.activityDays,
+  }) as unknown as HubContent;
 
 function baseOf(doc: HubDoc, etag: string | null): SyncBase {
   const ids = {} as SyncBase["ids"];
@@ -122,11 +116,7 @@ function merge(doc: HubDoc, base: SyncBase | null, s: HubContent, seedsFollowTea
   const days = [...new Set([...doc.activityDays, ...s.activityDays.filter((d) => !synced.has(d))])].sort();
   const remoteProfile = doc.voiceProfile.at > s.voiceProfileAt;
   return {
-    items: out.items as HubContent["items"],
-    stories: out.stories as HubContent["stories"],
-    voiceEntries: out.voiceEntries as HubContent["voiceEntries"],
-    swipe: out.swipe as HubContent["swipe"],
-    edits: out.edits as HubContent["edits"],
+    ...(out as unknown as Pick<HubContent, Collection>),
     voiceProfile: remoteProfile ? doc.voiceProfile.text : s.voiceProfile,
     voiceProfileAt: remoteProfile ? doc.voiceProfile.at : s.voiceProfileAt,
     activityDays: days,

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { ArrowRight, Sparkles } from "lucide-react";
 import { ActivityGrid, PillarMix, StageBars, StatTile } from "@/components/charts";
 import { DueDate } from "@/components/DueDate";
+import { TodayPlan } from "@/components/today/TodayPlan";
 import { Button, Card, PillarTag, StageTag } from "@/components/ui";
 import { STAGES, stageIndex } from "@/lib/meta";
 import { METRICS, dailyActivity, streaks, weeklySeries } from "@/lib/metrics";
@@ -72,6 +73,8 @@ export default function TodayPage() {
           </Button>
         </div>
       </div>
+
+      <TodayPlan />
 
       <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
         {METRICS.map((m) => (

@@ -10,7 +10,7 @@ import { highlight, search, timecode, type HitKind } from "@/lib/footage/search"
 import type { Footage } from "@/lib/footage/types";
 import { addClip, momentRange, wholeRange } from "@/lib/studio/actions";
 import type { Edit } from "@/lib/studio/types";
-import { Modal } from "./Modal";
+import { Modal } from "../Modal";
 
 const ALL_KINDS = new Set<HitKind>(["said", "shown", "place", "file"]);
 const KIND_ICON = { said: MessageSquareQuote, shown: Eye, place: MapPin, file: FileVideo };

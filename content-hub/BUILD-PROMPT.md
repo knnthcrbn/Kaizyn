@@ -172,6 +172,14 @@ posts that go out fully automated. Verify the current API rules before
 deciding.
 
 ### 8. Scheduling and multi-account publishing
+
+Built 28 Oct 2026 as far as it goes without account logins: the Accounts
+page (main and clipping pages in groups), scheduling one video to many
+accounts with staggered times and a Claude-written caption per account, the
+Calendar (week and month, drag to reschedule), and posting from a checklist
+on Today. Still to come: connecting a posting service so posts go out on
+their own, and pulling results in automatically.
+
 - Connect all my accounts: Instagram (main and clipping pages), TikTok,
   YouTube, Facebook, and [LinkedIn / X / Threads?].
 - Schedule one post to many accounts, with **per-account caption variants**
@@ -185,6 +193,13 @@ deciding.
   trade-offs.
 
 ### 9. Analytics feedback loop
+
+Built 28 Oct 2026: results per post (typed in until accounts are
+connected), what's working by hook type, pillar, length, time and more,
+trial reel tests, the trending audio tracker, and a summary of all of it in
+every Claude request. Recording days, goals and the weekly review (section
+10) were built the same day.
+
 Pull views, retention, shares, saves, follows, and comments per post back
 into its card. Tag what worked (hook type, pillar, overlay variant, audio,
 length, post time) and feed it back into ideation and scripting, so the

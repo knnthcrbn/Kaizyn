@@ -75,7 +75,19 @@ Offer it first for new landing pages, recoloured for the brand.
   `/api/studio/shorts`): Claude returns transcript line numbers, never times;
   the route drops picks that overlap, run off the transcript or miss the
   length; suggestions live in IndexedDB per video, the shorts made are
-  ordinary edits (+ cards in Editing).
+  ordinary edits (+ cards in Editing). Calendar, Analytics and Accounts
+  (built 28 Oct 2026): seven more synced collections (`accounts`, `posts`,
+  `goals`, `days`, `reviews`, `tests`, `sounds`; types in `lib/types.ts`,
+  generic `addRecord`/`updateRecord`/`deleteRecord` in the store, every
+  collection in `hubsync.COLLECTIONS` syncs with no other change). A post is
+  one video on one account at one time; go through `lib/plan.ts`
+  (`planPosts`, `markPosted`, `logResults`) so cards follow their posts.
+  Goals count a video once per platform. Posting is a checklist until a
+  posting service is connected (Phase 5's last step, not chosen yet; don't
+  ask for account logins). Results are typed in; `lib/insights.ts` turns
+  them into "what's working" and the summary Claude gets with every request.
+  `useNow()` for anything that shows what's due (render must not read the
+  clock).
   If the stored hub is wiped, browsers that
   synced before put everything back (the hub's `rev` going backwards, or no
   stored file, is the signal).

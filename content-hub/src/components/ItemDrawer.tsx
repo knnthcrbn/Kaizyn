@@ -2,7 +2,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Check, Clapperboard, MonitorPlay, Plus, Sparkles, Trash2, X } from "lucide-react";
+import { CalendarPlus, Check, Clapperboard, FlaskConical, MonitorPlay, Plus, Sparkles, Trash2, X } from "lucide-react";
 import { editForCard, studioUrl } from "@/lib/studio/actions";
 import { IN_CLAUDE } from "@/lib/platform";
 import { useHub } from "@/lib/store";
@@ -11,8 +11,15 @@ import type { ContentItem, Format, Pillar, ScriptMode, StageId } from "@/lib/typ
 import { Button, ConfirmAction, cx, inputCls, selectCls, StageIcon, Tabs } from "./ui";
 import { LintPanel } from "./LintPanel";
 import { Teleprompter } from "./Teleprompter";
+import { HOOK_TYPES } from "@/lib/hookTypes";
+import { compact } from "@/lib/insights";
+import { clockLabel, platformLabel } from "@/lib/plan";
+import { PlatformDot } from "./plan/bits";
+import { PostDialog } from "./plan/PostDialog";
+import { ScheduleDialog } from "./plan/ScheduleDialog";
+import { TestDialog } from "./analytics/TestDialog";
 
-type Tab = "hooks" | "script" | "caption" | "notes";
+type Tab = "hooks" | "script" | "caption" | "posts" | "notes";
 
 export function ItemDrawer() {
   const item = useHub((s) => s.items.find((i) => i.id === s.openItemId));
@@ -41,6 +48,12 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
   const [prompter, setPrompter] = useState(false);
   const router = useRouter();
   const hasEdit = useHub((s) => s.edits.some((e) => e.cardId === item.id));
+  const allPosts = useHub((s) => s.posts);
+  const accounts = useHub((s) => s.accounts);
+  const posts = allPosts.filter((p) => p.cardId === item.id).sort((a, b) => a.at - b.at);
+  const [scheduling, setScheduling] = useState(false);
+  const [testing, setTesting] = useState(false);
+  const [openPost, setOpenPost] = useState<string | null>(null);
   const set = (patch: Partial<ContentItem>) => update(item.id, patch);
 
   const words = item.script.trim() ? item.script.trim().split(/\s+/).length : 0;
@@ -133,6 +146,7 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
                 { value: "hooks", label: `Hooks · ${item.hooks.length}` },
                 { value: "script", label: "Script" },
                 { value: "caption", label: "Caption" },
+                { value: "posts", label: `Posts${posts.length ? ` · ${posts.length}` : ""}` },
                 { value: "notes", label: "Notes & stories" },
               ]}
             />
@@ -192,6 +206,18 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
                     <Plus className="size-4" />
                   </Button>
                 </form>
+                <div className="pt-2">
+                  <label className="mb-1.5 block text-xs font-medium text-muted">Hook type</label>
+                  <select value={item.hookType ?? ""} onChange={(e) => set({ hookType: e.target.value || undefined })} className={cx(selectCls, "w-full")} data-hook-type>
+                    <option value="">Not tagged</option>
+                    {HOOK_TYPES.map((h) => (
+                      <option key={h.id} value={h.id}>
+                        {h.name}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="mt-1.5 text-[11px] text-faint">Analytics compares results by hook type, so you learn which ones land for your audience.</p>
+                </div>
                 <div className="pt-2">
                   <label className="mb-1.5 block text-xs font-medium text-muted">On-screen overlay text</label>
                   <input
@@ -276,6 +302,47 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
               </>
             )}
 
+            {tab === "posts" && (
+              <>
+                {posts.length ? (
+                  <ul className="divide-y divide-line rounded-lg border border-line" data-card-posts>
+                    {posts.map((p) => {
+                      const acc = accounts.find((a) => a.id === p.accountId);
+                      return (
+                        <li key={p.id}>
+                          <button onClick={() => setOpenPost(p.id)} className="flex w-full items-center gap-2 px-3 py-2 text-left text-xs hover:bg-surface-2">
+                            <PlatformDot platform={p.platform} />
+                            <span className="min-w-0 flex-1 truncate text-ink">{acc ? `@${acc.handle}` : platformLabel(p.platform)}</span>
+                            <span className="tabular-nums text-faint">
+                              {new Date(p.at).toLocaleDateString(undefined, { month: "short", day: "numeric" })} {clockLabel(p.at)}
+                            </span>
+                            <span
+                              className={cx(
+                                "w-20 text-right",
+                                p.status === "posted" ? "text-good-text" : p.status === "skipped" ? "text-ghost line-through" : "text-muted",
+                              )}
+                            >
+                              {p.results?.views != null ? `${compact(p.results.views)} views` : p.status === "posted" ? "Posted" : p.status === "skipped" ? "Skipped" : "Planned"}
+                            </span>
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                ) : (
+                  <p className="text-xs leading-relaxed text-faint">Not scheduled yet. Schedule it to one account or a whole group of clipping pages, at staggered times.</p>
+                )}
+                <div className="flex flex-wrap gap-2">
+                  <Button onClick={() => setScheduling(true)} data-card-schedule>
+                    <CalendarPlus className="size-3.5" /> Schedule
+                  </Button>
+                  <Button onClick={() => setTesting(true)}>
+                    <FlaskConical className="size-3.5" /> Test hooks as trial reels
+                  </Button>
+                </div>
+              </>
+            )}
+
             {tab === "notes" && (
               <>
                 <textarea
@@ -314,6 +381,9 @@ function DrawerBody({ item, onClose }: { item: ContentItem; onClose: () => void 
         </div>
       </div>
       {prompter && <Teleprompter text={item.script || item.hooks[item.chosenHook] || ""} onClose={() => setPrompter(false)} />}
+      {scheduling && <ScheduleDialog cardId={item.id} onClose={() => setScheduling(false)} />}
+      {testing && <TestDialog cardId={item.id} onClose={() => setTesting(false)} />}
+      {openPost && <PostDialog postId={openPost} onClose={() => setOpenPost(null)} />}
     </>
   );
 }

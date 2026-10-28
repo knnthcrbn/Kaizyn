@@ -10,7 +10,7 @@ import { timecode } from "@/lib/footage/search";
 import { createEdit } from "@/lib/studio/actions";
 import { editLength } from "@/lib/studio/types";
 import { useHub } from "@/lib/store";
-import { Modal } from "./Modal";
+import { Modal } from "../Modal";
 import { LongVideoList } from "./Repurpose";
 
 export function EditList({ onOpen, onOpenLong }: { onOpen: (id: string) => void; onOpenLong: (footageId: string) => void }) {

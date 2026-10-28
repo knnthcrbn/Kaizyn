@@ -4,6 +4,9 @@ import { ANTI_AI_BRIEF } from "./antiAi";
 import { capability, IN_CLAUDE, type Sample } from "./platform";
 import { contextBlock, SYSTEM } from "./prompt";
 import { formatLabel, pillarLabel, scriptModeLabel, stageLabel } from "./meta";
+import { hookTypeName } from "./hookTypes";
+import { factsFor, performanceSummary } from "./insights";
+import { planSummary, platformLabel, timeOf } from "./plan";
 import { useHub } from "./store";
 import type { Usage } from "./models";
 
@@ -23,6 +26,8 @@ export function buildContext(page: string) {
       lesson: st.lesson,
       themes: st.themes,
     })),
+    performance: performanceSummary(factsFor(s.posts, s.items, s.edits, s.accounts), s.tests),
+    plan: planSummary(),
     item: item && {
       title: item.title,
       pillar: pillarLabel(item.pillar),
@@ -38,6 +43,17 @@ export function buildContext(page: string) {
       linkedStories: s.stories
         .filter((st) => item.storyIds.includes(st.id))
         .map((st) => st.title),
+      hookType: hookTypeName(item.hookType) ?? null,
+      posts: s.posts
+        .filter((p) => p.cardId === item.id)
+        .slice(0, 20)
+        .map((p) => ({
+          platform: platformLabel(p.platform),
+          account: s.accounts.find((a) => a.id === p.accountId)?.handle ?? null,
+          when: `${new Date(p.at).toDateString()} ${timeOf(p.at)}`,
+          status: p.status,
+          results: p.results ?? null,
+        })),
     },
   };
 }

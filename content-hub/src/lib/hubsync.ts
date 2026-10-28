@@ -7,9 +7,12 @@
 // back. Resetting or restoring a backup starts a new generation, which every
 // browser adopts wholesale on its next sync.
 import type { Edit } from "./studio/types";
-import type { ContentItem, Story, SwipeItem, VoiceEntry } from "./types";
+import type { ContentItem, PlanCollection, PlanRecords, Story, SwipeItem, VoiceEntry } from "./types";
 
-export const COLLECTIONS = ["items", "stories", "voiceEntries", "swipe", "edits"] as const;
+/** The calendar's, analytics' and accounts' collections (28 Oct). */
+export const PLAN_COLLECTIONS = ["accounts", "posts", "goals", "days", "reviews", "tests", "sounds"] as const satisfies readonly PlanCollection[];
+
+export const COLLECTIONS = ["items", "stories", "voiceEntries", "swipe", "edits", ...PLAN_COLLECTIONS] as const;
 export type Collection = (typeof COLLECTIONS)[number];
 
 export interface HubRecord {
@@ -18,7 +21,7 @@ export interface HubRecord {
   updatedAt: number;
 }
 
-export interface HubData {
+export type HubData = {
   items: ContentItem[];
   stories: Story[];
   voiceEntries: VoiceEntry[];
@@ -27,15 +30,15 @@ export interface HubData {
   edits: Edit[];
   voiceProfile: { text: string; at: number };
   activityDays: string[];
-}
+} & { [C in PlanCollection]: PlanRecords[C][] };
 
-export interface HubDoc extends HubData {
+export type HubDoc = HubData & {
   gen: number;
   /** Goes up by one on every save, so a browser can tell an older copy from a newer one. */
   rev: number;
   /** When each deleted record went, by collection and id. */
   deleted: Record<Collection, Record<string, number>>;
-}
+};
 
 export interface HubOps {
   /** The generation these changes were made against. */
@@ -72,22 +75,20 @@ export const HUB_PATH = "hub/state.json";
 const TOMBSTONE_DAYS = 90;
 const MAX_DAYS = 400;
 
-export const emptyDoc = (gen = 1): HubDoc => ({
-  gen,
-  rev: 0,
-  items: [],
-  stories: [],
-  voiceEntries: [],
-  swipe: [],
-  edits: [],
-  voiceProfile: { text: "", at: 0 },
-  activityDays: [],
-  deleted: { items: {}, stories: {}, voiceEntries: {}, swipe: {}, edits: {} },
-});
+export const emptyDoc = (gen = 1): HubDoc =>
+  ({
+    gen,
+    rev: 0,
+    ...Object.fromEntries(COLLECTIONS.map((c) => [c, []])),
+    voiceProfile: { text: "", at: 0 },
+    activityDays: [],
+    deleted: Object.fromEntries(COLLECTIONS.map((c) => [c, {}])),
+  }) as unknown as HubDoc;
 
 /**
  * A stored hub with every part present. Collections added after a hub was
- * first saved (Studio's edits, 27 Oct) are simply missing from older ones.
+ * first saved (Studio's edits, 27 Oct; the calendar's, analytics' and
+ * accounts', 28 Oct) are simply missing from older ones.
  */
 export function normalizeDoc(doc: Partial<HubDoc> | null | undefined): HubDoc {
   const base = emptyDoc(doc?.gen ?? 1);

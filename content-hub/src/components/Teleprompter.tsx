@@ -4,8 +4,22 @@ import { useEffect, useRef, useState } from "react";
 import { FlipHorizontal, Minus, Pause, Play, Plus, X } from "lucide-react";
 import { cx } from "./ui";
 
-/** Full-screen scrolling script for recording. Space to play/pause, Esc to close. */
-export function Teleprompter({ text, onClose }: { text: string; onClose: () => void }) {
+/**
+ * Full-screen scrolling script for recording. Space to play/pause, Esc to close.
+ * A recording day passes a heading (which script of how many) and its own
+ * buttons (previous, next, recorded) to run a batch back to back.
+ */
+export function Teleprompter({
+  text,
+  onClose,
+  heading,
+  actions,
+}: {
+  text: string;
+  onClose: () => void;
+  heading?: React.ReactNode;
+  actions?: React.ReactNode;
+}) {
   const [playing, setPlaying] = useState(false);
   const [speed, setSpeed] = useState(40); // pixels per second
   const [size, setSize] = useState(44);
@@ -42,6 +56,7 @@ export function Teleprompter({ text, onClose }: { text: string; onClose: () => v
 
   return (
     <div className="fixed inset-0 z-[60] flex flex-col bg-black">
+      {heading && <div className="flex items-center justify-center gap-3 border-b border-white/10 px-4 py-2 text-sm text-white/70">{heading}</div>}
       <div className="pointer-events-none absolute inset-x-0 top-1/3 z-10 h-px bg-white/30" />
       <div
         ref={box}
@@ -55,7 +70,7 @@ export function Teleprompter({ text, onClose }: { text: string; onClose: () => v
           {text || "No script yet."}
         </p>
       </div>
-      <div className="flex items-center justify-center gap-2 border-t border-white/10 bg-black/80 p-3 text-sm text-white/80">
+      <div className="flex flex-wrap items-center justify-center gap-2 border-t border-white/10 bg-black/80 p-3 text-sm text-white/80">
         <Ctl onClick={() => setPlaying((p) => !p)} active={playing}>
           {playing ? <Pause className="size-4" /> : <Play className="size-4" />}
           {playing ? "Pause" : "Play"} <span className="text-white/40">space</span>
@@ -72,6 +87,7 @@ export function Teleprompter({ text, onClose }: { text: string; onClose: () => v
         <Ctl onClick={() => setMirror((m) => !m)} active={mirror}>
           <FlipHorizontal className="size-4" /> Mirror
         </Ctl>
+        {actions}
         <Ctl onClick={onClose}>
           <X className="size-4" /> Close
         </Ctl>
@@ -80,7 +96,7 @@ export function Teleprompter({ text, onClose }: { text: string; onClose: () => v
   );
 }
 
-function Ctl({
+export function Ctl({
   children,
   onClick,
   active,

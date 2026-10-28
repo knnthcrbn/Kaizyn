@@ -207,6 +207,82 @@ segments, `captions.ts`, `render.ts`, `export.ts`, `ops.ts` the tools,
 `peaks.ts`, `fonts.ts`, `presets.ts`), `src/components/studio/`,
 `src/app/studio/`, `src/app/api/studio/`.
 
+## Calendar
+
+`/calendar`, four tabs:
+
+- **Calendar**: week and month views of every post (planned, posted,
+  skipped), every card's due date and every recording day. Drag any of them to
+  another day; times stay the same. One video on many accounts shows as one
+  line ("×13"); open it for the posting checklist. Recorded videos with
+  nothing scheduled wait in **Ready to schedule**: drag one onto a day. A
+  heads-up shows when next week is short of the goals.
+- **Recording days** (batch mode): plan a session, line up 5 to 10 scripts
+  (one tap adds everything Ready to record, or ask Claude what to record),
+  then **Start recording**: the teleprompter runs them back to back
+  (← → between scripts) and each one ticked moves its card to Recorded.
+- **Weekly review**: the week's numbers (videos posted, views logged, days
+  active, goals, best posts), four questions (what worked, what didn't, what
+  you learned, the focus for next week) and **Draft my review**: Claude reads
+  the week and writes double down / drop / test next. The latest review's
+  focus goes to Claude with every request.
+- **Goals**: videos a week per platform and pillar. A video counts once per
+  platform however many accounts it goes to (100 clipping pages posting one
+  reel is one Instagram post toward the goal).
+
+## Analytics
+
+`/analytics`, four tabs:
+
+- **Results**: posts, views, shares, saves and follows for 7 / 30 / 90 days
+  against the period before, and every post's numbers in a sortable table.
+  Numbers are typed in from the app's insights (the platforms only share them
+  with a connected app, which is Phase 5): one post at a time, or every post
+  waiting on one **Log results** sheet. "12.4k" works. Logging results moves
+  the card to Analysed.
+- **What's working**: the median per post (so one viral video doesn't flatter
+  its group) by hook type, pillar, length, platform, time and day posted,
+  overlay text, trending sound, account type and trial reel, for views,
+  % watched, shares, saves or follows. Groups under 3 posts are faded.
+  **Tag hook types** has Claude (Haiku, `/api/analytics/hooks`) sort every
+  card's hook into the hook library's types; each can be changed on its card.
+- **Trial reel tests**: two to four versions of one thing (the line on
+  screen, the spoken hook, the caption, the sound…), each planned as an
+  Instagram trial reel, with a copy of the Studio edit per version for
+  on-screen text. Log each version's numbers, pick the winner (it says when
+  the gap is too small to trust) and put it on the card. What a test taught
+  you goes to Claude.
+- **Trending audio**: sounds spotted in the app, from spotted to saved to
+  used to faded, with how posts using each did. The platforms don't let other
+  apps attach their music, so a post with a sound reminds whoever posts it to
+  add it in the app. **Ask Claude what's trending** searches the web.
+
+**Feedback into Claude**: once 3 posts have views, every Claude request
+carries a short summary of what has performed (best hook types, pillars,
+lengths, times, top posts, what tests taught), the goals and this week's
+progress, what's scheduled, the next recording day and the last review's
+focus (`lib/insights.ts` `performanceSummary`, `lib/plan.ts` `planSummary`).
+An open card also sends its posts and results.
+
+## Accounts and scheduling
+
+`/accounts` keeps your main profiles and every clipping page: paste handles
+or links (a hundred at once), pick the platform, main or clipping, a group
+("IG clips A") and what they post. Only handles are stored, never logins.
+
+**Schedule** (from the Calendar, a card's Posts tab, or Accounts) sends one
+video to many accounts: tick whole groups or single accounts, the first time,
+the minutes between posts and a random ± so clipping pages never post in the
+same minute or on a visible beat. **A caption per account** has Claude
+(Sonnet, `/api/plan/captions`) write different captions per platform, which
+take turns across the accounts. Posts can carry a trending sound and go out
+as trial reels.
+
+Until a posting service is connected (the last step), posting is a
+checklist: **Today › Posting today** lists what's due with the caption to
+copy and the account to post from; tick it off, or mark a whole group posted
+at once. The first post moves its card to Posted.
+
 ## On your phone
 
 Open the hub in Safari, tap Share → **Add to Home Screen**. It opens full
@@ -217,7 +293,7 @@ icon in the address bar.
 
 | Screen | What it does |
 | --- | --- |
-| Today | This week vs last week (ideas, scripts, recordings, posts), up-next queue, consistency grid and streaks, pipeline bottleneck, pillar mix |
+| Today | What's posting today (the checklist), this week's goals, the next recording day, results and weekly-review nudges, this week vs last week, up-next queue, consistency grid and streaks, pipeline bottleneck, pillar mix |
 | Pipeline | 10-stage board or list (Idea → Analysed). Drag cards; open one to edit hooks, overlay text, script, caption, notes and linked stories |
 | Ideas | Ideas by pillar, one-click "script it", and an idea generator for when you're blank |
 | Voice Lab | Talk (live transcription in Chrome/Edge/Safari) or paste; builds your voice corpus and voice profile; anti-AI checker |
@@ -266,6 +342,9 @@ server, `hub/state.json` in the same private Blob store as the footage
 - The first time a browser syncs, it merges what it had with the team's
   hub. Starter cards nobody touched follow the team.
 
+The calendar, results, tests, sounds, goals, recording days, reviews and
+accounts are shared the same way (one record per post, account, test…).
+
 Studio's uploaded fonts and music sit in the same store, under
 `studio/fonts/` and `studio/audio/`, for the whole team.
 
@@ -276,9 +355,9 @@ copy has no server, so it keeps its data in that browser.
 
 1. **Shell + writing system** (this)
 2. Studio (built): the searchable footage library, editing, auto captions, AI zoom, overlays, music, exports, repurposing long videos into shorts
-3. Calendar and habit: posting goals, batch recording days, weekly review
-4. Analytics and testing: results per post, trial reel A/B log, trending audio
-5. Accounts and publishing: main + clipping pages, multi-account scheduling
+3. Calendar and habit (built): calendar, posting goals, batch recording days, weekly review
+4. Analytics and testing (built): results per post, what's working, trial reel A/B tests, trending audio, results fed back into Claude
+5. Accounts and publishing: accounts, groups and multi-account scheduling with staggered times and caption variants (built, posted from a checklist); next, connecting a posting service so posts go out on their own
 
 ## Code map
 
@@ -287,6 +366,9 @@ copy has no server, so it keeps its data in that browser.
 - `src/lib/chats.ts`: saved chats and the send/stream/stop logic; `src/components/chat/`: the chat UI
 - `src/lib/store.ts`: all hub data and actions (Zustand, saved to localStorage)
 - `src/lib/studio/`, `src/components/studio/`: the Studio editor (see Studio above)
+- `src/lib/plan.ts`: posts, goals, staggered times, marking posted, Claude's plan summary; `src/components/plan/`: calendar, schedule and post dialogs, recording days, weekly review, goals
+- `src/lib/insights.ts`: results compared by hook type, pillar, length and time, test winners, Claude's performance summary; `src/components/analytics/`: the Analytics tabs and the test dialog
+- `src/lib/hookTypes.ts`: the hook library's type names (a small copy of research.json's)
 - `src/lib/sync.ts`: team sync in the browser; `src/lib/hubsync.ts`: the shared document and its merge rules; `src/app/api/hub/route.ts`: the server side
 - `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
 - `src/lib/antiAi.ts`: the phrases that make writing sound generated

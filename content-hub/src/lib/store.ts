@@ -6,12 +6,14 @@ import { useEffect, useState } from "react";
 import type {
   ContentItem,
   Pillar,
+  PlanCollection,
+  PlanRecords,
   StageId,
   Story,
   SwipeItem,
   VoiceEntry,
 } from "./types";
-import type { SyncBase } from "./hubsync";
+import { PLAN_COLLECTIONS, type SyncBase } from "./hubsync";
 import { defaultOverlay, leadlabCaptions, youtubeCaptions, type Edit } from "./studio/types";
 import { SEED_ITEMS, SEED_STORIES, SEED_VOICE } from "./seed";
 
@@ -29,7 +31,13 @@ export const dayKey = (d = new Date()) =>
 
 export const today = () => dayKey();
 
-interface HubState {
+/** Calendar, analytics and accounts records, one list per collection. */
+type PlanLists = { [C in PlanCollection]: PlanRecords[C][] };
+
+/** What a new record needs from the caller: everything but its id and dates. */
+export type NewRecord<C extends PlanCollection> = Omit<PlanRecords[C], "id" | "createdAt" | "updatedAt">;
+
+interface HubState extends PlanLists {
   items: ContentItem[];
   stories: Story[];
   voiceEntries: VoiceEntry[];
@@ -72,6 +80,16 @@ interface HubState {
   updateEdit: (id: string, patch: Partial<Edit> | ((e: Edit) => Partial<Edit>)) => void;
   deleteEdit: (id: string) => void;
 
+  /** Calendar, analytics and accounts records: add one (or many at once), change one, delete one. */
+  addRecord: <C extends PlanCollection>(c: C, record: NewRecord<C>) => string;
+  addRecords: <C extends PlanCollection>(c: C, records: NewRecord<C>[]) => string[];
+  updateRecord: <C extends PlanCollection>(
+    c: C,
+    id: string,
+    patch: Partial<PlanRecords[C]> | ((r: PlanRecords[C]) => Partial<PlanRecords[C]>),
+  ) => void;
+  deleteRecord: (c: PlanCollection, id: string) => void;
+
   openItem: (id: string | null) => void;
   setClaudeOpen: (open: boolean) => void;
   setPaletteOpen: (open: boolean) => void;
@@ -83,6 +101,8 @@ interface HubState {
 const markActive = (days: string[]) =>
   days.includes(today()) ? days : [...days, today()].slice(-400);
 
+const emptyPlan = () => Object.fromEntries(PLAN_COLLECTIONS.map((c) => [c, []])) as unknown as PlanLists;
+
 const initialData = () => ({
   items: SEED_ITEMS,
   stories: SEED_STORIES,
@@ -92,6 +112,7 @@ const initialData = () => ({
   swipe: [] as SwipeItem[],
   edits: [] as Edit[],
   activityDays: [] as string[],
+  ...emptyPlan(),
 });
 
 /** The parts of the hub that are saved and shared, as opposed to what's open on screen. */
@@ -236,6 +257,27 @@ export const useHub = create<HubState>()(
         })),
       deleteEdit: (id) => set((s) => ({ edits: s.edits.filter((e) => e.id !== id) })),
 
+      addRecord: (c, record) => get().addRecords(c, [record])[0],
+      addRecords: (c, records) => {
+        const now = Date.now();
+        const made = records.map((r) => ({ ...r, id: uid(), createdAt: now, updatedAt: now }));
+        set((s) => ({ [c]: [...made, ...(s[c] as unknown[])], activityDays: markActive(s.activityDays) }) as Partial<HubState>);
+        return made.map((r) => r.id);
+      },
+      updateRecord: (c, id, patch) =>
+        set(
+          (s) =>
+            ({
+              [c]: (s[c] as { id: string }[]).map((r) =>
+                r.id === id
+                  ? { ...r, ...(typeof patch === "function" ? patch(r as never) : patch), updatedAt: Date.now() }
+                  : r,
+              ),
+              activityDays: markActive(s.activityDays),
+            }) as Partial<HubState>,
+        ),
+      deleteRecord: (c, id) => set((s) => ({ [c]: (s[c] as { id: string }[]).filter((r) => r.id !== id) }) as Partial<HubState>),
+
       openItem: (openItemId) => set({ openItemId }),
       setClaudeOpen: (claudeOpen) => set({ claudeOpen }),
       setPaletteOpen: (paletteOpen) => set({ paletteOpen }),
@@ -259,6 +301,7 @@ export const useHub = create<HubState>()(
         voiceProfileAt: s.voiceProfileAt,
         swipe: s.swipe,
         edits: s.edits,
+        ...Object.fromEntries(PLAN_COLLECTIONS.map((c) => [c, s[c]])),
         activityDays: s.activityDays,
         syncBase: s.syncBase,
       }),
@@ -290,6 +333,7 @@ export function backupContent(raw: Record<string, unknown>): HubContent {
     voiceProfileAt: Date.now(),
     swipe: d.swipe ?? s.swipe,
     edits: d.edits ?? s.edits,
+    ...(Object.fromEntries(PLAN_COLLECTIONS.map((c) => [c, d[c] ?? s[c]])) as unknown as PlanLists),
     activityDays: d.activityDays ?? s.activityDays,
   };
 }

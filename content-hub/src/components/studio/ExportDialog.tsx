@@ -8,7 +8,7 @@ import type { Footage } from "@/lib/footage/types";
 import { exportEdit, exportFormat, exportName, type ExportResult } from "@/lib/studio/export";
 import { setPlaying } from "@/lib/studio/player";
 import { ASPECTS, editLength, type Aspect, type Edit } from "@/lib/studio/types";
-import { Modal } from "./Modal";
+import { Modal } from "../Modal";
 
 interface Made extends ExportResult {
   aspect: Aspect;
