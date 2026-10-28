@@ -9,6 +9,7 @@ import { ScheduleDialog } from "@/components/plan/ScheduleDialog";
 import { Badge, Button, Card, ConfirmAction, Empty, PageHeader, cx, inputCls, selectCls } from "@/components/ui";
 import { PILLARS, pillarLabel } from "@/lib/meta";
 import { weekStart } from "@/lib/metrics";
+import { isUS } from "@/lib/clipping";
 import { PLATFORMS, parseHandles, platformLabel } from "@/lib/plan";
 import { useHub } from "@/lib/store";
 import { useNow } from "@/lib/useNow";
@@ -123,6 +124,7 @@ export default function AccountsPage() {
                       >
                         <span className="min-w-0 flex-1 truncate text-xs text-ink">@{a.handle}</span>
                         {a.kind === "main" && <Badge tone="brand">Main</Badge>}
+                        {a.basedIn && <Badge tone={isUS(a.basedIn) ? "good" : "critical"}>{a.basedIn}</Badge>}
                         {a.pillars.length > 0 && <span className="hidden text-[11px] text-faint sm:inline">{a.pillars.map(pillarLabel).join(", ")}</span>}
                         {thisWeek.get(a.id) ? <span className="text-[11px] tabular-nums text-faint">{thisWeek.get(a.id)} this week</span> : null}
                       </button>
@@ -236,6 +238,7 @@ function AddAccounts({ onClose }: { onClose: () => void }) {
 function EditAccount({ id, onClose }: { id: string; onClose: () => void }) {
   const a = useHub((s) => s.accounts.find((x) => x.id === id));
   const accounts = useHub((s) => s.accounts);
+  const clippers = useHub((s) => s.clippers);
   if (!a) return null;
   const set = (patch: Partial<Account>) => useHub.getState().updateRecord("accounts", a.id, patch);
   const groups = [...new Set(accounts.map((x) => x.group).filter(Boolean))];
@@ -268,6 +271,42 @@ function EditAccount({ id, onClose }: { id: string; onClose: () => void }) {
           <FieldLabel>What it posts</FieldLabel>
           <PillarPicker value={a.pillars} onChange={(pillars) => set({ pillars })} />
         </div>
+        <div className="grid grid-cols-2 gap-3">
+          <label className="block">
+            <FieldLabel>Run by</FieldLabel>
+            <select value={a.clipperId ?? ""} onChange={(e) => set({ clipperId: e.target.value || undefined })} className={cx(selectCls, "w-full")}>
+              <option value="">The team</option>
+              {clippers
+                .filter((c) => c.status !== "removed")
+                .map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+            </select>
+          </label>
+          <label className="block">
+            <FieldLabel>Based in</FieldLabel>
+            <input value={a.basedIn ?? ""} onChange={(e) => set({ basedIn: e.target.value || undefined, verifiedAt: undefined })} placeholder="From About this account" className={cx(inputCls, "h-8 py-0")} />
+          </label>
+          <label className="block">
+            <FieldLabel>Joined</FieldLabel>
+            <input value={a.joined ?? ""} onChange={(e) => set({ joined: e.target.value || undefined })} placeholder="March 2026" className={cx(inputCls, "h-8 py-0")} />
+          </label>
+          <label className="block">
+            <FieldLabel>Followers</FieldLabel>
+            <input type="number" min={0} value={a.followers ?? ""} onChange={(e) => set({ followers: e.target.value === "" ? undefined : Math.max(0, Number(e.target.value) || 0) })} className={cx(selectCls, "w-full")} />
+          </label>
+        </div>
+        <label className="flex items-center gap-2 text-xs text-muted">
+          <input type="checkbox" checked={!!a.verifiedAt} onChange={(e) => set({ verifiedAt: e.target.checked ? Date.now() : undefined })} className="accent-white" />
+          Checked: where it&apos;s based matches its About this account screen
+          {a.proof && (
+            <a href={`/api/library/file?path=${encodeURIComponent(a.proof)}`} target="_blank" rel="noreferrer" className="text-faint underline underline-offset-2 hover:text-ink">
+              see the screenshot
+            </a>
+          )}
+        </label>
         <label className="block">
           <FieldLabel>Notes</FieldLabel>
           <textarea value={a.notes} onChange={(e) => set({ notes: e.target.value })} rows={3} className={cx(inputCls, "resize-y")} placeholder="Who runs it, its angle, anything to remember" />

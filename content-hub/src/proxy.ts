@@ -7,6 +7,9 @@ export async function proxy(req: NextRequest) {
   if (!authEnabled()) return NextResponse.next();
   const { pathname } = req.nextUrl;
   if (pathname === "/login" || pathname === "/api/login") return NextResponse.next();
+  // The clipper portal has its own door: the key in each clipper's link,
+  // checked by every /api/clip route. The page itself holds no data.
+  if (pathname === "/clip" || pathname === "/api/clip" || pathname.startsWith("/api/clip/")) return NextResponse.next();
 
   if (await isValidSession(req.cookies.get(SESSION_COOKIE)?.value)) return NextResponse.next();
 

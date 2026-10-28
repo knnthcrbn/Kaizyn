@@ -192,6 +192,29 @@ their own, and pulling results in automatically.
   (e.g. Ayrshare, Upload-Post, or similar). Recommend one with cost and
   trade-offs.
 
+### 8b. Clipping network
+
+Built 28 Oct 2026. A team of clippers posts my clips from their own
+accounts; I pay per 1,000 views from the United States only, because
+clippers paid on views can buy views or run accounts based abroad.
+
+- Each clipper gets a private link: clips to post with hooks and captions
+  (rotated so pages don't post the same words), their accounts, their posts
+  and earnings, a leaderboard.
+- They add each account with an "About this account" screenshot (where
+  it's based, when it joined) and each post with its link and insights
+  screenshots. Claude reads the numbers and the viewers' countries.
+- Review flags what bought views leave behind (views dropping, engagement
+  far below views, accounts abroad, low US share, brand-new accounts with
+  huge numbers, duplicate links). Posts are payable after a 7-day hold;
+  payouts are recorded and exported, the money is sent outside the hub.
+- Not built, deliberately: creating Instagram or TikTok accounts in bulk.
+  Both platforms forbid it and ban the accounts, and the ones linked to
+  them, in waves. Accounts are made by hand and added.
+- Next: connect clippers' accounts through the Instagram Graph and TikTok
+  Business APIs so the views and countries come from the platforms, not
+  screenshots.
+
 ### 9. Analytics feedback loop
 
 Built 28 Oct 2026: results per post (typed in until accounts are
@@ -226,9 +249,9 @@ system gets smarter about **my** audience every week.
 - Keyboard-first (command palette on ⌘K), fast, and smooth micro-animations.
 
 ## Team and access (confirm)
-[Is this just me, or will editors / a VA / clippers use it? If others will,
-add roles: owner, editor, and clipper; per-card assignment; and
-review/approval comments in the Review stage.]
+Me and a small team share one password and one hub. Clippers don't sign in
+to the hub: each has a private link to the clipper portal (section 8b) that
+shows only their own clips, accounts, posts and pay.
 
 ## How I want you to work
 1. **Don't start coding yet.** First ask me every question you need answered

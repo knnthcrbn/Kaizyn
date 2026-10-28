@@ -88,6 +88,18 @@ Offer it first for new landing pages, recoloured for the brand.
   them into "what's working" and the summary Claude gets with every request.
   `useNow()` for anything that shows what's due (render must not read the
   clock).
+  Clipping (built 28 Oct 2026): `/clipping` for the owner and `/clip#k=<key>`
+  for each clipper (no hub password; `proxy.ts` lets `/clip` and `/api/clip*`
+  through and `clipServer.clipperFor` checks the key, so a clipper only ever
+  sees their own records). Four more synced collections (`clippers`, `drops`,
+  `submissions`, `payouts`); clipper routes write the hub on the server
+  through `hubServer.changeHub` (compare-and-set, re-read on conflict). Rules
+  in `lib/clipping.ts`: pay = views x US share / 1000 x rate, capped, only
+  after `HOLD_DAYS` (7); `flagsFor` is the fake-view check. Claude (Sonnet
+  5.5, `lib/proofs.ts`) reads insights and About-this-account screenshots;
+  proofs are private under `clipping/proof/`. The hub never creates social
+  accounts (both platforms ban bulk-made ones); next is the platforms' own
+  APIs in place of screenshots. Test with the mock on ANTHROPIC_BASE_URL.
   If the stored hub is wiped, browsers that
   synced before put everything back (the hub's `rev` going backwards, or no
   stored file, is the signal).

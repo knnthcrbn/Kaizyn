@@ -47,6 +47,16 @@ export async function writeJSON(p: string, data: unknown) {
   });
 }
 
+/** Saves a small file (a screenshot) privately. */
+export async function writeBytes(p: string, bytes: Uint8Array, contentType: string) {
+  if (STORAGE === "local") {
+    await fs.mkdir(path.dirname(local(p)), { recursive: true });
+    await fs.writeFile(local(p), bytes);
+    return;
+  }
+  await put(p, Buffer.from(bytes), { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType });
+}
+
 /** Someone else wrote the file between our read and our write. */
 export class WriteConflict extends Error {}
 
@@ -241,6 +251,8 @@ function guessType(p: string) {
       webm: "video/webm",
       json: "application/json",
       jpg: "image/jpeg",
+      png: "image/png",
+      webp: "image/webp",
       otf: "font/otf",
       ttf: "font/ttf",
       woff: "font/woff",

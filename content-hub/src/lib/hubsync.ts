@@ -10,7 +10,20 @@ import type { Edit } from "./studio/types";
 import type { ContentItem, PlanCollection, PlanRecords, Story, SwipeItem, VoiceEntry } from "./types";
 
 /** The calendar's, analytics' and accounts' collections (28 Oct). */
-export const PLAN_COLLECTIONS = ["accounts", "posts", "goals", "days", "reviews", "tests", "sounds"] as const satisfies readonly PlanCollection[];
+export const PLAN_COLLECTIONS = [
+  "accounts",
+  "posts",
+  "goals",
+  "days",
+  "reviews",
+  "tests",
+  "sounds",
+  // Clipping (28 Oct).
+  "clippers",
+  "drops",
+  "submissions",
+  "payouts",
+] as const satisfies readonly PlanCollection[];
 
 export const COLLECTIONS = ["items", "stories", "voiceEntries", "swipe", "edits", ...PLAN_COLLECTIONS] as const;
 export type Collection = (typeof COLLECTIONS)[number];

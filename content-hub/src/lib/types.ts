@@ -153,6 +153,17 @@ export interface Account {
   pillars: Pillar[];
   active: boolean;
   notes: string;
+  /** The clipper who runs it; none means the team does. */
+  clipperId?: string;
+  /** "Account based in", from the app's About this account screen. */
+  basedIn?: string;
+  /** "Date joined" from the same screen, as the app shows it ("March 2026"). */
+  joined?: string;
+  followers?: number;
+  /** The About this account screenshot it was read from. */
+  proof?: string;
+  /** When someone checked the screenshot and confirmed where it's based. */
+  verifiedAt?: number;
   createdAt: number;
   updatedAt: number;
 }
@@ -271,7 +282,115 @@ export interface Sound {
   updatedAt: number;
 }
 
-/** The shared collections added with the calendar, analytics and accounts. */
+// ---------------------------------------------------------------------------
+// Clipping: people who run clipping pages, the clips sent to them, the posts
+// they make, and paying them on verified United States views only.
+
+/** Someone who runs clipping pages and is paid per 1,000 verified US views. */
+export interface Clipper {
+  id: string;
+  name: string;
+  /** Email, phone or handle to reach them. */
+  contact: string;
+  /** Where they live, as they told you. */
+  country: string;
+  /** Dollars per 1,000 verified US views. */
+  cpm: number;
+  status: "active" | "paused" | "removed";
+  /** The secret in their portal link. A new one locks the old link out. */
+  key: string;
+  /** How they're paid ("PayPal: name@…"). Never bank details. */
+  payoutNote: string;
+  notes: string;
+  /** When they agreed to the rules in their portal. */
+  acceptedRulesAt?: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** A clip sent out for clippers (and the team's own pages) to post. */
+export interface Drop {
+  id: string;
+  title: string;
+  /** The video in the footage library (usually Footage › Exports). */
+  footageId?: string;
+  cardId?: string;
+  /** Hooks to put on screen; each clipper gets a different one first. */
+  hooks: string[];
+  /** Caption options; clippers take turns. */
+  captions: string[];
+  /** What to do and what not to: shown in every clipper's portal. */
+  brief: string;
+  platforms: Platform[];
+  /** Overrides each clipper's own rate for this clip. */
+  cpm?: number;
+  /** Most paid for any one post of this clip, in dollars. */
+  capPerPost?: number;
+  /** All posts of this clip together, in dollars. */
+  budget?: number;
+  status: "live" | "ended";
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** One reading of a post's numbers: from screenshots, typed in, or (later) the platform. */
+export interface ViewSnapshot {
+  at: number;
+  views?: number;
+  likes?: number;
+  comments?: number;
+  shares?: number;
+  saves?: number;
+  /** Accounts reached. */
+  reach?: number;
+  /** Share of the audience in the United States, 0 to 1. */
+  usShare?: number;
+  topCountries?: { country: string; pct: number }[];
+  /** The handle the screenshot shows, to check it's their account. */
+  handle?: string;
+  source: "screenshot" | "manual" | "api";
+  /** Stored screenshot paths. */
+  proofs?: string[];
+  /** What didn't add up when the screenshots were read. */
+  concerns?: string[];
+}
+
+/** One post a clipper made, with its proof, waiting to be checked and paid. */
+export interface Submission {
+  id: string;
+  clipperId: string;
+  dropId?: string;
+  accountId?: string;
+  platform: Platform;
+  url: string;
+  postedAt: number;
+  snapshots: ViewSnapshot[];
+  status: "pending" | "approved" | "rejected" | "paid";
+  /** Verified US views, set when approved. */
+  usViews?: number;
+  /** Dollars, set when approved. */
+  amount?: number;
+  reviewNote?: string;
+  payoutId?: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** Money sent to a clipper for a set of approved posts. */
+export interface Payout {
+  id: string;
+  clipperId: string;
+  submissionIds: string[];
+  usViews: number;
+  amount: number;
+  status: "owed" | "paid";
+  paidAt?: number;
+  note: string;
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** The shared collections added with the calendar, analytics, accounts and clipping. */
 export interface PlanRecords {
   accounts: Account;
   posts: Post;
@@ -280,5 +399,9 @@ export interface PlanRecords {
   reviews: Review;
   tests: Test;
   sounds: Sound;
+  clippers: Clipper;
+  drops: Drop;
+  submissions: Submission;
+  payouts: Payout;
 }
 export type PlanCollection = keyof PlanRecords;

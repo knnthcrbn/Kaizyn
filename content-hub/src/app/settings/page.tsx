@@ -18,6 +18,7 @@ const ROADMAP = [
   { phase: "Phase 3", title: "Calendar & habit", status: "Done", items: "Calendar (week and month, drag to reschedule), posting goals per pillar and platform, recording days with a back-to-back teleprompter, the weekly review with Claude" },
   { phase: "Phase 4", title: "Analytics & testing", status: "Done", items: "Results per post, what's working by hook type, pillar, length and time, trial reel A/B tests, trending audio tracker, all fed back into Claude" },
   { phase: "Phase 5", title: "Accounts & publishing", status: "Now", items: "Accounts and clipping pages in groups, one video to many accounts at staggered times with a caption each (live, posted from a checklist). Next: connect a posting service so they go out on their own" },
+  { phase: "Clipping", title: "Clipper network", status: "Done", items: "Clippers get a private link: clips to post with hooks and captions, proof screenshots read by Claude, their earnings. You review posts with fake-view flags, pay per 1,000 US views after a 7-day hold, and see where every account is based" },
 ];
 
 export default function SettingsPage() {
@@ -164,7 +165,7 @@ export default function SettingsPage() {
         {!IN_CLAUDE && (
           <Card
             title="Team sync"
-            description="Cards, stories, voice notes, the voice profile, the swipe file, Studio edits, the calendar, results, tests, sounds and accounts are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
+            description="Cards, stories, voice notes, the voice profile, the swipe file, Studio edits, the calendar, results, tests, sounds, accounts, clippers, clips, their posts and payouts are shared: everyone who signs in sees the same hub, and changes reach other screens within a minute. Claude chats stay on each device."
           >
             <div className="flex flex-wrap items-center gap-3 px-4 pb-4 pt-3 text-[13px]">
               {sync.status === "synced" ? (

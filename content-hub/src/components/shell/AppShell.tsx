@@ -21,7 +21,9 @@ export function AppShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [navOpen, setNavOpen] = useState(false);
   const openItem = useHub((s) => s.openItem);
-  const onLogin = pathname === "/login";
+  // The sign-in screen and the clipper portal stand alone, outside the hub
+  // (no sidebar, no Claude, no syncing the hub into a clipper's browser).
+  const onLogin = pathname === "/login" || pathname === "/clip";
   const onChat = pathname === "/chat";
   const onLoginRef = useRef(onLogin);
   const onChatRef = useRef(onChat);

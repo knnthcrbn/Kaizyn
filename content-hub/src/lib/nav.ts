@@ -11,6 +11,7 @@ import {
   Link2,
   Magnet,
   Mic,
+  Network,
   Sparkles,
   Settings,
   Library,
@@ -53,6 +54,7 @@ export const NAV: { group: string; items: NavItem[] }[] = [
       { href: "/calendar", label: "Calendar", icon: CalendarDays },
       { href: "/analytics", label: "Analytics", icon: BarChart3 },
       { href: "/accounts", label: "Accounts", icon: Link2 },
+      { href: "/clipping", label: "Clipping", icon: Network },
     ],
   },
   {

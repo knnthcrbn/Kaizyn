@@ -55,7 +55,9 @@ Live at **https://content-hub-theta-one.vercel.app** (Vercel project
 purple and the logo hovering on a glass tile that tilts toward the cursor.
 `src/proxy.ts` sends
 everything else, including the Claude route, to it until the password is
-entered; the session lasts 30 days. Settings has **Sign out** and a link to
+entered; the session lasts 30 days. The clipper portal (`/clip`,
+`/api/clip/*`) is the one exception: it checks the clipper's own key
+instead. Settings has **Sign out** and a link to
 the screen.
 
 ## Run it
@@ -283,6 +285,64 @@ checklist: **Today › Posting today** lists what's due with the caption to
 copy and the account to post from; tick it off, or mark a whole group posted
 at once. The first post moves its card to Posted.
 
+## Clipping
+
+`/clipping` runs a team of clippers who post your clips from their own
+accounts and get paid only for real views from the United States.
+
+**Clippers** each get a private link (`/clip#k=…`, no hub password): the
+clips to post, their accounts, their posts and earnings, and a leaderboard.
+Copy the link from the Clippers tab and send it to them; **New link** cuts
+off the old one, and removing a clipper turns their link off. A clipper's
+link opens only their own records, never the rest of the hub.
+
+**Drops** send a clip to every clipper at once: a video from the footage
+library (exports first), hooks and captions (Claude writes caption variants),
+a brief, the platforms, a rate per 1,000 US views (or each clipper's own), a
+cap per post and a budget. Each clipper sees the hooks and captions in a
+different order, so a hundred pages don't post the same words.
+
+**What a clipper sends:** they add each account with a screenshot of
+the profile and Instagram's "About this account" (just the profile on other
+platforms), which Claude reads for the handle, where it's based, when it
+joined and its followers.
+For each post, the link and screenshots of its insights: Claude (Sonnet,
+`src/lib/proofs.ts`) reads the views, likes, comments, shares, saves, reach
+and the viewers' countries, and notes anything that doesn't add up. Typed
+numbers fill gaps; a typed number that disagrees with the screenshot is
+flagged. They send a fresh screenshot later with **Update numbers**.
+
+**Review** (`src/lib/clipping.ts` `flagsFor`) marks each post Likely fake,
+Check it or Looks clean: the same link twice, views that went down between
+readings (the platform removing fake views), likes + comments + shares under
+0.4% of 5,000+ views, an account based abroad, under 20% (or 50%) US viewers,
+no country breakdown, no screenshots, a screenshot showing another handle, a
+new account with 50k+ views, every view on day one then nothing, and
+Claude's own concerns. Approving pays views × US share ÷ 1,000 × the rate,
+capped per post and by what's left of the drop's budget. **Approve N clean
+posts** does the clean ones past their hold in one go.
+
+**Payouts:** an approved post is payable 7 days after it went up
+(`HOLD_DAYS`), long enough for fake views to be cleaned out and show. Pay
+makes a payout of a clipper's payable posts; download the spreadsheet, send
+the money however you pay them, then **Mark paid**. Money never goes through
+the hub.
+
+**Overview:** this month's views, verified US views, money owed, posts
+waiting to be checked (and how many look fake), clippers ranked by verified
+US views, and where every account is based.
+
+What the screenshots can't promise: a screenshot can be edited. The flags
+catch what bought views usually leave behind, and the 7-day hold catches
+views the platform removes, but the real fix is the platforms' own numbers:
+connecting each account through the Instagram Graph API (reach by country)
+and TikTok's Business API (audience countries) would replace the
+screenshots. TikTok doesn't show where an account was made, only its profile.
+
+The hub never creates accounts: Instagram and TikTok ban accounts made in
+bulk, and the ones linked to them, in waves. Accounts are made by hand by
+the team or the clippers, then added here.
+
 ## On your phone
 
 Open the hub in Safari, tap Share → **Add to Home Screen**. It opens full
@@ -342,8 +402,12 @@ server, `hub/state.json` in the same private Blob store as the footage
 - The first time a browser syncs, it merges what it had with the team's
   hub. Starter cards nobody touched follow the team.
 
-The calendar, results, tests, sounds, goals, recording days, reviews and
-accounts are shared the same way (one record per post, account, test…).
+The calendar, results, tests, sounds, goals, recording days, reviews,
+accounts, clippers, drops, clippers' posts and payouts are shared the same
+way (one record per post, account, test…). Clippers' routes write to the
+same document on the server (`src/lib/hubServer.ts` `changeHub`), and their
+proof screenshots sit privately under `clipping/proof/`, shown only to
+someone signed in.
 
 Studio's uploaded fonts and music sit in the same store, under
 `studio/fonts/` and `studio/audio/`, for the whole team.
@@ -358,6 +422,7 @@ copy has no server, so it keeps its data in that browser.
 3. Calendar and habit (built): calendar, posting goals, batch recording days, weekly review
 4. Analytics and testing (built): results per post, what's working, trial reel A/B tests, trending audio, results fed back into Claude
 5. Accounts and publishing: accounts, groups and multi-account scheduling with staggered times and caption variants (built, posted from a checklist); next, connecting a posting service so posts go out on their own
+6. Clipping network (built): clippers' private links, drops, proof read by Claude, fake-view flags, pay for US views only, payouts. Next: connecting clippers' accounts through the platforms' APIs in place of screenshots
 
 ## Code map
 
@@ -368,6 +433,8 @@ copy has no server, so it keeps its data in that browser.
 - `src/lib/studio/`, `src/components/studio/`: the Studio editor (see Studio above)
 - `src/lib/plan.ts`: posts, goals, staggered times, marking posted, Claude's plan summary; `src/components/plan/`: calendar, schedule and post dialogs, recording days, weekly review, goals
 - `src/lib/insights.ts`: results compared by hook type, pillar, length and time, test winners, Claude's performance summary; `src/components/analytics/`: the Analytics tabs and the test dialog
+- `src/lib/clipping.ts`: the clipping rules (flags, pay, hold, links), shared by the portal and the Clipping screen; `src/lib/proofs.ts`: Claude reading screenshots; `src/lib/clipServer.ts`: the portal's key check, rate limit and proof storage; `src/app/clip/`, `src/app/api/clip/`: the clipper portal; `src/components/clipping/`: the Clipping tabs
+- `src/lib/hubServer.ts`: reading and writing the shared document on the server (used by `/api/hub` and the clipper routes)
 - `src/lib/hookTypes.ts`: the hook library's type names (a small copy of research.json's)
 - `src/lib/sync.ts`: team sync in the browser; `src/lib/hubsync.ts`: the shared document and its merge rules; `src/app/api/hub/route.ts`: the server side
 - `src/lib/seed.ts`: starter ideas, story prompts and your first voice samples
