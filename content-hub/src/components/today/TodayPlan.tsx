@@ -7,6 +7,7 @@ import { GroupDialog, groupPosts, type PostGroup } from "@/components/plan/Calen
 import { GoalsStrip } from "@/components/plan/Goals";
 import { PostDialog } from "@/components/plan/PostDialog";
 import { PlatformDot } from "@/components/plan/bits";
+import { VideoButton } from "@/components/plan/VideoButton";
 import { Card, cx } from "@/components/ui";
 import { weekStart } from "@/lib/metrics";
 import { clockLabel, dayDate, markPosted, needsResults, platformLabel, weekKey } from "@/lib/plan";
@@ -84,12 +85,19 @@ export function TodayPlan() {
                   <button onClick={() => (g.posts.length > 1 ? setOpenGroup(g) : setOpenPost(first.id))} className="min-w-0 flex-1 text-left">
                     <span className="block truncate text-[13px] text-ink">{g.title}</span>
                     <span className="block truncate text-[11px] text-faint">
-                      {g.posts.length > 1 ? `${g.posts.length} accounts on ${platformLabel(g.platform)}` : acc ? `@${acc.handle}` : platformLabel(g.platform)}
+                      {g.posts.length > 1
+                        ? first.testId
+                          ? `${g.posts.length} trial reels to test${acc ? ` from @${acc.handle}` : ""}`
+                          : `${g.posts.length} accounts on ${platformLabel(g.platform)}`
+                        : acc
+                          ? `@${acc.handle}`
+                          : platformLabel(g.platform)}
                       {first.soundId ? " · add the sound in the app" : ""}
                     </span>
                   </button>
                   {g.posts.length === 1 && (
                     <>
+                      {first.video && <VideoButton video={first.video} />}
                       <button
                         onClick={async () => {
                           try {

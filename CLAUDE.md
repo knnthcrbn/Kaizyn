@@ -88,6 +88,15 @@ Offer it first for new landing pages, recoloured for the brand.
   them into "what's working" and the summary Claude gets with every request.
   `useNow()` for anything that shows what's due (render must not read the
   clock).
+  Trial reel banner tests (29 Oct 2026): an edit has `subhead` (the line
+  under the banner, `follow` keeps it under however the banner wraps) and
+  `versions` (banner lines; `overlay.text` is the one on screen, kept in
+  step by the Text panel). `hookVersions` gives the lettered list; export
+  renders `withHook(edit, line)` per version, `TrialReels` uploads them to
+  Exports with `addVideos(..., { process: false })` and calls
+  `plan.lineUpTrialReels` (one test, one trial post per version, each with
+  `post.video`). `VideoButton` hands a post's file over: share sheet on a
+  phone, download elsewhere.
   Clipping (built 28 Oct 2026): `/clipping` for the owner and `/clip#k=<key>`
   for each clipper (no hub password; `proxy.ts` lets `/clip` and `/api/clip*`
   through and `clipServer.clipperFor` checks the key, so a clipper only ever

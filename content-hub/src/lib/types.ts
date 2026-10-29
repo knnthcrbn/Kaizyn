@@ -183,6 +183,13 @@ export interface PostResults {
 }
 
 /** One video going out on one account at one time: planned, then posted, then measured. */
+/** A video in the footage library (Studio's Exports, usually) that a post is made from. */
+export interface PostVideo {
+  footageId: string;
+  path: string;
+  name: string;
+}
+
 export interface Post {
   id: string;
   cardId?: string;
@@ -201,6 +208,8 @@ export interface Post {
   variantId?: string;
   /** The trending sound to add in the app when posting. */
   soundId?: string;
+  /** The exact file to post, when it isn't just the card's video (one version of a test, say). */
+  video?: PostVideo;
   results?: PostResults;
   notes?: string;
   createdAt: number;

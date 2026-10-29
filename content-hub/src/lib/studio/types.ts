@@ -143,6 +143,14 @@ export interface EditOverlay {
   animation: TextAnim;
 }
 
+/** A second line under the hook (a sub-headline, e.g. white on blue). */
+export interface EditSubhead extends EditOverlay {
+  /** Sits just under the hook, however many lines the hook takes; otherwise at its own height (`y`). */
+  follow: boolean;
+  /** Space between the hook's box and this one, in pixels on a 1080 frame. */
+  gap: number;
+}
+
 export interface EditMusic {
   path: string;
   name: string;
@@ -170,6 +178,12 @@ export interface Edit {
    */
   captionText: Record<string, string>;
   overlay: EditOverlay;
+  subhead?: EditSubhead;
+  /**
+   * Hook lines to test against each other: one video each, the rest of the
+   * edit the same (trial reels). The one in `overlay.text` is on screen.
+   */
+  versions?: string[];
   music?: EditMusic;
   /** Volume of the clips' own sound, 0..2. */
   sourceVolume?: number;
@@ -239,6 +253,41 @@ export const defaultOverlay = (): EditOverlay => ({
   animation: "none",
 });
 
+/** Instagram's blue: the sub-headline in white on it, under a black-on-white hook. */
+export const SUBHEAD_BLUE = "#0095F6";
+
+export const defaultSubhead = (): EditSubhead => ({
+  ...defaultOverlay(),
+  style: {
+    ...defaultOverlay().style,
+    size: 40,
+    color: "#FFFFFF",
+    box: { on: true, color: SUBHEAD_BLUE, opacity: 1, radius: 12, padX: 22, padY: 14, border: noStroke() },
+  },
+  y: 0.3,
+  follow: true,
+  gap: 14,
+});
+
+/** The edit as it would be with another line on screen: what a version exports as. */
+export const withHook = (e: Edit, text: string): Edit => ({ ...e, overlay: { ...e.overlay, text } });
+
+/** Version letters: a test reads "A won", and the exports are named the same way. */
+export const VERSION_LABELS = "ABCDEFGHIJ";
+
+/** The hook lines worth exporting, each once, with the letter its row has in the Text panel. */
+export function hookVersions(e: Pick<Edit, "versions">) {
+  const seen = new Set<string>();
+  const out: { label: string; text: string }[] = [];
+  (e.versions ?? []).forEach((v, i) => {
+    const text = v.trim();
+    if (!text || seen.has(text) || i >= VERSION_LABELS.length) return;
+    seen.add(text);
+    out.push({ label: VERSION_LABELS[i], text });
+  });
+  return out;
+}
+
 type LegacyCaptions = Omit<Partial<EditCaptions>, "highlight"> & {
   look?: "bold" | "white" | "off";
   highlight?: unknown;
@@ -271,7 +320,8 @@ export function withDefaults(raw: Edit): Edit {
   const overlay: EditOverlay = o.style
     ? { ...defaultOverlay(), ...(o as EditOverlay) }
     : { ...defaultOverlay(), text: o.text ?? "", until: o.until ?? 0, y: o.position === "middle" ? 0.42 : 0.18 };
-  return { ...raw, captions, overlay, captionText: raw.captionText ?? {}, clips: raw.clips ?? [] };
+  const subhead: EditSubhead = { ...defaultSubhead(), ...(raw.subhead ?? {}) };
+  return { ...raw, captions, overlay, subhead, versions: raw.versions ?? [], captionText: raw.captionText ?? {}, clips: raw.clips ?? [] };
 }
 
 export const newClip = (footageId: string, from: number, to: number, id: string): EditClip => ({

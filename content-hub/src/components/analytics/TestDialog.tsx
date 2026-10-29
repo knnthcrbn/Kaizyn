@@ -8,7 +8,7 @@ import { Button, cx, inputCls, selectCls } from "@/components/ui";
 import { METRIC_INFO } from "@/lib/insights";
 import { atTime, planPosts } from "@/lib/plan";
 import { dayKey, uid, useHub } from "@/lib/store";
-import { withDefaults } from "@/lib/studio/types";
+import { VERSION_LABELS, withDefaults } from "@/lib/studio/types";
 import type { ContentItem, Test, TestMetric, TestVariable } from "@/lib/types";
 
 export const VARIABLES: { id: TestVariable; label: string; hint: string }[] = [
@@ -21,7 +21,7 @@ export const VARIABLES: { id: TestVariable; label: string; hint: string }[] = [
   { id: "other", label: "Something else", hint: "Anything you want to compare." },
 ];
 
-const LABELS = ["A", "B", "C", "D"];
+const LABELS = [...VERSION_LABELS];
 
 /** Starting versions from the card: its overlay and hooks, or its caption. */
 function suggestFor(card: ContentItem | undefined, v: TestVariable) {
@@ -101,6 +101,11 @@ export function TestDialog({ cardId: given, onClose }: { cardId?: string; onClos
           Post each version as a trial reel: Instagram shows it to non-followers first, so your followers never see the same video twice. After a
           day or two, log each one&apos;s numbers and the winner is clear.
         </p>
+        {variable === "overlay" && (
+          <p className="-mt-2 text-[11px] leading-relaxed text-ghost">
+            Testing the banner? In Studio, Text › Test other banners makes the videos too: one export makes every version and lines them up here.
+          </p>
+        )}
         {!given && (
           <label className="block">
             <FieldLabel>Video</FieldLabel>
@@ -179,7 +184,7 @@ export function TestDialog({ cardId: given, onClose }: { cardId?: string; onClos
               )}
             </div>
           ))}
-          {values.length < 4 && (
+          {values.length < LABELS.length && (
             <button onClick={() => setValues((l) => [...l, ""])} className="inline-flex items-center gap-1 text-xs text-faint hover:text-ink">
               <Plus className="size-3.5" /> Another version
             </button>

@@ -6,8 +6,8 @@
 // posts (posted when the first one goes out, analysed once results are in).
 import { PLATFORMS, platformLabel, stageIndex } from "./meta";
 import { weekStart } from "./metrics";
-import { dayKey, useHub, type NewRecord } from "./store";
-import type { Account, ContentItem, Goal, Pillar, Platform, Post, PostResults } from "./types";
+import { dayKey, uid, useHub, type NewRecord } from "./store";
+import type { Account, ContentItem, Goal, Pillar, Platform, Post, PostResults, PostVideo, Test, TestMetric } from "./types";
 
 export { PLATFORMS, platformLabel };
 export const platformHex = (p: Platform) => PLATFORMS.find((x) => x.id === p)?.hex ?? "#a1a1aa";
@@ -122,6 +122,10 @@ export function goalLabel(goal: Pick<Goal, "platform" | "pillar">, pillarName: (
  * Times for posting one video to many accounts: the first at `start`, the
  * rest `gapMin` apart with up to `jitterMin` either way, so clipping pages
  * never post the same thing in the same minute or on a visible beat.
+ *
+ * Each post's jitter is its own, so two neighbours can lean towards each
+ * other: ±5 on a 10-minute gap put two pages a minute apart. The jitter is
+ * held to 30% of the gap, which keeps every pair at least 40% of it apart.
  */
 export function staggerTimes(start: number, n: number, gapMin: number, jitterMin = 0, seed = 1) {
   let s = seed || 1;
@@ -129,9 +133,10 @@ export function staggerTimes(start: number, n: number, gapMin: number, jitterMin
     s = (s * 16807) % 2147483647;
     return s / 2147483647;
   };
+  const spread = Math.min(jitterMin, gapMin * 0.3);
   return Array.from({ length: n }, (_, i) => {
     if (i === 0) return start;
-    const jitter = jitterMin ? (rand() * 2 - 1) * jitterMin : 0;
+    const jitter = spread ? (rand() * 2 - 1) * spread : 0;
     // Whole minutes: a schedule reads "10:47", not "10:47:23".
     return start + Math.round(i * gapMin + jitter) * 60_000;
   });
@@ -150,6 +155,8 @@ export interface PlanInput {
   soundId?: string;
   testId?: string;
   variantId?: string;
+  /** The exact file every one of these posts is made from. */
+  video?: PostVideo;
 }
 
 /** Creates the planned posts; returns their ids. */
@@ -166,11 +173,50 @@ export function planPosts(p: PlanInput) {
     soundId: p.soundId,
     testId: p.testId,
     variantId: p.variantId,
+    video: p.video,
   }));
   const ids = useHub.getState().addRecords("posts", records);
   // A card with posts on the calendar is scheduled, if it wasn't further along.
   if (p.cardId) advanceCard(p.cardId, "scheduled");
   return ids;
+}
+
+/**
+ * One trial reel per version of a hook (a Studio edit's versions, exported):
+ * a test of what's on screen, each version posted as a trial reel from one
+ * Instagram account, a few minutes apart, each with its own video file.
+ */
+export function lineUpTrialReels(o: {
+  cardId?: string;
+  editId?: string;
+  name: string;
+  metric: TestMetric;
+  versions: { label: string; text: string; video?: PostVideo }[];
+  accountId?: string;
+  start: number;
+  gapMin: number;
+  caption: string;
+}) {
+  const hub = useHub.getState();
+  const variants: Test["variants"] = o.versions.map((v) => ({ id: uid(), label: v.label, value: v.text, editId: o.editId }));
+  const testId = hub.addRecord("tests", { cardId: o.cardId, name: o.name, variable: "overlay", metric: o.metric, variants, learned: "", status: "running" });
+  const withPosts = variants.map((v, i) => {
+    const [postId] = planPosts({
+      cardId: o.cardId,
+      targets: [{ platform: "instagram", accountId: o.accountId }],
+      start: o.start + i * o.gapMin * 60_000,
+      gapMin: 0,
+      jitterMin: 0,
+      captions: [o.caption],
+      trial: true,
+      testId,
+      variantId: v.id,
+      video: o.versions[i].video,
+    });
+    return { ...v, postId };
+  });
+  hub.updateRecord("tests", testId, { variants: withPosts });
+  return { testId, postIds: withPosts.map((v) => v.postId) };
 }
 
 /** Moves a card forward to `stage`, never back. */

@@ -351,7 +351,9 @@ export function Detail({ id, at, terms, onClose }: { id: string; at?: number; te
                     icon={MessageSquareQuote}
                     text={
                       item.steps.transcript === "skipped"
-                        ? "This video has no sound."
+                        ? item.folder === "Exports"
+                          ? "A Studio export: what's said is in the footage it was cut from."
+                          : "This video has no sound."
                         : item.steps.transcript === "running"
                           ? "Transcribing…"
                           : "No transcript yet."

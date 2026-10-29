@@ -3,6 +3,7 @@
 import { useMemo, useState, type DragEvent, type ReactNode } from "react";
 import { ChevronLeft, ChevronRight, Clapperboard, GripVertical, Plus, TriangleAlert } from "lucide-react";
 import { Modal } from "@/components/Modal";
+import { VideoButton } from "./VideoButton";
 import { Button, Segmented, cx } from "@/components/ui";
 import { PILLAR_STYLE, stageIndex, stageLabel } from "@/lib/meta";
 import { weekStart } from "@/lib/metrics";
@@ -370,6 +371,7 @@ function Chip({
 export function GroupDialog({ group, onClose, onOpen }: { group: PostGroup; onClose: () => void; onOpen: (id: string) => void }) {
   const accounts = useHub((s) => s.accounts);
   const posts = useHub((s) => s.posts);
+  const tests = useHub((s) => s.tests);
   const live = useMemo(() => {
     const ids = new Set(group.posts.map((g) => g.id));
     return posts.filter((p) => ids.has(p.id)).sort((a, b) => a.at - b.at);
@@ -379,35 +381,46 @@ export function GroupDialog({ group, onClose, onOpen }: { group: PostGroup; onCl
   return (
     <Modal title={`${group.title} · ${platformLabel(group.platform)}`} onClose={onClose} className="max-w-lg">
       <p className="border-b border-line px-4 py-2.5 text-xs text-faint">
-        {done} of {live.length} posted. Copy each caption, post from that account, then tick it off.
+        {done} of {live.length} posted.{" "}
+        {live.some((p) => p.video)
+          ? "Save each version's video, post it (as a trial reel where it says so) with its caption, then tick it off."
+          : "Copy each caption, post from that account, then tick it off."}
       </p>
       <ul className="min-h-0 flex-1 divide-y divide-line overflow-y-auto" data-group-list>
         {live.map((p) => {
           const acc = accounts.find((a) => a.id === p.accountId);
+          const variant = tests.find((t) => t.id === p.testId)?.variants.find((v) => v.id === p.variantId);
           return (
-            <li key={p.id} className="flex items-center gap-2 px-4 py-2 text-xs">
-              <span className="w-16 shrink-0 tabular-nums text-faint">{clockLabel(p.at)}</span>
-              <button onClick={() => onOpen(p.id)} className="min-w-0 flex-1 truncate text-left text-ink hover:underline">
-                {acc ? `@${acc.handle}` : platformLabel(p.platform)}
-              </button>
-              <button
-                onClick={async () => {
-                  try {
-                    await navigator.clipboard.writeText(p.caption);
-                    setCopied(p.id);
-                  } catch {}
-                }}
-                className="text-faint hover:text-ink"
-              >
-                {copied === p.id ? "Copied" : "Copy caption"}
-              </button>
-              {p.status === "posted" ? (
-                <span className="w-16 text-right text-good-text">Posted</span>
-              ) : (
-                <button onClick={() => markPosted(p.id)} className="w-16 text-right font-medium text-ink hover:text-good-text" data-group-mark>
-                  Mark posted
+            <li key={p.id} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-4 py-2 text-xs" data-group-row>
+              {/* The line (or account) takes the row; on a phone the actions drop below it rather than squeezing it to a letter. */}
+              <span className="flex min-w-0 flex-1 basis-56 items-center gap-2">
+                <span className="w-14 shrink-0 tabular-nums text-faint">{clockLabel(p.at)}</span>
+                <button onClick={() => onOpen(p.id)} className="flex min-w-0 flex-1 items-center gap-2 text-left text-ink hover:underline">
+                  {variant && <span className="grid size-5 shrink-0 place-items-center rounded bg-surface-3 text-[10px] font-semibold text-muted">{variant.label}</span>}
+                  <span className={variant ? "line-clamp-2" : "truncate"}>{variant ? variant.value : acc ? `@${acc.handle}` : platformLabel(p.platform)}</span>
                 </button>
-              )}
+              </span>
+              <span className="ml-auto flex shrink-0 items-center gap-3 whitespace-nowrap">
+                {p.video && <VideoButton video={p.video} />}
+                <button
+                  onClick={async () => {
+                    try {
+                      await navigator.clipboard.writeText(p.caption);
+                      setCopied(p.id);
+                    } catch {}
+                  }}
+                  className="text-faint hover:text-ink"
+                >
+                  {copied === p.id ? "Copied" : "Copy caption"}
+                </button>
+                {p.status === "posted" ? (
+                  <span className="min-w-16 text-right text-good-text">Posted</span>
+                ) : (
+                  <button onClick={() => markPosted(p.id)} className="min-w-16 text-right font-medium text-ink hover:text-good-text" data-group-mark>
+                    Mark posted
+                  </button>
+                )}
+              </span>
             </li>
           );
         })}

@@ -34,7 +34,7 @@ export function Preview({
     latest.current = { edit, items, groups };
   });
 
-  const fontKey = `${edit.captions.style.font}|${edit.overlay.style.font}`;
+  const fontKey = `${edit.captions.style.font}|${edit.overlay.style.font}|${edit.subhead?.text.trim() ? edit.subhead.style.font : ""}`;
   useEffect(() => {
     void loadFonts(latest.current.edit);
   }, [fontKey]);

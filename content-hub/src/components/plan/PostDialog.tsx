@@ -4,6 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowUpRight, AudioLines, Check, Copy, ExternalLink, FlaskConical, Trash2 } from "lucide-react";
 import { Modal } from "@/components/Modal";
+import { VideoButton } from "./VideoButton";
 import { Button, ConfirmAction, Segmented, cx, inputCls, selectCls } from "@/components/ui";
 import { studioUrl } from "@/lib/studio/actions";
 import { atTime, dayOf, logResults, markPosted, postTitle, timeOf } from "@/lib/plan";
@@ -89,6 +90,18 @@ function Body({ post, onClose, focus }: { post: Post; onClose: () => void; focus
           <p className="flex items-center gap-1.5 text-xs text-muted">
             <FlaskConical className="size-3.5 text-faint" /> Test &ldquo;{test.name}&rdquo;{variant ? `, version ${variant.label}` : ""}
           </p>
+        )}
+
+        {post.video && (
+          <div className="flex items-center gap-3 rounded-lg border border-line px-3 py-2.5" data-post-video-row>
+            <span className="min-w-0 flex-1">
+              <span className="block truncate text-xs text-ink">{test?.variable === "overlay" && variant ? variant.value : post.video.name}</span>
+              <span className="block text-[11px] text-faint">
+                {post.trial ? "Post this file as a trial reel: turn on Trial before you share it." : "Post this exact file."}
+              </span>
+            </span>
+            <VideoButton video={post.video} className="shrink-0 font-medium text-ink" />
+          </div>
         )}
 
         <section className="grid gap-3 sm:grid-cols-2">

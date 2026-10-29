@@ -8,6 +8,7 @@ import { Badge, Button, Card, ConfirmAction, Empty, cx, inputCls } from "@/compo
 import { METRIC_INFO, compact, testLeader } from "@/lib/insights";
 import { clockLabel } from "@/lib/plan";
 import { studioUrl } from "@/lib/studio/actions";
+import { withDefaults } from "@/lib/studio/types";
 import { useHub } from "@/lib/store";
 import type { Test } from "@/lib/types";
 import { TestDialog, VARIABLES } from "./TestDialog";
@@ -58,7 +59,12 @@ function TestCard({ test }: { test: Test }) {
   const apply = () => {
     if (!card || !winner) return;
     const hub = useHub.getState();
-    if (test.variable === "overlay") hub.updateItem(card.id, { overlay: winner.value });
+    if (test.variable === "overlay") {
+      hub.updateItem(card.id, { overlay: winner.value });
+      // Versions of one Studio edit: the winner goes back on screen there too.
+      if (winner.editId && test.variants.every((v) => v.editId === winner.editId))
+        hub.updateEdit(winner.editId, (e) => ({ overlay: { ...withDefaults(e).overlay, text: winner.value } }));
+    }
     else if (test.variable === "caption") hub.updateItem(card.id, { caption: winner.value });
     else if (test.variable === "hook") {
       const i = card.hooks.indexOf(winner.value);

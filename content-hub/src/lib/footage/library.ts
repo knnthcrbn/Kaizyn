@@ -185,10 +185,19 @@ function pump() {
 const VIDEO_EXT = /\.(mp4|m4v|mov|webm|mkv|avi|3gp)$/i;
 export const isVideoFile = (f: File) => f.type.startsWith("video/") || VIDEO_EXT.test(f.name);
 
-/** Adds videos to the library: each uploads and gets processed in this browser at the same time. */
-export async function addVideos(files: File[], folder: string) {
+/**
+ * Adds videos to the library: each uploads and gets processed in this browser
+ * at the same time. Returns their ids. `process: false` skips transcribing
+ * and describing them: Studio's exports of an edit (five versions of one
+ * video differ only in a line of text) don't need it, and the footage they
+ * were cut from already has it.
+ */
+export async function addVideos(files: File[], folder: string, opts: { process?: boolean } = {}) {
+  const analyse = opts.process ?? true;
+  const ids: string[] = [];
   for (const file of files.filter(isVideoFile)) {
     const id = uid();
+    ids.push(id);
     const now = Date.now();
     const item: Footage = {
       id,
@@ -199,7 +208,7 @@ export async function addVideos(files: File[], folder: string) {
       updatedAt: now,
       tags: [],
       uploaded: false,
-      steps: { transcript: "pending", visuals: "pending" },
+      steps: analyse ? { transcript: "pending", visuals: "pending" } : { transcript: "skipped", visuals: "skipped" },
       ...(file.lastModified ? { recordedAt: file.lastModified } : {}),
     };
     setItem(item);
@@ -217,7 +226,7 @@ export async function addVideos(files: File[], folder: string) {
             throw e;
           });
         // Processing reads the local file, so it doesn't wait for the upload.
-        const work = processVideo(id, file, ac.signal);
+        const work = analyse ? processVideo(id, file, ac.signal) : Promise.resolve();
         await Promise.allSettled([upload, work]);
         const it = useLibrary.getState().items[id];
         setJob(id, { stage: it?.errors?.upload || it?.errors?.visuals || it?.errors?.transcript ? "error" : "done" });
@@ -230,6 +239,7 @@ export async function addVideos(files: File[], folder: string) {
     });
   }
   pump();
+  return ids;
 }
 
 /** Runs (or re-runs) processing on a stored video, reading it from storage. */

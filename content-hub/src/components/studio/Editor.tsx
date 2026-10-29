@@ -225,7 +225,7 @@ export function Editor({ id, onClose }: { id: string; onClose: () => void }) {
               <ClipPanel edit={edit} footage={footage} selected={selectedClip?.id} onSelect={setSelected} onAdd={() => setPicking(true)} />
             )}
             {tab === "captions" && <CaptionPanel edit={edit} footage={footage} />}
-            {tab === "text" && <TextPanel edit={edit} />}
+            {tab === "text" && <TextPanel edit={edit} footage={footage} />}
             {tab === "audio" && <AudioPanel edit={edit} />}
           </div>
         </aside>

@@ -182,10 +182,24 @@ again"), reading it from storage. Code: `src/lib/footage/`,
   background box (colour, opacity, roundness, padding, border), words at
   once and height. Animations: pop, bounce, rise, slide, fade, word by word,
   zoom.
-- **Hook text**: 8 styles (Instagram white, black box, glass, lilac, yellow
-  sticker, red caps, outline, wide headline) and the same controls as
-  captions, plus position, line width, how long it shows and an animation
-  (pop, rise, slide, fade, typewriter).
+- **Hook text**: the banner, in 8 styles (Instagram white, black box, glass,
+  lilac, yellow sticker, red caps, outline, wide headline) with the same
+  controls as captions, plus position, line width, how long it shows and an
+  animation (pop, rise, slide, fade, typewriter). **Line under it** is a
+  second line (white on Instagram blue to start; black, white, red, yellow or
+  no box in a tap, any style under More styling) that sits right under the
+  banner however many lines the banner wraps to, or at its own height.
+- **Banner versions for trial reels**: under the banner, **Test other
+  banners** lists up to 10 lines (A to J), everything else the same. **Write
+  with Claude** (Sonnet, `/api/studio/hooks`) adds lines that each take a
+  different hook type, told what's said in the clip, the line under it and
+  the lines you already have. Tap a letter to see that one on the video.
+  Export then makes every version at once ("<title> B 9x16"), and **Save to
+  Footage and line up N trial reels** puts each in Footage › Exports (not
+  re-transcribed) and on the calendar as one trial reel test: one account,
+  minutes apart, one caption. On Today, each version has its own **Video**
+  button: on a phone it opens the share sheet (Save Video, or straight to
+  Instagram), on a computer it downloads.
 - **Fonts**: Druk Wide is a paid Commercial Type font, so it can't be built
   in: upload the licensed .otf (Captions or Hook text › Font) and the whole
   team can use it. Unbounded Black is the free wide stand-in. Uploads live
@@ -248,12 +262,13 @@ segments, `captions.ts`, `render.ts`, `export.ts`, `ops.ts` the tools,
   % watched, shares, saves or follows. Groups under 3 posts are faded.
   **Tag hook types** has Claude (Haiku, `/api/analytics/hooks`) sort every
   card's hook into the hook library's types; each can be changed on its card.
-- **Trial reel tests**: two to four versions of one thing (the line on
+- **Trial reel tests**: two to ten versions of one thing (the line on
   screen, the spoken hook, the caption, the sound…), each planned as an
-  Instagram trial reel, with a copy of the Studio edit per version for
-  on-screen text. Log each version's numbers, pick the winner (it says when
-  the gap is too small to trust) and put it on the card. What a test taught
-  you goes to Claude.
+  Instagram trial reel. Banner tests made in Studio (above) come with each
+  version's video. Log each version's numbers, pick the winner (it says when
+  the gap is too small to trust, and waits until every version has numbers)
+  and put it on the card; a Studio banner test puts it back on screen in the
+  edit too. What a test taught you goes to Claude.
 - **Trending audio**: sounds spotted in the app, from spotted to saved to
   used to faded, with how posts using each did. The platforms don't let other
   apps attach their music, so a post with a sound reminds whoever posts it to
@@ -275,7 +290,8 @@ or links (a hundred at once), pick the platform, main or clipping, a group
 **Schedule** (from the Calendar, a card's Posts tab, or Accounts) sends one
 video to many accounts: tick whole groups or single accounts, the first time,
 the minutes between posts and a random ± so clipping pages never post in the
-same minute or on a visible beat. **A caption per account** has Claude
+same minute or on a visible beat (held to 30% of the gap, so no two land
+closer than 40% of it). **A caption per account** has Claude
 (Sonnet, `/api/plan/captions`) write different captions per platform, which
 take turns across the accounts. Posts can carry a trending sound and go out
 as trial reels.

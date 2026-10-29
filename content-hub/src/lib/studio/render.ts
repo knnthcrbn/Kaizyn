@@ -8,7 +8,7 @@
 // canvas looks the same as the export.
 import { captionAt, type CapGroup, type CapWord } from "./captions";
 import { ensureFont, fontSpec } from "./fonts";
-import { zoomAt, type Edit, type EditClip, type Shadow, type TextLook } from "./types";
+import { zoomAt, type Edit, type EditClip, type EditOverlay, type Shadow, type TextLook } from "./types";
 
 export interface Picture {
   image: CanvasImageSource;
@@ -17,8 +17,9 @@ export interface Picture {
 }
 
 /** Waits for an edit's fonts, so the first frames aren't drawn in a fallback face. */
-export async function loadFonts(edit?: Pick<Edit, "captions" | "overlay">) {
-  await Promise.all([ensureFont("montserrat"), ensureFont("geist"), ...(edit ? [ensureFont(edit.captions.style.font), ensureFont(edit.overlay.style.font)] : [])]);
+export async function loadFonts(edit?: Pick<Edit, "captions" | "overlay" | "subhead">) {
+  const faces = edit ? [edit.captions.style.font, edit.overlay.style.font, ...(edit.subhead?.text.trim() ? [edit.subhead.style.font] : [])] : [];
+  await Promise.all([ensureFont("montserrat"), ensureFont("geist"), ...faces.map(ensureFont)]);
 }
 
 /** One unit = one pixel on a 1080-wide (or 1080-tall) frame. */
@@ -275,11 +276,10 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, max: number) {
   return lines;
 }
 
-/** The hook text, styled like any CapCut text: font, colours, outline, shadow and a box behind it. */
-function drawOverlay(ctx: CanvasRenderingContext2D, W: number, H: number, edit: Edit, t: number) {
-  const o = edit.overlay;
+/** How a block of text sits: its wrapped lines and the box around them, before any animation. */
+function layoutText(ctx: CanvasRenderingContext2D, W: number, H: number, o: EditOverlay) {
   const raw = o.text.trim();
-  if (!raw || (o.until > 0 && t >= o.until)) return;
+  if (!raw) return null;
   const look = o.style;
   const u = unit(W, H);
   const px = look.size * u;
@@ -287,12 +287,24 @@ function drawOverlay(ctx: CanvasRenderingContext2D, W: number, H: number, edit: 
   ctx.save();
   setFont(ctx, look, px);
   const lines = wrap(ctx, text, W * o.width);
+  const lineW = lines.map((l) => ctx.measureText(l).width);
+  ctx.restore();
   const lh = px * 1.25;
   const padX = look.box.padX * u;
   const padY = look.box.padY * u;
-  const lineW = lines.map((l) => ctx.measureText(l).width);
-  const boxW = Math.max(...lineW) + padX * 2;
-  const boxH = lines.length * lh + padY * 2;
+  return { look, u, px, lines, lineW, lh, padX, padY, boxW: Math.max(...lineW) + padX * 2, boxH: lines.length * lh + padY * 2 };
+}
+
+/**
+ * Text on screen (the hook, or the line under it), styled like any CapCut
+ * text: font, colours, outline, shadow and a box behind it. `cy` is the
+ * block's centre; the hook's comes from its own height setting.
+ */
+function drawTextBlock(ctx: CanvasRenderingContext2D, W: number, H: number, o: EditOverlay, t: number, cy: number) {
+  if (o.until > 0 && t >= o.until) return;
+  const L = layoutText(ctx, W, H, o);
+  if (!L) return;
+  const { look, u, px, lines, lineW, lh, padY, boxW, boxH } = L;
 
   let alpha = 1;
   let scale = 1;
@@ -316,15 +328,14 @@ function drawOverlay(ctx: CanvasRenderingContext2D, W: number, H: number, edit: 
       break;
   }
   if (o.until > 0 && o.animation !== "none") alpha *= clamp01((o.until - t) / 0.2);
-  if (alpha <= 0.001) {
-    ctx.restore();
-    return;
-  }
+  if (alpha <= 0.001) return;
   // Typewriter: letters appear 30 a second.
   let budget = o.animation === "typewriter" ? Math.floor(t * 30) : Infinity;
 
+  ctx.save();
+  setFont(ctx, look, px);
   ctx.globalAlpha = alpha;
-  ctx.translate(W / 2 + dx, o.y * H + dy);
+  ctx.translate(W / 2 + dx, cy + dy);
   ctx.scale(scale, scale);
   if (look.box.on) drawBox(ctx, -boxW / 2, -boxH / 2, boxW, boxH, look, u);
   ctx.textAlign = "center";
@@ -342,6 +353,21 @@ function drawOverlay(ctx: CanvasRenderingContext2D, W: number, H: number, edit: 
     } else drawText(ctx, l, 0, y, look, look.color, u, !look.box.on);
   });
   ctx.restore();
+}
+
+/** The hook, then the sub-headline: under the hook's box (wherever its lines end), or at its own height. */
+function drawOverlays(ctx: CanvasRenderingContext2D, W: number, H: number, edit: Edit, t: number) {
+  const o = edit.overlay;
+  const hookY = o.y * H;
+  drawTextBlock(ctx, W, H, o, t, hookY);
+  const sub = edit.subhead;
+  if (!sub?.text.trim()) return;
+  let cy = sub.y * H;
+  const hook = sub.follow ? layoutText(ctx, W, H, o) : null;
+  const mine = hook ? layoutText(ctx, W, H, sub) : null;
+  // Placed by the hook's resting layout, not its animation, so it never jumps when the hook pops in.
+  if (hook && mine) cy = hookY + hook.boxH / 2 + sub.gap * unit(W, H) + mine.boxH / 2;
+  drawTextBlock(ctx, W, H, sub, t, cy);
 }
 
 /**
@@ -367,5 +393,5 @@ export function drawFrame(
   if (clip && pic && pic.width && pic.height) drawPicture(ctx, W, H, pic, clip, source == null ? 1 : zoomAt(clip, source));
   ctx.restore();
   drawCaption(ctx, W, H, edit, groups, t);
-  drawOverlay(ctx, W, H, edit, t);
+  drawOverlays(ctx, W, H, edit, t);
 }
